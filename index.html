@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karavansaray Events 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8FAFC;--surface:#FFFFFF;--s2:#F1F5F9;--border:#E2E8F0;--border2:#CBD5E1;
+  --ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;
+  --conf-bg:#EFF6FF;--conf-tx:#1D4ED8;--conf-acc:#3B82F6;
+  --nego-bg:#FFFBEB;--nego-tx:#92400E;--nego-acc:#F59E0B;
+  --cyan:#06B6D4;--r:12px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);display:flex;height:100vh;overflow:hidden}
+
+/* Loading Overlay */
+#loadingOverlay{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadingOverlay p{color:var(--ink3);font-size:15px}
+
+/* Sidebar */
+#sidebar{width:240px;min-width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 16px;gap:12px;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:10px;padding:8px 4px;margin-bottom:4px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--cyan),#0891B2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3}
+.logo-sub{font-size:11px;color:var(--ink3);font-weight:400}
+
+.conn-badge{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:500;width:fit-content}
+.conn-badge.online{background:#DCFCE7;color:#166534}
+.conn-badge.loading{background:#FEF9C3;color:#854D0E}
+.conn-badge.offline{background:#FEE2E2;color:#991B1B}
+
+.nav-section{font-size:11px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:.6px;padding:4px 4px 2px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--ink2);transition:background .15s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--s2)}
+.nav-item.active{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);color:var(--conf-tx);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.7}
+
+.sidebar-footer{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+.btn-export{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;color:var(--ink2);font-family:inherit;transition:background .15s;width:100%}
+.btn-export:hover{background:var(--border)}
+
+/* Main */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#topbar h1{font-size:18px;font-weight:700;color:var(--ink);flex:1}
+.btn-add{display:flex;align-items:center;gap:6px;padding:9px 16px;background:var(--cyan);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:opacity .15s}
+.btn-add:hover{opacity:.85}
+
+/* Stats */
+#statsBar{display:flex;gap:12px;padding:16px 24px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--surface)}
+.stat-card{background:var(--s2);border-radius:var(--r);padding:12px 16px;flex:1;min-width:120px}
+.stat-label{font-size:11px;color:var(--ink3);font-weight:500;margin-bottom:4px}
+.stat-val{font-size:20px;font-weight:700;color:var(--ink)}
+.stat-val.cyan{color:var(--cyan)}
+.stat-val.blue{color:var(--conf-acc)}
+.stat-val.amber{color:var(--nego-acc)}
+.stat-val.green{color:#16A34A}
+
+/* Filters */
+#filterBar{padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink3);transition:all .15s}
+.pill.active{border-color:var(--conf-acc);background:var(--conf-bg);color:var(--conf-tx)}
+.pill-sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+.search-box{margin-left:auto;padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--s2);outline:none;width:200px}
+.search-box:focus{border-color:var(--cyan);background:#fff}
+
+/* View toggle */
+.view-toggle{display:flex;gap:4px;padding:0 24px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
+.view-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:12px;font-family:inherit;color:var(--ink3);transition:all .15s}
+.view-btn.active{background:var(--conf-bg);color:var(--conf-tx);border-color:var(--conf-acc);font-weight:600}
+
+/* Event List */
+#contentArea{flex:1;overflow-y:auto;padding:16px 24px}
+.event-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:box-shadow .15s;cursor:pointer}
+.event-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.event-card.done-card{opacity:.6}
+.event-no{width:28px;height:28px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0;margin-top:2px}
+.event-body{flex:1;min-width:0}
+.event-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.event-title{font-size:14px;font-weight:600;color:var(--ink)}
+.event-artist{font-size:13px;color:var(--ink3);margin-bottom:4px}
+.event-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink3)}
+.meta-item{display:flex;align-items:center;gap:4px}
+.event-actions{display:flex;gap:6px;flex-shrink:0;margin-top:2px}
+.btn-icon{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .15s;color:var(--ink3)}
+.btn-icon:hover{background:var(--s2)}
+.btn-icon.del:hover{background:#FEE2E2;border-color:#FECACA;color:#DC2626}
+.btn-icon.done-btn:hover{background:#DCFCE7;border-color:#BBF7D0;color:#16A34A}
+
+/* Type badges */
+.type-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.3px}
+.ct-arena{background:#EDE9FE;color:#6D28D9}
+.ct-concert{background:#FCE7F3;color:#BE185D}
+.ct-football{background:#DCFCE7;color:#166534}
+.ct-regional{background:#FEF3C7;color:#92400E}
+.ct-festival{background:#FEE2E2;color:#9B1C1C}
+.ct-sport{background:#E0F2FE;color:#075985}
+.ct-harbour{background:#D1FAE5;color:#065F46}
+.ct-circus{background:#FEF9C3;color:#78350F}
+.ct-gala{background:#F3E8FF;color:#6B21A8}
+.ct-dj{background:#F0ABFC;color:#701A75}
+.ct-other{background:#F1F5F9;color:#475569}
+
+/* Status badges */
+.status-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.s-confirmed{background:var(--conf-bg);color:var(--conf-tx)}
+.s-negotiation{background:var(--nego-bg);color:var(--nego-tx)}
+.s-done{background:#F0FDF4;color:#166534}
+
+/* Calendar */
+#calendarView{flex:1;overflow-y:auto;padding:16px 24px;display:none}
+.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.cal-nav h2{font-size:18px;font-weight:700;flex:1;text-align:center}
+.cal-nav-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.cal-nav-btn:hover{background:var(--s2)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden}
+.cal-header{background:var(--s2);padding:8px;text-align:center;font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase}
+.cal-day{background:var(--surface);padding:8px;min-height:90px;position:relative}
+.cal-day.other-month{background:var(--s2);opacity:.6}
+.cal-day.today{background:#EFF6FF}
+.cal-day-num{font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:4px}
+.cal-chip{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;truncate:clip;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.cal-chip:hover{opacity:.8}
+
+/* Modal */
+#modalOverlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+#modalOverlay.open{display:flex}
+#modal{background:#fff;border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-header h2{font-size:17px;font-weight:700}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--ink3)}
+.modal-close:hover{background:var(--s2)}
+.modal-body{padding:20px 24px 24px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:12px;font-weight:600;color:var(--ink3)}
+.form-group input,.form-group select,.form-group textarea{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--cyan)}
+.form-group textarea{resize:vertical;min-height:70px}
+.modal-footer{padding:0 24px 20px;display:flex;gap:8px;justify-content:flex-end}
+.btn-cancel{padding:9px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;font-family:inherit;color:var(--ink2);transition:background .15s}
+.btn-cancel:hover{background:var(--s2)}
+.btn-save{padding:9px 22px;border:none;border-radius:8px;background:var(--cyan);color:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:opacity .15s}
+.btn-save:hover{opacity:.85}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;z-index:2000}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* Empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:12px;color:var(--ink3)}
+.empty-icon{font-size:48px;opacity:.4}
+
+@media(max-width:768px){
+  #sidebar{display:none}
+  .modal-body{grid-template-columns:1fr}
+  #statsBar{padding:12px}
+  #filterBar{padding:8px 12px}
+  #contentArea,#calendarView{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor…</p>
+</div>
+
+<!-- Sidebar -->
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <div>
+      <div class="logo-text">Karavansaray</div>
+      <div class="logo-sub">Events 2026</div>
+    </div>
+  </div>
+
+  <div id="connBadge" class="conn-badge loading">⬤ Bağlanıyor…</div>
+
+  <div class="nav-section">Görünüm</div>
+  <button class="nav-item active" id="navList" onclick="switchView('list')">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    Liste
+  </button>
+  <button class="nav-item" id="navCal" onclick="switchView('calendar')">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    Takvim
+  </button>
+
+  <div class="nav-section" style="margin-top:8px">Durum</div>
+  <button class="nav-item" onclick="setSideFilter('all')">📋 Tüm Etkinlikler</button>
+  <button class="nav-item" onclick="setSideFilter('confirmed')">🔵 Onaylı</button>
+  <button class="nav-item" onclick="setSideFilter('negotiation')">🟡 Müzakere</button>
+  <button class="nav-item" onclick="setSideFilter('done')">✅ Tamamlandı</button>
+
+  <div class="sidebar-footer">
+    <button class="btn-export" onclick="exportCSV()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+      CSV Dışa Aktar
+    </button>
+  </div>
+</aside>
+
+<!-- Main -->
+<div id="main">
+  <div id="topbar">
+    <h1>Karavansaray Events 2026</h1>
+    <button class="btn-add" onclick="openModal()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Etkinlik Ekle
+    </button>
+  </div>
+
+  <div id="statsBar">
+    <div class="stat-card">
+      <div class="stat-label">Toplam Etkinlik</div>
+      <div class="stat-val cyan" id="statTotal">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Onaylı</div>
+      <div class="stat-val blue" id="statConf">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Müzakere</div>
+      <div class="stat-val amber" id="statNego">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tamamlandı</div>
+      <div class="stat-val green" id="statDone">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Toplam Gelir</div>
+      <div class="stat-val" id="statRev" style="font-size:15px">0 €</div>
+    </div>
+  </div>
+
+  <div id="filterBar">
+    <div id="statusPills" style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="pill active" data-status="all" onclick="setStatusFilter('all')">Tümü</span>
+      <span class="pill" data-status="confirmed" onclick="setStatusFilter('confirmed')">Onaylı</span>
+      <span class="pill" data-status="negotiation" onclick="setStatusFilter('negotiation')">Müzakere</span>
+      <span class="pill" data-status="done" onclick="setStatusFilter('done')">Tamamlandı</span>
+    </div>
+    <div class="pill-sep"></div>
+    <div id="typePills" style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="pill active" data-type="all" onclick="setTypeFilter('all')">Tüm Tipler</span>
+      <span class="pill" data-type="ARENA EVENT" onclick="setTypeFilter('ARENA EVENT')">Arena</span>
+      <span class="pill" data-type="ARENA CONCERT" onclick="setTypeFilter('ARENA CONCERT')">Concert</span>
+      <span class="pill" data-type="ARENA FOOTBALL" onclick="setTypeFilter('ARENA FOOTBALL')">Football</span>
+      <span class="pill" data-type="REGIONAL ART FESTIVAL" onclick="setTypeFilter('REGIONAL ART FESTIVAL')">Art Fest</span>
+      <span class="pill" data-type="FESTIVAL" onclick="setTypeFilter('FESTIVAL')">Festival</span>
+      <span class="pill" data-type="SPORT EVENT" onclick="setTypeFilter('SPORT EVENT')">Sport</span>
+      <span class="pill" data-type="HARBOUR CONCERT" onclick="setTypeFilter('HARBOUR CONCERT')">Harbour</span>
+      <span class="pill" data-type="CIRCUS" onclick="setTypeFilter('CIRCUS')">Circus</span>
+      <span class="pill" data-type="GALA EVENT" onclick="setTypeFilter('GALA EVENT')">Gala</span>
+      <span class="pill" data-type="DJ PARTY" onclick="setTypeFilter('DJ PARTY')">DJ</span>
+    </div>
+    <input type="search" class="search-box" id="searchBox" placeholder="Ara…" oninput="render()">
+  </div>
+
+  <div style="display:flex;gap:4px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border)">
+    <button class="view-btn active" id="vbList" onclick="switchView('list')">☰ Liste</button>
+    <button class="view-btn" id="vbCal" onclick="switchView('calendar')">📅 Takvim</button>
+  </div>
+
+  <div id="contentArea"></div>
+  <div id="calendarView"></div>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" onclick="closeModalOutside(event)">
+  <div id="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Yeni Etkinlik</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group full">
+        <label>Sanatçı / Takım</label>
+        <input type="text" id="fArtist" placeholder="Sanatçı veya takım adı">
+      </div>
+      <div class="form-group full">
+        <label>Etkinlik Adı</label>
+        <input type="text" id="fEvent" placeholder="Etkinlik adı veya açıklama">
+      </div>
+      <div class="form-group">
+        <label>Tip</label>
+        <select id="fType">
+          <option value="ARENA EVENT">Arena Event</option>
+          <option value="ARENA CONCERT">Arena Concert</option>
+          <option value="ARENA FOOTBALL">Arena Football</option>
+          <option value="REGIONAL ART FESTIVAL">Regional Art Festival</option>
+          <option value="FESTIVAL">Festival</option>
+          <option value="SPORT EVENT">Sport Event</option>
+          <option value="HARBOUR CONCERT">Harbour Concert</option>
+          <option value="CIRCUS">Circus</option>
+          <option value="GALA EVENT">Gala Event</option>
+          <option value="DJ PARTY">DJ Party</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Durum</label>
+        <select id="fStatus">
+          <option value="confirmed">Onaylı</option>
+          <option value="negotiation">Müzakere</option>
+          <option value="done">Tamamlandı</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Başlangıç</label>
+        <input type="date" id="fStart">
+      </div>
+      <div class="form-group">
+        <label>Bitiş</label>
+        <input type="date" id="fEnd">
+      </div>
+      <div class="form-group">
+        <label>Gelir (€)</label>
+        <input type="number" id="fRevenue" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Dolaylı Gelir (€)</label>
+        <input type="number" id="fNonDirect" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Misafir Sayısı</label>
+        <input type="number" id="fGuests" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Gider (€)</label>
+        <input type="number" id="fExpense" placeholder="0">
+      </div>
+      <div class="form-group full">
+        <label>Not</label>
+        <textarea id="fNote" placeholder="Notlar…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">İptal</button>
+      <button class="btn-save" onclick="saveModal()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+const BLOB_ID = "019d3eb2-5b95-770c-8e52-3a00f1d6e5c7";
+const API_URL = "https://jsonblob.com/api/jsonBlob/" + BLOB_ID;
+
+const RAW_EVENTS = [
+  {id:"1",no:1,type:"ARENA CONCERT",event:"Halay & Türkü Gecesi",artist:"Volkan Konak",start:"2026-01-10",end:"2026-01-10",revenue:85000,nonDirect:12000,guests:8500,expense:22000,note:"Açılış konseri",status:"done",done:true},
+  {id:"2",no:2,type:"ARENA EVENT",event:"Yeni Yıl Galası",artist:"Çeşitli Sanatçılar",start:"2026-01-17",end:"2026-01-17",revenue:120000,nonDirect:18000,guests:12000,expense:35000,note:"Özel davetli",status:"done",done:true},
+  {id:"3",no:3,type:"FESTIVAL",event:"Kış Müzik Festivali",artist:"Karışık Program",start:"2026-01-24",end:"2026-01-25",revenue:200000,nonDirect:30000,guests:20000,expense:60000,note:"2 günlük etkinlik",status:"done",done:true},
+  {id:"4",no:4,type:"ARENA FOOTBALL",event:"Süper Lig Maçı",artist:"Galatasaray vs Fenerbahçe",start:"2026-02-07",end:"2026-02-07",revenue:350000,nonDirect:45000,guests:35000,expense:80000,note:"Derbi maçı",status:"done",done:true},
+  {id:"5",no:5,type:"GALA EVENT",event:"Valentines Galası",artist:"Sertab Erener",start:"2026-02-14",end:"2026-02-14",revenue:95000,nonDirect:14000,guests:9500,expense:28000,note:"Sevgililer günü özel",status:"done",done:true},
+  {id:"6",no:6,type:"ARENA CONCERT",event:"Pop Gecesi",artist:"Tarkan",start:"2026-02-21",end:"2026-02-21",revenue:450000,nonDirect:55000,guests:40000,expense:120000,note:"Büyük konser",status:"done",done:true},
+  {id:"7",no:7,type:"SPORT EVENT",event:"Boks Şampiyonası",artist:"Milli Takım Karşılaşması",start:"2026-02-28",end:"2026-02-28",revenue:75000,nonDirect:10000,guests:7500,expense:20000,note:"Uluslararası maç",status:"done",done:true},
+  {id:"8",no:8,type:"REGIONAL ART FESTIVAL",event:"Sanat Haftası",artist:"Yerel Sanatçılar",start:"2026-03-05",end:"2026-03-08",revenue:60000,nonDirect:8000,guests:6000,expense:15000,note:"Bölgesel festival",status:"done",done:true},
+  {id:"9",no:9,type:"HARBOUR CONCERT",event:"Liman Konseri",artist:"Sezen Aksu",start:"2026-03-14",end:"2026-03-14",revenue:180000,nonDirect:25000,guests:15000,expense:45000,note:"Açık hava konseri",status:"done",done:true},
+  {id:"10",no:10,type:"ARENA CONCERT",event:"Rock Gecesi",artist:"Duman",start:"2026-03-21",end:"2026-03-21",revenue:220000,nonDirect:32000,guests:20000,expense:58000,note:"",status:"done",done:true},
+  {id:"11",no:11,type:"CIRCUS",event:"Uluslararası Sirk",artist:"Cirque Fantastique",start:"2026-04-03",end:"2026-04-06",revenue:140000,nonDirect:20000,guests:14000,expense:40000,note:"4 günlük gösteri",status:"confirmed",done:false},
+  {id:"12",no:12,type:"FESTIVAL",event:"Bahar Festivali",artist:"Çeşitli",start:"2026-04-11",end:"2026-04-12",revenue:170000,nonDirect:24000,guests:17000,expense:48000,note:"",status:"confirmed",done:false},
+  {id:"13",no:13,type:"ARENA FOOTBALL",event:"UEFA Elemeleri",artist:"Türkiye Milli Takımı",start:"2026-04-18",end:"2026-04-18",revenue:420000,nonDirect:52000,guests:38000,expense:95000,note:"Milli maç",status:"confirmed",done:false},
+  {id:"14",no:14,type:"ARENA CONCERT",event:"Pop Starlar",artist:"Hadise & Hande Yener",start:"2026-04-25",end:"2026-04-25",revenue:280000,nonDirect:38000,guests:25000,expense:72000,note:"İkili konser",status:"confirmed",done:false},
+  {id:"15",no:15,type:"DJ PARTY",event:"Elektronik Müzik Gecesi",artist:"DJ Tiësto",start:"2026-05-02",end:"2026-05-02",revenue:320000,nonDirect:42000,guests:28000,expense:88000,note:"Uluslararası DJ",status:"confirmed",done:false},
+  {id:"16",no:16,type:"GALA EVENT",event:"Özel Gala",artist:"VIP Etkinlik",start:"2026-05-09",end:"2026-05-09",revenue:150000,nonDirect:22000,guests:5000,expense:45000,note:"Davetiye ile",status:"confirmed",done:false},
+  {id:"17",no:17,type:"SPORT EVENT",event:"Atletizm Yarışması",artist:"Milli Atletler",start:"2026-05-16",end:"2026-05-17",revenue:90000,nonDirect:12000,guests:9000,expense:25000,note:"2 günlük",status:"confirmed",done:false},
+  {id:"18",no:18,type:"HARBOUR CONCERT",event:"Deniz Festivali",artist:"Yıldız Tilbe",start:"2026-05-23",end:"2026-05-23",revenue:160000,nonDirect:22000,guests:13000,expense:42000,note:"",status:"confirmed",done:false},
+  {id:"19",no:19,type:"ARENA CONCERT",event:"Yaz Konseri",artist:"Mustafa Sandal",start:"2026-05-30",end:"2026-05-30",revenue:240000,nonDirect:33000,guests:22000,expense:62000,note:"",status:"confirmed",done:false},
+  {id:"20",no:20,type:"FESTIVAL",event:"Yaz Müzik Festivali",artist:"Birçok Sanatçı",start:"2026-06-06",end:"2026-06-07",revenue:380000,nonDirect:50000,guests:35000,expense:100000,note:"Büyük festival",status:"confirmed",done:false},
+  {id:"21",no:21,type:"ARENA FOOTBALL",event:"Kupa Finali",artist:"TFF Kupası",start:"2026-06-14",end:"2026-06-14",revenue:500000,nonDirect:65000,guests:42000,expense:130000,note:"Kupa finali",status:"confirmed",done:false},
+  {id:"22",no:22,type:"REGIONAL ART FESTIVAL",event:"Uluslararası Sanat",artist:"Uluslararası Sanatçılar",start:"2026-06-20",end:"2026-06-22",revenue:110000,nonDirect:16000,guests:11000,expense:32000,note:"3 gün",status:"confirmed",done:false},
+  {id:"23",no:23,type:"ARENA CONCERT",event:"Latin Gecesi",artist:"Marc Anthony",start:"2026-07-04",end:"2026-07-04",revenue:380000,nonDirect:48000,guests:32000,expense:98000,note:"Uluslararası sanatçı",status:"confirmed",done:false},
+  {id:"24",no:24,type:"DJ PARTY",event:"Sunset DJ Festivali",artist:"David Guetta",start:"2026-07-11",end:"2026-07-11",revenue:420000,nonDirect:55000,guests:36000,expense:115000,note:"",status:"negotiation",done:false},
+  {id:"25",no:25,type:"FESTIVAL",event:"Rock Festivali",artist:"Çeşitli Rock Grupları",start:"2026-07-18",end:"2026-07-20",revenue:550000,nonDirect:70000,guests:48000,expense:145000,note:"3 günlük büyük festival",status:"negotiation",done:false},
+  {id:"26",no:26,type:"HARBOUR CONCERT",event:"Yaz Akşamı Konseri",artist:"Ajda Pekkan",start:"2026-07-25",end:"2026-07-25",revenue:290000,nonDirect:40000,guests:24000,expense:78000,note:"",status:"negotiation",done:false},
+  {id:"27",no:27,type:"ARENA CONCERT",event:"Türk Pop Gecesi",artist:"Serdar Ortaç",start:"2026-08-01",end:"2026-08-01",revenue:260000,nonDirect:35000,guests:23000,expense:68000,note:"",status:"negotiation",done:false},
+  {id:"28",no:28,type:"SPORT EVENT",event:"Motosiklet Yarışları",artist:"MotoGP Turkey",start:"2026-08-08",end:"2026-08-09",revenue:600000,nonDirect:80000,guests:55000,expense:160000,note:"Uluslararası yarış",status:"negotiation",done:false},
+  {id:"29",no:29,type:"GALA EVENT",event:"Yaz Galası",artist:"Özel Program",start:"2026-08-15",end:"2026-08-15",revenue:180000,nonDirect:26000,guests:8000,expense:55000,note:"",status:"negotiation",done:false},
+  {id:"30",no:30,type:"ARENA CONCERT",event:"Sonbahar Konseri",artist:"Sıla",start:"2026-09-05",end:"2026-09-05",revenue:210000,nonDirect:29000,guests:19000,expense:56000,note:"",status:"negotiation",done:false},
+  {id:"31",no:31,type:"FESTIVAL",event:"Sonbahar Festivali",artist:"Karma Program",start:"2026-09-19",end:"2026-09-20",revenue:320000,nonDirect:44000,guests:28000,expense:86000,note:"",status:"negotiation",done:false},
+  {id:"32",no:32,type:"ARENA FOOTBALL",event:"Şampiyonlar Ligi",artist:"Avrupa Maçı",start:"2026-10-03",end:"2026-10-03",revenue:480000,nonDirect:62000,guests:40000,expense:125000,note:"",status:"negotiation",done:false},
+  {id:"33",no:33,type:"ARENA CONCERT",event:"Yılsonu Konseri",artist:"Çeşitli Sanatçılar",start:"2026-12-31",end:"2026-12-31",revenue:650000,nonDirect:85000,guests:50000,expense:175000,note:"Büyük kapanış konseri",status:"negotiation",done:false}
+];
+
+let events = JSON.parse(JSON.stringify(RAW_EVENTS));
+let statusFilter = 'all';
+let typeFilter = 'all';
+let currentView = 'list';
+let calYear = 2026;
+let calMonth = 2;
+let editingId = null;
+let lastDataStr = '';
+
+function typeBadge(type) {
+  const map = {
+    'ARENA EVENT':['ct-arena','Arena'],
+    'ARENA CONCERT':['ct-concert','Concert'],
+    'ARENA FOOTBALL':['ct-football','Football'],
+    'REGIONAL ART FESTIVAL':['ct-regional','Art Fest'],
+    'FESTIVAL':['ct-festival','Festival'],
+    'SPORT EVENT':['ct-sport','Sport'],
+    'HARBOUR CONCERT':['ct-harbour','Harbour'],
+    'CIRCUS':['ct-circus','Circus'],
+    'GALA EVENT':['ct-gala','Gala'],
+    'DJ PARTY':['ct-dj','DJ']
+  };
+  const [cls,label] = map[type] || ['ct-other',type];
+  return `<span class="type-badge ${cls}">${label}</span>`;
+}
+
+function statusBadge(status) {
+  const map = {confirmed:['s-confirmed','Onaylı'],negotiation:['s-negotiation','Müzakere'],done:['s-done','Tamamlandı']};
+  const [cls,label] = map[status] || ['s-confirmed',status];
+  return `<span class="status-badge ${cls}">${label}</span>`;
+}
+
+function typeChipClass(type) {
+  const map = {'ARENA EVENT':'ct-arena','ARENA CONCERT':'ct-concert','ARENA FOOTBALL':'ct-football','REGIONAL ART FESTIVAL':'ct-regional','FESTIVAL':'ct-festival','SPORT EVENT':'ct-sport','HARBOUR CONCERT':'ct-harbour','CIRCUS':'ct-circus','GALA EVENT':'ct-gala','DJ PARTY':'ct-dj'};
+  return map[type] || 'ct-other';
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  const p = d.split('-');
+  return `${p[2]}.${p[1]}.${p[0]}`;
+}
+
+function fmtMoney(n) {
+  if (!n) return '0 €';
+  return Number(n).toLocaleString('tr-TR') + ' €';
+}
+
+function filtered() {
+  const q = (document.getElementById('searchBox')?.value||'').toLowerCase();
+  return events.filter(e => {
+    if (statusFilter !== 'all' && e.status !== statusFilter) return false;
+    if (typeFilter !== 'all' && e.type !== typeFilter) return false;
+    if (q && !`${e.event} ${e.artist} ${e.type}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function updateStats() {
+  const total = events.length;
+  const conf = events.filter(e=>e.status==='confirmed').length;
+  const nego = events.filter(e=>e.status==='negotiation').length;
+  const done = events.filter(e=>e.status==='done').length;
+  const rev = events.reduce((s,e)=>(s+Number(e.revenue||0)),0);
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statConf').textContent = conf;
+  document.getElementById('statNego').textContent = nego;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statRev').textContent = fmtMoney(rev);
+}
+
+function render() {
+  updateStats();
+  if (currentView === 'calendar') {renderCalendar();return;}
+  const list = filtered();
+  const area = document.getElementById('contentArea');
+  if (!list.length) {
+    area.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div>Etkinlik bulunamadı</div></div>';
+    return;
+  }
+  area.innerHTML = list.map(e => `
+    <div class="event-card ${e.done?'done-card':''}" onclick="openModal('${e.id}')">
+      <div class="event-no">${e.no}</div>
+      <div class="event-body">
+        <div class="event-top">
+          ${typeBadge(e.type)}
+          ${statusBadge(e.status)}
+          ${e.done?'<span style="font-size:11px;color:#16A34A;font-weight:600">✓ Tamamlandı</span>':''}
+        </div>
+        <div class="event-title">${e.event||'—'}</div>
+        ${e.artist?`<div class="event-artist">🎤 ${e.artist}</div>`:''}
+        <div class="event-meta">
+          ${e.start?`<span class="meta-item">📅 ${fmtDate(e.start)}${e.end&&e.end!==e.start?' – '+fmtDate(e.end):''}</span>`:''}
+          ${e.revenue?`<span class="meta-item">💰 ${fmtMoney(e.revenue)}</span>`:''}
+          ${e.guests?`<span class="meta-item">👥 ${Number(e.guests).toLocaleString('tr-TR')}</span>`:''}
+          ${e.expense?`<span class="meta-item">💸 ${fmtMoney(e.expense)}</span>`:''}
+        </div>
+        ${e.note?`<div style="font-size:12px;color:var(--ink4);margin-top:4px;font-style:italic">${e.note}</div>`:''}
+      </div>
+      <div class="event-actions" onclick="event.stopPropagation()">
+        <button class="btn-icon done-btn" title="Tamamlandı olarak işaretle" onclick="toggleDone('${e.id}')">${e.done?'↩':'✓'}</button>
+        <button class="btn-icon" title="Düzenle" onclick="openModal('${e.id}')">✏</button>
+        <button class="btn-icon del" title="Sil" onclick="deleteEvent('${e.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCalendar() {
+  const cal = document.getElementById('calendarView');
+  const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const dayNames = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  const firstDay = new Date(calYear, calMonth, 1);
+  const lastDay = new Date(calYear, calMonth+1, 0);
+  let startDow = firstDay.getDay();
+  if (startDow === 0) startDow = 7;
+  startDow--;
+
+  const cells = [];
+  for (let i=0; i<startDow; i++) {
+    const d = new Date(calYear, calMonth, -startDow+i+1);
+    cells.push({date:d, other:true});
+  }
+  for (let d=1; d<=lastDay.getDate(); d++) {
+    cells.push({date:new Date(calYear,calMonth,d), other:false});
+  }
+  while (cells.length % 7 !== 0) {
+    const d = new Date(calYear, calMonth+1, cells.length - lastDay.getDate() - startDow + 1);
+    cells.push({date:d, other:true});
+  }
+
+  const today = new Date();
+  const evMap = {};
+  events.forEach(e => {
+    if (!e.start) return;
+    const key = e.start.substring(0,10);
+    if (!evMap[key]) evMap[key] = [];
+    evMap[key].push(e);
+  });
+
+  cal.innerHTML = `
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+      <h2>${monthNames[calMonth]} ${calYear}</h2>
+      <button class="cal-nav-btn" onclick="calNext()">›</button>
+    </div>
+    <div class="cal-grid">
+      ${dayNames.map(d=>`<div class="cal-header">${d}</div>`).join('')}
+      ${cells.map(c => {
+        const key = `${c.date.getFullYear()}-${String(c.date.getMonth()+1).padStart(2,'0')}-${String(c.date.getDate()).padStart(2,'0')}`;
+        const isToday = c.date.toDateString()===today.toDateString();
+        const dayEvs = evMap[key]||[];
+        return `<div class="cal-day${c.other?' other-month':''}${isToday?' today':''}">
+          <div class="cal-day-num">${c.date.getDate()}</div>
+          ${dayEvs.slice(0,3).map(e=>`<div class="cal-chip type-badge ${typeChipClass(e.type)}" onclick="openModal('${e.id}')" title="${e.event}">${e.artist||e.event}</div>`).join('')}
+          ${dayEvs.length>3?`<div style="font-size:10px;color:var(--ink4)">+${dayEvs.length-3} daha</div>`:''}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function calPrev() {
+  calMonth--;
+  if (calMonth<0){calMonth=11;calYear--;}
+  renderCalendar();
+}
+function calNext() {
+  calMonth++;
+  if (calMonth>11){calMonth=0;calYear++;}
+  renderCalendar();
+}
+
+function switchView(v) {
+  currentView = v;
+  const ca = document.getElementById('contentArea');
+  const cv = document.getElementById('calendarView');
+  const nl = document.getElementById('navList');
+  const nc = document.getElementById('navCal');
+  const vl = document.getElementById('vbList');
+  const vc = document.getElementById('vbCal');
+  if (v==='list') {
+    ca.style.display='block'; cv.style.display='none';
+    nl.classList.add('active'); nc.classList.remove('active');
+    vl.classList.add('active'); vc.classList.remove('active');
+  } else {
+    ca.style.display='none'; cv.style.display='block';
+    nl.classList.remove('active'); nc.classList.add('active');
+    vl.classList.remove('active'); vc.classList.add('active');
+    renderCalendar();
+  }
+}
+
+function setStatusFilter(v) {
+  statusFilter = v;
+  document.querySelectorAll('#statusPills .pill').forEach(p=>{
+    p.classList.toggle('active', p.dataset.status===v);
+  });
+  render();
+}
+
+function setTypeFilter(v) {
+  typeFilter = v;
+  document.querySelectorAll('#typePills .pill').forEach(p=>{
+    p.classList.toggle('active', p.dataset.type===v);
+  });
+  render();
+}
+
+function setSideFilter(v) {
+  statusFilter = v;
+  typeFilter = 'all';
+  switchView('list');
+  document.querySelectorAll('#statusPills .pill').forEach(p=>{
+    p.classList.toggle('active', p.dataset.status===v);
+  });
+  document.querySelectorAll('#typePills .pill').forEach(p=>{
+    p.classList.toggle('active', p.dataset.type==='all');
+  });
+  render();
+}
+
+function openModal(id) {
+  editingId = id || null;
+  const m = document.getElementById('modalTitle');
+  if (id) {
+    const e = events.find(x=>x.id===id);
+    if (!e) return;
+    m.textContent = 'Etkinliği Düzenle';
+    document.getElementById('fArtist').value = e.artist||'';
+    document.getElementById('fEvent').value = e.event||'';
+    document.getElementById('fType').value = e.type||'ARENA EVENT';
+    document.getElementById('fStatus').value = e.status||'confirmed';
+    document.getElementById('fStart').value = e.start||'';
+    document.getElementById('fEnd').value = e.end||'';
+    document.getElementById('fRevenue').value = e.revenue||'';
+    document.getElementById('fNonDirect').value = e.nonDirect||'';
+    document.getElementById('fGuests').value = e.guests||'';
+    document.getElementById('fExpense').value = e.expense||'';
+    document.getElementById('fNote').value = e.note||'';
+  } else {
+    m.textContent = 'Yeni Etkinlik';
+    ['fArtist','fEvent','fStart','fEnd','fRevenue','fNonDirect','fGuests','fExpense','fNote'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fType').value = 'ARENA EVENT';
+    document.getElementById('fStatus').value = 'confirmed';
+  }
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+async function saveModal() {
+  const artist = document.getElementById('fArtist').value.trim();
+  const event_name = document.getElementById('fEvent').value.trim();
+  if (!event_name) {showToast('⚠ Etkinlik adı gerekli');return;}
+  if (editingId) {
+    const idx = events.findIndex(x=>x.id===editingId);
+    if (idx>=0) {
+      events[idx] = {...events[idx],
+        artist, event:event_name,
+        type:document.getElementById('fType').value,
+        status:document.getElementById('fStatus').value,
+        start:document.getElementById('fStart').value,
+        end:document.getElementById('fEnd').value,
+        revenue:Number(document.getElementById('fRevenue').value)||0,
+        nonDirect:Number(document.getElementById('fNonDirect').value)||0,
+        guests:Number(document.getElementById('fGuests').value)||0,
+        expense:Number(document.getElementById('fExpense').value)||0,
+        note:document.getElementById('fNote').value.trim()
+      };
+    }
+  } else {
+    const newNo = events.length > 0 ? Math.max(...events.map(e=>e.no||0))+1 : 1;
+    events.push({
+      id:String(Date.now()), no:newNo,
+      artist, event:event_name,
+      type:document.getElementById('fType').value,
+      status:document.getElementById('fStatus').value,
+      start:document.getElementById('fStart').value,
+      end:document.getElementById('fEnd').value,
+      revenue:Number(document.getElementById('fRevenue').value)||0,
+      nonDirect:Number(document.getElementById('fNonDirect').value)||0,
+      guests:Number(document.getElementById('fGuests').value)||0,
+      expense:Number(document.getElementById('fExpense').value)||0,
+      note:document.getElementById('fNote').value.trim(),
+      done:false
+    });
+  }
+  closeModal();
+  render();
+  await save();
+  lastDataStr = JSON.stringify(events);
+  showToast('✅ Kaydedildi');
+}
+
+async function deleteEvent(id) {
+  if (!confirm('Bu etkinliği silmek istiyor musunuz?')) return;
+  events = events.filter(e=>e.id!==id);
+  render();
+  await save();
+  lastDataStr = JSON.stringify(events);
+  showToast('🗑 Silindi');
+}
+
+async function toggleDone(id) {
+  const e = events.find(x=>x.id===id);
+  if (!e) return;
+  e.done = !e.done;
+  if (e.done) e.status = 'done';
+  render();
+  await save();
+  lastDataStr = JSON.stringify(events);
+  showToast(e.done?'✅ Tamamlandı':'↩ Geri alındı');
+}
+
+async function save() {
+  try {
+    await fetch(API_URL, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(events)
+    });
+  } catch(e) {
+    showToast('⚠ Kaydetme hatası');
+  }
+}
+
+function setConnStatus(status) {
+  const b = document.getElementById('connBadge');
+  if (status==='online') {b.className='conn-badge online';b.textContent='⬤ Canlı';}
+  else if (status==='loading') {b.className='conn-badge loading';b.textContent='⬤ Bağlanıyor…';}
+  else {b.className='conn-badge offline';b.textContent='⬤ Bağlantı yok';}
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function exportCSV() {
+  const headers = ['No','Tip','Etkinlik','Sanatçı','Başlangıç','Bitiş','Gelir','Dolaylı','Misafir','Gider','Durum','Not'];
+  const rows = events.map(e=>[e.no,e.type,e.event,e.artist,e.start,e.end,e.revenue,e.nonDirect,e.guests,e.expense,e.status,e.note]);
+  const csv = [headers,...rows].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download = 'karavansaray-events-2026.csv';
+  a.click();
+}
+
+// Polling
+setInterval(async () => {
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    const data = await r.json();
+    const str = JSON.stringify(data);
+    if (str !== lastDataStr && lastDataStr !== '') {
+      events = data;
+      lastDataStr = str;
+      render();
+      showToast('🔄 Veriler güncellendi');
+    }
+    if (!lastDataStr) lastDataStr = str;
+    setConnStatus('online');
+  } catch(e) {
+    setConnStatus('offline');
+  }
+}, 5000);
+
+// Init
+async function init() {
+  setConnStatus('loading');
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    if (r.ok) {
+      const data = await r.json();
+      if (Array.isArray(data) && data.length > 0) {
+        events = data;
+        lastDataStr = JSON.stringify(data);
+      }
+      setConnStatus('online');
+    } else {
+      setConnStatus('offline');
+    }
+  } catch(e) {
+    setConnStatus('offline');
+    showToast('⚠ Bağlantı hatası — yerel veriler kullanılıyor');
+  }
+  document.getElementById('loadingOverlay').style.display = 'none';
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
