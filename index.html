@@ -70,6 +70,10 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 .event-card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;display:flex;align-items:stretch;cursor:pointer;transition:all 0.15s;overflow:hidden;position:relative}
 .event-card:hover{border-color:#93C5FD;box-shadow:0 2px 12px rgba(59,130,246,0.08);transform:translateY(-1px)}
 .event-card.done-card{opacity:0.5}
+.event-card.cancelled-card{background:#FEF2F2;border-color:#FECACA}
+.event-card.cancelled-card:hover{border-color:#FCA5A5;box-shadow:0 2px 12px rgba(220,38,38,0.1)}
+.ev-table tbody tr.cancelled-row{background:#FEF2F2}
+.ev-table tbody tr.cancelled-row:hover{background:#FEE2E2}
 .event-stripe{width:5px;flex-shrink:0;border-radius:0}
 .card-check-wrap{display:flex;align-items:center;padding:0 10px;flex-shrink:0}
 .card-check{width:17px;height:17px;border-radius:5px;border:2px solid #CBD5E1;cursor:pointer;appearance:none;-webkit-appearance:none;background:#fff;transition:all 0.15s;flex-shrink:0}
@@ -1901,6 +1905,7 @@ function getCatClass(type) {
 function getStripe(status) {
   if (status === 'confirmed') return 'linear-gradient(180deg,#3B82F6,#6366F1)';
   if (status === 'negotiation') return 'linear-gradient(180deg,#F59E0B,#EF4444)';
+  if (status === 'cancelled') return '#EF4444';
   return '#CBD5E1';
 }
 function getStatusClass(status) {
@@ -2149,7 +2154,8 @@ function renderEvents() {
     const catCls = getCatClass(e.type);
     const stripe = getStripe(e.status);
     const statusCls = getStatusClass(e.status);
-    const doneCard = e.done ? ' done-card' : '';
+    const isCancelled = e.status === 'cancelled';
+    const doneCard = isCancelled ? ' cancelled-card' : (e.done ? ' done-card' : '');
     const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
     const extras = [];
     if (e.note) extras.push(`<div>📝 ${esc(e.note)}</div>`);
@@ -2159,7 +2165,7 @@ function renderEvents() {
     return `<div class="event-card${doneCard}" onclick="openDetails(${e.id})">
       <div class="event-stripe" style="background:${stripe}"></div>
       <div class="card-check-wrap">
-        <input type="checkbox" class="card-check" ${e.done ? 'checked' : ''} onclick="toggleDone(event,${e.id})" title="Tamamlandı"/>
+        ${isCancelled ? '' : `<input type="checkbox" class="card-check" ${e.done ? 'checked' : ''} onclick="toggleDone(event,${e.id})" title="Tamamlandı"/>`}
       </div>
       <div class="card-body">
         <div class="card-top">
@@ -2207,7 +2213,7 @@ function renderTable() {
   const rows = filtered.map(e => {
     const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
     const conflict = conflictIds.has(e.id) ? ` <span class="conflict-badge" title="${esc(T('conflictWarn'))}">⚠</span>` : '';
-    return `<tr class="${e.done ? 'done-row' : ''}" onclick="openDetails(${e.id})">
+    return `<tr class="${e.status === 'cancelled' ? 'cancelled-row' : (e.done ? 'done-row' : '')}" onclick="openDetails(${e.id})">
       <td>${e.no || ''}</td>
       <td>${dateStr}</td>
       <td>${esc(e.artist)}${conflict}</td>
