@@ -100,6 +100,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 .status-negotiation{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
 .status-done{background:#F1F5F9;color:#475569;border-color:#E2E8F0}
 .status-contractSigned{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
+.status-cancelled{background:#FEF2F2;color:#B91C1C;border-color:#FECACA}
 .card-extra{display:flex;flex-direction:column;gap:3px;margin-top:2px;font-size:12px;color:#64748B}
 .detail-link{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;text-decoration:none;font-weight:600;width:max-content}
 .detail-link:hover{background:#DBEAFE}
@@ -155,6 +156,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 .cal-chip.chip-conf{background:#DBEAFE;color:#1D4ED8}
 .cal-chip.chip-nego{background:#FFFBEB;color:#92400E}
 .cal-chip.chip-done{background:#F1F5F9;color:#475569}
+.cal-chip.chip-cancel{background:#FEE2E2;color:#B91C1C;text-decoration:line-through}
 /* Dashboard */
 .dash-wrap{padding:0 24px 24px;display:flex;flex-direction:column;gap:14px;flex:1}
 .dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -491,12 +493,15 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" id="lbl-status">Durum</label>
-            <select class="form-select" id="f-status">
+            <select class="form-select" id="f-status" onchange="handleNewOption(this,'status')">
               <option value="confirmed">Onaylandı</option>
               <option value="negotiation">Müzakere</option>
               <option value="contractSigned">Sözleşme İmzalandı</option>
               <option value="done">Tamamlandı</option>
+              <option value="cancelled">İptal Edildi</option>
+              <option value="__NEW__" style="color:#3B82F6;font-weight:600">＋ Yeni Durum Ekle…</option>
             </select>
+            <input class="form-input" id="f-status-custom" type="text" placeholder="Yeni durum adı" style="display:none;margin-top:6px"/>
           </div>
           <div class="form-group">
             <label class="form-label" id="lbl-guests">Misafir Sayısı</label>
@@ -1546,7 +1551,7 @@ const DEFAULT_DATA = [
 ];
 
 const TR = {
-  confirmed:'Onaylandı', negotiation:'Müzakere', contractSigned:'Sözleşme İmzalandı', done:'Tamamlandı',
+  confirmed:'Onaylandı', negotiation:'Müzakere', contractSigned:'Sözleşme İmzalandı', done:'Tamamlandı', cancelled:'İptal Edildi',
   allEvents:'Tüm Etkinlikler', calendar:'Takvim', addEvent:'Etkinlik Ekle',
   editEvent:'Etkinlik Düzenle', save:'Kaydet', cancel:'İptal', delete:'Sil',
   search:'Ara...', report:'Rapor Al',
@@ -1581,7 +1586,7 @@ const TR = {
   totalLabel:'TOPLAM', pageLabel:'Sayfa'
 };
 const RU = {
-  confirmed:'Подтверждено', negotiation:'Переговоры', contractSigned:'Договор подписан', done:'Завершено',
+  confirmed:'Подтверждено', negotiation:'Переговоры', contractSigned:'Договор подписан', done:'Завершено', cancelled:'Отменено',
   allEvents:'Все события', calendar:'Календарь', addEvent:'Добавить событие',
   editEvent:'Редактировать', save:'Сохранить', cancel:'Отмена', delete:'Удалить',
   search:'Поиск...', report:'Отчёт',
@@ -1902,6 +1907,7 @@ function getStatusClass(status) {
   if (status === 'confirmed') return 'status-confirmed';
   if (status === 'negotiation') return 'status-negotiation';
   if (status === 'contractSigned') return 'status-contractSigned';
+  if (status === 'cancelled') return 'status-cancelled';
   return 'status-done';
 }
 
@@ -1948,12 +1954,12 @@ function applyLang() {
   document.getElementById('del-label').textContent = T('delete');
   document.getElementById('cancel-label').textContent = T('cancel');
   document.getElementById('save-label').textContent = T('save');
-  // update status option labels in form
+  // update status option labels in form (value bazlı — sıra bağımsız)
   const statusSel = document.getElementById('f-status');
   if (statusSel) {
-    statusSel.options[0].text = T('confirmed');
-    statusSel.options[1].text = T('negotiation');
-    statusSel.options[2].text = T('done');
+    Array.from(statusSel.options).forEach(o => {
+      if (o.value !== '__NEW__' && (L[o.value] || TR[o.value])) o.text = T(o.value);
+    });
   }
   // new UI labels
   setTxt('nav-dash-label', T('dashboard'));
@@ -2075,7 +2081,7 @@ function getFilteredData() {
 
 function computeConflicts() {
   conflictIds = new Set();
-  const active = data.filter(e => !e.done && e.status !== 'done' && e.start && e.location);
+  const active = data.filter(e => !e.done && e.status !== 'done' && e.status !== 'cancelled' && e.start && e.location);
   for (let i = 0; i < active.length; i++) {
     for (let j = i + 1; j < active.length; j++) {
       const a = active[i], b = active[j];
@@ -2249,7 +2255,7 @@ function renderDashboard() {
   const totalRev = yd.reduce((s,e) => s + (e.revenue||0) + (e.nonDirect||0), 0);
   const doneCount = yd.filter(e => e.done || e.status === 'done').length;
   const todayIso = new Date().toISOString().slice(0,10);
-  const upcoming = yd.filter(e => !e.done && e.status !== 'done' && (e.end || e.start) >= todayIso).length;
+  const upcoming = yd.filter(e => !e.done && e.status !== 'done' && e.status !== 'cancelled' && (e.end || e.start) >= todayIso).length;
   const withGuests = yd.filter(e => (e.guests||0) > 0);
   const avgGuests = withGuests.length ? Math.round(withGuests.reduce((s,e) => s + e.guests, 0) / withGuests.length) : 0;
   setTxt('kpi-totalrev', fmtRev(totalRev));
@@ -2406,7 +2412,7 @@ function openModal(id) {
   editingId = id;
   loadCustomOptions();
   // Reset custom inputs
-  ['f-location-custom','f-category-custom'].forEach(cid => {
+  ['f-location-custom','f-category-custom','f-status-custom'].forEach(cid => {
     const el = document.getElementById(cid);
     if (el) { el.style.display = 'none'; el.value = ''; }
   });
@@ -2431,7 +2437,12 @@ function openModal(id) {
     }
     catSel.value = e.type || 'ARENA EVENT';
     document.getElementById('f-location').value = e.location || 'Karavansaray Arena';
-    document.getElementById('f-status').value = e.status || 'confirmed';
+    // Set status — if custom, add it temporarily
+    const stSel = document.getElementById('f-status');
+    if (e.status && !Array.from(stSel.options).some(o => o.value === e.status)) {
+      stSel.insertBefore(new Option(T(e.status), e.status), stSel.querySelector('option[value="__NEW__"]'));
+    }
+    stSel.value = e.status || 'confirmed';
     document.getElementById('f-start').value = e.start || '';
     document.getElementById('f-end').value = e.end || '';
     document.getElementById('f-revenue').value = e.revenue || '';
@@ -2502,7 +2513,7 @@ function getSelectValue(selectId, customId) {
 }
 
 function loadCustomOptions() {
-  ['f-location','f-category'].forEach(id => {
+  ['f-location','f-category','f-status'].forEach(id => {
     const stored = JSON.parse(localStorage.getItem('custom_'+id)||'[]');
     const sel = document.getElementById(id);
     if (!sel) return;
@@ -2519,7 +2530,7 @@ async function saveEvent() {
   const start = document.getElementById('f-start').value;
   if (!artist || !start) { alert(lang==='tr'?'Sanatçı ve başlangıç tarihi zorunludur.':'Заполните обязательные поля.'); return; }
   const end = document.getElementById('f-end').value || start;
-  const status = document.getElementById('f-status').value;
+  const status = getSelectValue('f-status','f-status-custom');
   const obj = {
     artist,
     type: getSelectValue('f-category','f-category-custom'),
@@ -2631,6 +2642,7 @@ function dayClick(dateStr) {
   document.getElementById('f-end').value = dateStr;
 }
 function calChipCls(status) {
+  if (status === 'cancelled') return 'chip-cancel';
   return status === 'confirmed' ? 'chip-conf' : status === 'negotiation' ? 'chip-nego' : status === 'contractSigned' ? 'chip-conf' : 'chip-done';
 }
 
@@ -2756,6 +2768,7 @@ function xlStatusColor(status) {
   if (status === 'confirmed') return XL.stConfirmed;
   if (status === 'negotiation') return XL.stNego;
   if (status === 'contractSigned') return XL.stSigned;
+  if (status === 'cancelled') return 'FFB91C1C';
   return XL.stDone;
 }
 function xlTitleBlock(ws, colCount, subtitle) {
@@ -2989,6 +3002,7 @@ function pdfStatusColor(status) {
   if (status === 'confirmed') return '#1D4ED8';
   if (status === 'negotiation') return '#92400E';
   if (status === 'contractSigned') return '#047857';
+  if (status === 'cancelled') return '#B91C1C';
   return '#64748B';
 }
 
