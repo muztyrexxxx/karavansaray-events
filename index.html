@@ -1,799 +1,2207 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Karavansaray Events 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F8FAFC;--surface:#FFFFFF;--s2:#F1F5F9;--border:#E2E8F0;--border2:#CBD5E1;
-  --ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;
-  --conf-bg:#EFF6FF;--conf-tx:#1D4ED8;--conf-acc:#3B82F6;
-  --nego-bg:#FFFBEB;--nego-tx:#92400E;--nego-acc:#F59E0B;
-  --cyan:#06B6D4;--r:12px;
-}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);display:flex;height:100vh;overflow:hidden}
-
-/* Loading Overlay */
-#loadingOverlay{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
-.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-#loadingOverlay p{color:var(--ink3);font-size:15px}
-
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1E293B;background:#F8FAFC}
+#app{display:flex;height:100vh;position:relative;overflow:hidden}
+.sidebar{width:210px;background:#0F172A;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
 /* Sidebar */
-#sidebar{width:240px;min-width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 16px;gap:12px;overflow-y:auto}
-.logo{display:flex;align-items:center;gap:10px;padding:8px 4px;margin-bottom:4px}
-.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--cyan),#0891B2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0}
-.logo-text{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3}
-.logo-sub{font-size:11px;color:var(--ink3);font-weight:400}
-
-.conn-badge{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:500;width:fit-content}
-.conn-badge.online{background:#DCFCE7;color:#166534}
-.conn-badge.loading{background:#FEF9C3;color:#854D0E}
-.conn-badge.offline{background:#FEE2E2;color:#991B1B}
-
-.nav-section{font-size:11px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:.6px;padding:4px 4px 2px}
-.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--ink2);transition:background .15s;border:none;background:none;width:100%;text-align:left}
-.nav-item:hover{background:var(--s2)}
-.nav-item.active{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);color:var(--conf-tx);font-weight:600}
-.nav-item svg{flex-shrink:0;opacity:.7}
-
-.sidebar-footer{margin-top:auto;display:flex;flex-direction:column;gap:8px}
-.btn-export{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;color:var(--ink2);font-family:inherit;transition:background .15s;width:100%}
-.btn-export:hover{background:var(--border)}
-
-/* Main */
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-#topbar h1{font-size:18px;font-weight:700;color:var(--ink);flex:1}
-.btn-add{display:flex;align-items:center;gap:6px;padding:9px 16px;background:var(--cyan);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:opacity .15s}
-.btn-add:hover{opacity:.85}
-
+.sb-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.sb-logo-row{display:flex;align-items:center;gap:10px}
+.sb-logo-text{display:flex;flex-direction:column}
+.sb-logo-name{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:#06B6D4;letter-spacing:0.5px;line-height:1.1}
+.sb-logo-sub{font-size:10px;color:#475569;letter-spacing:1px;margin-top:2px}
+.sb-section-label{font-size:10px;font-weight:700;color:#475569;letter-spacing:1.2px;text-transform:uppercase;padding:16px 16px 6px}
+.sb-nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 16px;background:none;border:none;color:#94A3B8;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border-radius:0;transition:all 0.15s;text-align:left}
+.sb-nav-btn:hover{background:rgba(255,255,255,0.05);color:#E2E8F0}
+.sb-nav-btn.active{background:rgba(6,182,212,0.12);color:#06B6D4}
+.sb-filter-btn{display:flex;align-items:center;gap:7px;width:100%;padding:8px 16px;background:none;border:none;color:#94A3B8;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;cursor:pointer;transition:all 0.15s;text-align:left}
+.sb-filter-btn:hover{color:#CBD5E1}
+.sb-filter-btn.active{color:#E2E8F0;font-weight:600}
+.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-badge{margin-left:auto;background:rgba(255,255,255,0.08);color:#94A3B8;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:20px;text-align:center}
+.sb-filter-btn.active .sb-badge{background:rgba(6,182,212,0.2);color:#06B6D4}
+.sb-footer{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,0.07)}
+.sb-report-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);border-radius:8px;color:#06B6D4;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;margin-bottom:8px}
+.sb-report-btn:hover{background:rgba(6,182,212,0.18)}
+.sb-lang-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:7px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#64748B;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;cursor:pointer;transition:all 0.15s}
+.sb-lang-btn:hover{background:rgba(255,255,255,0.08);color:#94A3B8}
+/* Main header */
+.main-header{padding:20px 24px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.main-title{font-size:20px;font-weight:700;color:#1E293B;flex:1;min-width:0}
+.sync-badge{display:flex;align-items:center;gap:6px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:20px;padding:5px 10px;font-size:11px;color:#166534;font-weight:500;white-space:nowrap}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.add-btn{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
+.add-btn:hover{opacity:0.9;transform:translateY(-1px)}
 /* Stats */
-#statsBar{display:flex;gap:12px;padding:16px 24px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--surface)}
-.stat-card{background:var(--s2);border-radius:var(--r);padding:12px 16px;flex:1;min-width:120px}
-.stat-label{font-size:11px;color:var(--ink3);font-weight:500;margin-bottom:4px}
-.stat-val{font-size:20px;font-weight:700;color:var(--ink)}
-.stat-val.cyan{color:var(--cyan)}
-.stat-val.blue{color:var(--conf-acc)}
-.stat-val.amber{color:var(--nego-acc)}
-.stat-val.green{color:#16A34A}
-
-/* Filters */
-#filterBar{padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink3);transition:all .15s}
-.pill.active{border-color:var(--conf-acc);background:var(--conf-bg);color:var(--conf-tx)}
-.pill-sep{width:1px;height:20px;background:var(--border);margin:0 4px}
-.search-box{margin-left:auto;padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--s2);outline:none;width:200px}
-.search-box:focus{border-color:var(--cyan);background:#fff}
-
-/* View toggle */
-.view-toggle{display:flex;gap:4px;padding:0 24px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
-.view-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:12px;font-family:inherit;color:var(--ink3);transition:all .15s}
-.view-btn.active{background:var(--conf-bg);color:var(--conf-tx);border-color:var(--conf-acc);font-weight:600}
-
-/* Event List */
-#contentArea{flex:1;overflow-y:auto;padding:16px 24px}
-.event-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:box-shadow .15s;cursor:pointer}
-.event-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
-.event-card.done-card{opacity:.6}
-.event-no{width:28px;height:28px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0;margin-top:2px}
-.event-body{flex:1;min-width:0}
-.event-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-.event-title{font-size:14px;font-weight:600;color:var(--ink)}
-.event-artist{font-size:13px;color:var(--ink3);margin-bottom:4px}
-.event-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink3)}
-.meta-item{display:flex;align-items:center;gap:4px}
-.event-actions{display:flex;gap:6px;flex-shrink:0;margin-top:2px}
-.btn-icon{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .15s;color:var(--ink3)}
-.btn-icon:hover{background:var(--s2)}
-.btn-icon.del:hover{background:#FEE2E2;border-color:#FECACA;color:#DC2626}
-.btn-icon.done-btn:hover{background:#DCFCE7;border-color:#BBF7D0;color:#16A34A}
-
-/* Type badges */
-.type-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.3px}
-.ct-arena{background:#EDE9FE;color:#6D28D9}
-.ct-concert{background:#FCE7F3;color:#BE185D}
-.ct-football{background:#DCFCE7;color:#166534}
-.ct-regional{background:#FEF3C7;color:#92400E}
-.ct-festival{background:#FEE2E2;color:#9B1C1C}
-.ct-sport{background:#E0F2FE;color:#075985}
-.ct-harbour{background:#D1FAE5;color:#065F46}
-.ct-circus{background:#FEF9C3;color:#78350F}
-.ct-gala{background:#F3E8FF;color:#6B21A8}
-.ct-dj{background:#F0ABFC;color:#701A75}
-.ct-other{background:#F1F5F9;color:#475569}
-
-/* Status badges */
-.status-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
-.s-confirmed{background:var(--conf-bg);color:var(--conf-tx)}
-.s-negotiation{background:var(--nego-bg);color:var(--nego-tx)}
-.s-done{background:#F0FDF4;color:#166534}
-
-/* Calendar */
-#calendarView{flex:1;overflow-y:auto;padding:16px 24px;display:none}
-.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.cal-nav h2{font-size:18px;font-weight:700;flex:1;text-align:center}
-.cal-nav-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
-.cal-nav-btn:hover{background:var(--s2)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden}
-.cal-header{background:var(--s2);padding:8px;text-align:center;font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase}
-.cal-day{background:var(--surface);padding:8px;min-height:90px;position:relative}
-.cal-day.other-month{background:var(--s2);opacity:.6}
-.cal-day.today{background:#EFF6FF}
-.cal-day-num{font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:4px}
-.cal-chip{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;truncate:clip;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-.cal-chip:hover{opacity:.8}
-
-/* Modal */
-#modalOverlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
-#modalOverlay.open{display:flex}
-#modal{background:#fff;border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.18)}
-.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
-.modal-header h2{font-size:17px;font-weight:700}
-.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--ink3)}
-.modal-close:hover{background:var(--s2)}
-.modal-body{padding:20px 24px 24px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 24px}
+.stat-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.5px}
+.stat-value{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#1E293B;line-height:1.1}
+.stat-value.cyan{color:#06B6D4}
+.stat-sub{font-size:11px;color:#94A3B8}
+/* Toolbar */
+.toolbar-stack{padding:0 24px 12px;display:flex;flex-direction:column;gap:10px}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94A3B8;pointer-events:none}
+.search-input{width:100%;padding:8px 12px 8px 34px;border:1px solid #E2E8F0;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:#1E293B;background:#fff;outline:none;transition:border-color 0.15s}
+.search-input:focus{border-color:#93C5FD}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.filter-pill,.cat-pill,.mobile-btn{padding:5px 11px;border-radius:20px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:600;color:#64748B;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.filter-pill:hover,.cat-pill:hover,.mobile-btn:hover{border-color:#93C5FD;color:#1D4ED8}
+.filter-pill.active,.cat-pill.active,.mobile-btn.active{background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}
+.mobile-actions{display:none;padding:0 24px 12px;flex-direction:column;gap:10px}
+.mobile-top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mobile-btn{padding:8px 12px;border-radius:10px}
+/* Event list */
+.events-list{padding:0 24px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
+.no-events{text-align:center;padding:48px;color:#94A3B8;font-size:14px}
+/* Event card */
+.event-card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;display:flex;align-items:stretch;cursor:pointer;transition:all 0.15s;overflow:hidden;position:relative}
+.event-card:hover{border-color:#93C5FD;box-shadow:0 2px 12px rgba(59,130,246,0.08);transform:translateY(-1px)}
+.event-card.done-card{opacity:0.5}
+.event-stripe{width:5px;flex-shrink:0;border-radius:0}
+.card-check-wrap{display:flex;align-items:center;padding:0 10px;flex-shrink:0}
+.card-check{width:17px;height:17px;border-radius:5px;border:2px solid #CBD5E1;cursor:pointer;appearance:none;-webkit-appearance:none;background:#fff;transition:all 0.15s;flex-shrink:0}
+.card-check:checked{background:#64748B;border-color:#64748B;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center}
+.card-body{flex:1;padding:11px 12px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-artist{font-weight:700;font-size:13.5px;color:#1E293B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.cat-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid;white-space:nowrap;letter-spacing:0.3px}
+.ct-arena{background:#DBEAFE;color:#1D4ED8;border-color:#BFDBFE}
+.ct-conf{background:#E0E7FF;color:#3730A3;border-color:#C7D2FE}
+.ct-fest{background:#FCE7F3;color:#BE185D;border-color:#FBCFE8}
+.ct-sport{background:#D1FAE5;color:#065F46;border-color:#A7F3D0}
+.ct-gala{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.ct-dj{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.ct-circ{background:#FFEDD5;color:#C2410C;border-color:#FED7AA}
+.ct-harb{background:#CCFBF1;color:#0F766E;border-color:#99F6E4}
+.ct-art{background:#F3E8FF;color:#7C3AED;border-color:#DDD6FE}
+.ct-exhibition{background:#E0F2FE;color:#0369A1;border-color:#BAE6FD}
+.ct-ceremonia{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.card-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:#64748B;flex-wrap:wrap}
+.card-meta span{display:flex;align-items:center;gap:4px}
+.card-extra{font-size:11.5px;color:#64748B;line-height:1.45;display:flex;flex-direction:column;gap:3px;margin-top:2px}
+.card-extra div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:11px 14px;gap:6px;flex-shrink:0;min-width:120px}
+.card-revenue{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:#1E293B;white-space:nowrap}
+.status-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid;white-space:nowrap}
+.status-confirmed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.status-negotiation{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+.status-done{background:#F1F5F9;color:#475569;border-color:#E2E8F0}
+.status-contractSigned{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
+.card-extra{display:flex;flex-direction:column;gap:3px;margin-top:2px;font-size:12px;color:#64748B}
+.detail-link{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;text-decoration:none;font-weight:600;width:max-content}
+.detail-link:hover{background:#DBEAFE}
+.form-help{font-size:11px;color:#94A3B8;line-height:1.4;margin-top:4px}
+.btn-edit{padding:6px 10px;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.btn-edit:hover{background:#DBEAFE}
+.details-body{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.detail-block{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:12px 14px}
+.detail-label{font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.detail-value{font-size:14px;color:#1E293B;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.detail-grid{grid-template-columns:1fr}.details-body{padding:16px}.btn-edit{width:100%}}
+/* Overlay + Modal */
+#overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.6);z-index:200;overflow-y:auto}
+#overlay.open{display:flex!important;align-items:flex-start;justify-content:center;min-height:100%;padding:40px 16px}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,0.2);overflow:hidden;margin:auto}
+.modal-header{padding:20px 24px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700;color:#1E293B}
+.modal-close{background:none;border:none;cursor:pointer;color:#94A3B8;font-size:20px;line-height:1;padding:2px 6px;border-radius:6px;transition:all 0.15s}
+.modal-close:hover{background:#F1F5F9;color:#475569}
+.modal-body{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-group{display:flex;flex-direction:column;gap:5px}
 .form-group.full{grid-column:1/-1}
-.form-group label{font-size:12px;font-weight:600;color:var(--ink3)}
-.form-group input,.form-group select,.form-group textarea{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--cyan)}
-.form-group textarea{resize:vertical;min-height:70px}
-.modal-footer{padding:0 24px 20px;display:flex;gap:8px;justify-content:flex-end}
-.btn-cancel{padding:9px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;font-family:inherit;color:var(--ink2);transition:background .15s}
-.btn-cancel:hover{background:var(--s2)}
-.btn-save{padding:9px 22px;border:none;border-radius:8px;background:var(--cyan);color:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:opacity .15s}
-.btn-save:hover{opacity:.85}
-
+.form-label{font-size:12px;font-weight:600;color:#475569}
+.form-input,.form-select,.form-textarea{padding:8px 11px;border:1px solid #E2E8F0;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:#1E293B;background:#fff;outline:none;transition:border-color 0.15s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#93C5FD;box-shadow:0 0 0 3px rgba(147,197,253,0.2)}
+.form-textarea{resize:vertical;min-height:72px}
+.modal-footer{padding:16px 24px;border-top:1px solid #E2E8F0;display:flex;align-items:center;gap:8px}
+.modal-footer-left{flex:1}
+.btn-del{padding:8px 14px;border:1px solid #FECACA;background:#FEF2F2;color:#DC2626;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.btn-del:hover{background:#FEE2E2}
+.btn-cancel{padding:8px 16px;border:1px solid #E2E8F0;background:#fff;color:#475569;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.btn-cancel:hover{background:#F8FAFC}
+.btn-save{padding:8px 18px;border:none;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.btn-save:hover{opacity:0.9}
+/* Calendar */
+.cal-wrap{padding:0 24px 24px;flex:1}
+.cal-header{display:flex;align-items:center;gap:12px;padding:4px 0 16px}
+.cal-nav-btn{background:#fff;border:1px solid #E2E8F0;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#475569;font-size:16px;transition:all 0.15s;flex-shrink:0}
+.cal-nav-btn:hover{border-color:#93C5FD;color:#1D4ED8}
+.cal-month-label{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:#1E293B;flex:1}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day-header{text-align:center;padding:6px 0;font-size:11px;font-weight:700;color:#94A3B8;letter-spacing:0.5px}
+.cal-cell{min-height:90px;background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;transition:all 0.15s}
+.cal-cell.has-events{background:#EFF6FF;border-color:#BFDBFE}
+.cal-cell.other-month{opacity:0.35;background:#F8FAFC}
+.cal-cell.today .cal-day-num{background:#1E293B;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.cal-day-num{font-size:12px;font-weight:600;color:#475569;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.cal-chip{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:opacity 0.1s}
+.cal-chip:hover{opacity:0.8}
+.cal-more{font-size:10px;color:#64748B;padding:1px 4px;cursor:pointer}
+.cal-chip.chip-conf{background:#DBEAFE;color:#1D4ED8}
+.cal-chip.chip-nego{background:#FFFBEB;color:#92400E}
+.cal-chip.chip-done{background:#F1F5F9;color:#475569}
 /* Toast */
-#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;z-index:2000}
+#toast{position:fixed;bottom:24px;right:24px;background:#1E293B;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none}
 #toast.show{opacity:1;transform:translateY(0)}
 
-/* Empty state */
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:12px;color:var(--ink3)}
-.empty-icon{font-size:48px;opacity:.4}
+/* Loading Screen */
+#page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#F8FAFC 0%,#EEF2FF 100%);display:flex;align-items:center;justify-content:center;z-index:10000;transition:opacity .35s ease,visibility .35s ease}
+#page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-card{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid #E2E8F0;border-radius:24px;box-shadow:0 20px 60px rgba(15,23,42,.08);padding:28px 26px;min-width:280px;max-width:90vw;text-align:center}
+.loader-logo{width:64px;height:64px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#06B6D4,#3B82F6);color:#fff;font-family:'Fraunces',serif;font-size:34px;font-weight:700;box-shadow:0 12px 30px rgba(59,130,246,.22)}
+.loader-title{font-size:20px;font-weight:800;color:#0F172A;margin-bottom:6px}
+.loader-text{font-size:13px;line-height:1.5;color:#64748B;margin-bottom:18px}
+.loader-bar{width:220px;max-width:100%;height:8px;background:#E2E8F0;border-radius:999px;overflow:hidden;margin:0 auto}
+.loader-bar>span{display:block;height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,#06B6D4,#6366F1);animation:loaderSlide 1.2s ease-in-out infinite}
+@keyframes loaderSlide{0%{transform:translateX(-120%)}100%{transform:translateX(340%)}}
 
-@media(max-width:768px){
-  #sidebar{display:none}
-  .modal-body{grid-template-columns:1fr}
-  #statsBar{padding:12px}
-  #filterBar{padding:8px 12px}
-  #contentArea,#calendarView{padding:12px}
-}
+/* Responsive */
+@media(max-width:800px){.sidebar{display:none}.stats-grid{grid-template-columns:repeat(2,1fr)}.mobile-actions{display:flex}.toolbar-stack{padding-top:0}}
+@media(max-width:500px){.card-right{display:flex;min-width:88px;padding:10px 10px;align-items:stretch}.card-revenue{display:none}.btn-edit{width:100%;padding:8px 10px;font-size:11px}.stats-grid{grid-template-columns:1fr 1fr}.main-header{padding:16px 14px 0}.toolbar-stack,.mobile-actions,.events-list,.cal-wrap,.stats-grid{padding-left:14px;padding-right:14px}.search-wrap{max-width:none}.card-extra div{white-space:normal}}
+@media(max-width:700px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
-<!-- Loading Overlay -->
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <p>Veriler yükleniyor…</p>
-</div>
-
-<!-- Sidebar -->
-<aside id="sidebar">
-  <div class="logo">
-    <div class="logo-icon">K</div>
-    <div>
-      <div class="logo-text">Karavansaray</div>
-      <div class="logo-sub">Events 2026</div>
-    </div>
+<div id="page-loader">
+  <div class="loader-card">
+    <div class="loader-logo">K</div>
+    <div class="loader-title" id="loader-title">Etkinlikler Yükleniyor</div>
+    <div class="loader-text" id="loader-text">Lütfen bekleyin, etkinlik verileri hazırlanıyor...</div>
+    <div class="loader-bar"><span></span></div>
   </div>
-
-  <div id="connBadge" class="conn-badge loading">⬤ Bağlanıyor…</div>
-
-  <div class="nav-section">Görünüm</div>
-  <button class="nav-item active" id="navList" onclick="switchView('list')">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-    Liste
-  </button>
-  <button class="nav-item" id="navCal" onclick="switchView('calendar')">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-    Takvim
-  </button>
-
-  <div class="nav-section" style="margin-top:8px">Durum</div>
-  <button class="nav-item" onclick="setSideFilter('all')">📋 Tüm Etkinlikler</button>
-  <button class="nav-item" onclick="setSideFilter('confirmed')">🔵 Onaylı</button>
-  <button class="nav-item" onclick="setSideFilter('negotiation')">🟡 Müzakere</button>
-  <button class="nav-item" onclick="setSideFilter('done')">✅ Tamamlandı</button>
-
-  <div class="sidebar-footer">
-    <button class="btn-export" onclick="exportCSV()">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
-      CSV Dışa Aktar
+</div>
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="10" fill="url(#lg)"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40">
+            <stop offset="0%" stop-color="#06B6D4"/>
+            <stop offset="100%" stop-color="#0284C7"/>
+          </linearGradient></defs>
+          <text x="20" y="27" text-anchor="middle" font-family="serif" font-weight="700" font-size="22" fill="white">K</text>
+        </svg>
+        <div class="sb-logo-text">
+          <div class="sb-logo-name">KARAVANSARAY</div>
+          <div class="sb-logo-sub">EVENTS 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-section-label" id="lbl-views">Görünüm</div>
+    <button class="sb-nav-btn active" id="nav-list" onclick="switchView('list')">
+      <span>☰</span><span id="nav-list-label">Etkinlik Listesi</span>
     </button>
-  </div>
-</aside>
-
-<!-- Main -->
-<div id="main">
-  <div id="topbar">
-    <h1>Karavansaray Events 2026</h1>
-    <button class="btn-add" onclick="openModal()">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-      Etkinlik Ekle
+    <button class="sb-nav-btn" id="nav-cal" onclick="switchView('calendar')">
+      <span>📅</span><span id="nav-cal-label">Takvim</span>
     </button>
+    <div class="sb-section-label" id="lbl-filter">Filtre</div>
+    <button class="sb-filter-btn active" id="fb-all" onclick="setFilter('all')">
+      <span class="sb-dot" style="background:#94A3B8"></span>
+      <span id="fb-all-label">Tümü</span>
+      <span class="sb-badge" id="cnt-all">33</span>
+    </button>
+    <button class="sb-filter-btn" id="fb-confirmed" onclick="setFilter('confirmed')">
+      <span class="sb-dot" style="background:#3B82F6"></span>
+      <span id="fb-conf-label">Onaylandı</span>
+      <span class="sb-badge" id="cnt-confirmed">0</span>
+    </button>
+    <button class="sb-filter-btn" id="fb-negotiation" onclick="setFilter('negotiation')">
+      <span class="sb-dot" style="background:#F59E0B"></span>
+      <span id="fb-nego-label">Müzakere</span>
+      <span class="sb-badge" id="cnt-negotiation">0</span>
+    </button>
+    <button class="sb-filter-btn" id="fb-done" onclick="setFilter('done')">
+      <span class="sb-dot" style="background:#CBD5E1"></span>
+      <span id="fb-done-label">Tamamlandı</span>
+      <span class="sb-badge" id="cnt-done">0</span>
+    </button>
+    <div class="sb-footer">
+      <button class="sb-report-btn" id="report-btn" onclick="exportCSV()">⬇ <span id="report-label">Rapor Al</span></button>
+      <button class="sb-lang-btn" id="lang-btn" onclick="toggleLang()">🌐 <span id="lang-label">Русский</span></button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+    <div class="main-header">
+      <div class="main-title" id="main-title">Tüm Etkinlikler</div>
+      <div class="sync-badge">
+        <span class="sync-dot"></span>
+        <span id="sync-label">Paylaşımlı · Herkes düzenleyebilir</span>
+      </div>
+      <button class="add-btn" id="add-btn" onclick="openModal(null)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span id="add-btn-label">Etkinlik Ekle</span>
+      </button>
+    </div>
+
+    <div class="mobile-actions" id="mobile-actions">
+      <div class="mobile-top-actions">
+        <button class="mobile-btn" id="mobile-lang-btn" onclick="toggleLang()">🌐 <span id="mobile-lang-label">Русский</span></button>
+        <button class="mobile-btn" id="mobile-report-btn" onclick="exportCSV()">⬇ <span id="mobile-report-label">Rapor Al</span></button>
+      </div>
+      <div class="pill-row" id="mobile-filter-pills"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label" id="stat-lbl-total">Toplam Etkinlik</div>
+        <div class="stat-value" id="stat-total">33</div>
+        <div class="stat-sub" id="stat-total-sub">2026 yılı</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" id="stat-lbl-nego">Müzakerede</div>
+        <div class="stat-value cyan" id="stat-nego">0</div>
+        <div class="stat-sub" id="stat-nego-sub">aktif müzakere</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" id="stat-lbl-guests">Toplam Misafir</div>
+        <div class="stat-value" id="stat-guests">0</div>
+        <div class="stat-sub" id="stat-guests-sub">beklenen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" id="stat-lbl-rev">Toplam Gelir</div>
+        <div class="stat-value cyan" id="stat-rev">0</div>
+        <div class="stat-sub" id="stat-rev-sub">direkt gelir</div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar-stack" id="toolbar">
+      <div class="pill-row" id="status-pills"></div>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <circle cx="6.5" cy="6.5" r="4.5" stroke="#94A3B8" stroke-width="1.5"/>
+            <path d="M10 10l3 3" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input class="search-input" id="search-input" type="text" placeholder="Ara..." oninput="renderEvents()"/>
+        </div>
+        <div class="pill-row" id="cat-pills"></div>
+      </div>
+    </div>
+
+    <!-- EVENTS LIST -->
+    <div id="list-view" class="events-list"></div>
+
+    <!-- CALENDAR VIEW -->
+    <div id="cal-view" class="cal-wrap" style="display:none">
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+        <div class="cal-month-label" id="cal-month-label">NİSAN 2026</div>
+        <button class="cal-nav-btn" onclick="calNext()">›</button>
+      </div>
+      <div class="cal-grid" id="cal-day-headers"></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+  </main>
+
+  <!-- OVERLAY -->
+  <div id="overlay" onclick="overlayClick(event)">
+    <div class="modal" id="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">Etkinlik Ekle</div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group full">
+            <label class="form-label" id="lbl-artist">Sanatçı / İsim</label>
+            <input class="form-input" id="f-artist" type="text" required/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" id="lbl-category">Kategori</label>
+            <select class="form-select" id="f-category" onchange="handleNewOption(this,'category')">
+              <option value="ARENA EVENT">Arena Event</option>
+              <option value="ARENA CONCERT">Arena Concert</option>
+              <option value="CONFERENCE">Conference</option>
+              <option value="MEETING">Meeting</option>
+              <option value="FESTIVAL">Festival</option>
+              <option value="SPORT EVENT">Sport Event</option>
+              <option value="HARBOUR CONCERT">Harbour Concert</option>
+              <option value="CIRCUS">Circus</option>
+              <option value="GALA EVENT">Gala Event</option>
+              <option value="DJ PARTY">DJ Party</option>
+              <option value="REGIONAL ART FESTIVAL">Regional Art Festival</option>
+              <option value="EXHIBITION">Exhibition</option>
+              <option value="CEREMONIA">Ceremonia</option>
+              <option value="ARENA FOOTBALL">Arena Football</option>
+              <option value="__NEW__" style="color:#3B82F6;font-weight:600">＋ Yeni Kategori Ekle…</option>
+            </select>
+            <input class="form-input" id="f-category-custom" type="text" placeholder="Yeni kategori adı (büyük harf)" style="display:none;margin-top:6px" oninput="this.value=this.value.toUpperCase()"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-location">Mekan</label>
+            <select class="form-select" id="f-location" onchange="handleNewOption(this,'location')">
+              <option value="Karavansaray Arena">Karavansaray Arena</option>
+              <option value="Turkistan Conf Hall">Turkistan Conf Hall</option>
+              <option value="Otyrar Konferans Hall">Otyrar Konferans Hall</option>
+              <option value="1166">1166</option>
+              <option value="Harbour">Harbour</option>
+              <option value="Arena Parking">Arena Parking</option>
+              <option value="Flying Theater Area">Flying Theater Area</option>
+              <option value="__NEW__" style="color:#3B82F6;font-weight:600">＋ Yeni Mekan Ekle…</option>
+            </select>
+            <input class="form-input" id="f-location-custom" type="text" placeholder="Yeni mekan adı" style="display:none;margin-top:6px"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" id="lbl-status">Durum</label>
+            <select class="form-select" id="f-status">
+              <option value="confirmed">Onaylandı</option>
+              <option value="negotiation">Müzakere</option>
+              <option value="contractSigned">Sözleşme İmzalandı</option>
+              <option value="done">Tamamlandı</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-guests">Misafir Sayısı</label>
+            <input class="form-input" id="f-guests" type="number" min="0"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" id="lbl-start">Başlangıç</label>
+            <input class="form-input" id="f-start" type="date" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-end">Bitiş</label>
+            <input class="form-input" id="f-end" type="date"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" id="lbl-revenue">Gelir (₸)</label>
+            <input class="form-input" id="f-revenue" type="number" min="0"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-nondirect">Dolaylı Gelir (₸)</label>
+            <input class="form-input" id="f-nondirect" type="number" min="0"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="lbl-note">Not</label>
+          <textarea class="form-textarea" id="f-note"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="lbl-materials">Gerekli Malzemeler</label>
+          <textarea class="form-textarea" id="f-materials" placeholder="Örn: 2 mikrofon, LED ekran, projeksiyon, masa..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" id="lbl-contract-name">Sözleşme Dosya Adı</label>
+            <input class="form-input" id="f-contract-name" type="text" placeholder="Örn: Rayhon_Sozlesme.pdf"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-contract-url">Sözleşme Linki</label>
+            <input class="form-input" id="f-contract-url" type="url" placeholder="https://..."/>
+          </div>
+        </div>
+        <div class="form-help" id="contract-help">PDF dosyasını doğrudan bu yapıya gömmek yerine Google Drive, Dropbox veya benzeri bir paylaşım linki eklemeniz önerilir.</div>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-footer-left">
+          <button class="btn-del" id="btn-del" style="display:none" onclick="deleteEvent()"><span id="del-label">Sil</span></button>
+        </div>
+        <button class="btn-cancel" onclick="closeModal()"><span id="cancel-label">İptal</span></button>
+        <button class="btn-save" onclick="saveEvent()"><span id="save-label">Kaydet</span></button>
+      </div>
+    </div>
   </div>
 
-  <div id="statsBar">
-    <div class="stat-card">
-      <div class="stat-label">Toplam Etkinlik</div>
-      <div class="stat-val cyan" id="statTotal">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Onaylı</div>
-      <div class="stat-val blue" id="statConf">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Müzakere</div>
-      <div class="stat-val amber" id="statNego">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Tamamlandı</div>
-      <div class="stat-val green" id="statDone">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Toplam Gelir</div>
-      <div class="stat-val" id="statRev" style="font-size:15px">0 €</div>
+  <div id="details-overlay" onclick="detailsOverlayClick(event)" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.6);z-index:210;overflow-y:auto;">
+    <div class="modal" id="details-modal-box" onclick="event.stopPropagation()" style="margin:auto;max-width:640px;">
+      <div class="modal-header">
+        <div class="modal-title" id="details-title">Etkinlik Detayı</div>
+        <button class="modal-close" onclick="closeDetailsModal()">✕</button>
+      </div>
+      <div class="details-body" id="details-body"></div>
+      <div class="modal-footer">
+        <div class="modal-footer-left"></div>
+        <button class="btn-cancel" onclick="closeDetailsModal()"><span id="details-close-label">Kapat</span></button>
+      </div>
     </div>
   </div>
 
-  <div id="filterBar">
-    <div id="statusPills" style="display:flex;gap:6px;flex-wrap:wrap">
-      <span class="pill active" data-status="all" onclick="setStatusFilter('all')">Tümü</span>
-      <span class="pill" data-status="confirmed" onclick="setStatusFilter('confirmed')">Onaylı</span>
-      <span class="pill" data-status="negotiation" onclick="setStatusFilter('negotiation')">Müzakere</span>
-      <span class="pill" data-status="done" onclick="setStatusFilter('done')">Tamamlandı</span>
-    </div>
-    <div class="pill-sep"></div>
-    <div id="typePills" style="display:flex;gap:6px;flex-wrap:wrap">
-      <span class="pill active" data-type="all" onclick="setTypeFilter('all')">Tüm Tipler</span>
-      <span class="pill" data-type="ARENA EVENT" onclick="setTypeFilter('ARENA EVENT')">Arena</span>
-      <span class="pill" data-type="ARENA CONCERT" onclick="setTypeFilter('ARENA CONCERT')">Concert</span>
-      <span class="pill" data-type="ARENA FOOTBALL" onclick="setTypeFilter('ARENA FOOTBALL')">Football</span>
-      <span class="pill" data-type="REGIONAL ART FESTIVAL" onclick="setTypeFilter('REGIONAL ART FESTIVAL')">Art Fest</span>
-      <span class="pill" data-type="FESTIVAL" onclick="setTypeFilter('FESTIVAL')">Festival</span>
-      <span class="pill" data-type="SPORT EVENT" onclick="setTypeFilter('SPORT EVENT')">Sport</span>
-      <span class="pill" data-type="HARBOUR CONCERT" onclick="setTypeFilter('HARBOUR CONCERT')">Harbour</span>
-      <span class="pill" data-type="CIRCUS" onclick="setTypeFilter('CIRCUS')">Circus</span>
-      <span class="pill" data-type="GALA EVENT" onclick="setTypeFilter('GALA EVENT')">Gala</span>
-      <span class="pill" data-type="DJ PARTY" onclick="setTypeFilter('DJ PARTY')">DJ</span>
-    </div>
-    <input type="search" class="search-box" id="searchBox" placeholder="Ara…" oninput="render()">
-  </div>
-
-  <div style="display:flex;gap:4px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border)">
-    <button class="view-btn active" id="vbList" onclick="switchView('list')">☰ Liste</button>
-    <button class="view-btn" id="vbCal" onclick="switchView('calendar')">📅 Takvim</button>
-  </div>
-
-  <div id="contentArea"></div>
-  <div id="calendarView"></div>
+  <div id="toast"></div>
 </div>
 
-<!-- Modal -->
-<div id="modalOverlay" onclick="closeModalOutside(event)">
-  <div id="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Yeni Etkinlik</h2>
-      <button class="modal-close" onclick="closeModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group full">
-        <label>Sanatçı / Takım</label>
-        <input type="text" id="fArtist" placeholder="Sanatçı veya takım adı">
-      </div>
-      <div class="form-group full">
-        <label>Etkinlik Adı</label>
-        <input type="text" id="fEvent" placeholder="Etkinlik adı veya açıklama">
-      </div>
-      <div class="form-group">
-        <label>Tip</label>
-        <select id="fType">
-          <option value="ARENA EVENT">Arena Event</option>
-          <option value="ARENA CONCERT">Arena Concert</option>
-          <option value="ARENA FOOTBALL">Arena Football</option>
-          <option value="REGIONAL ART FESTIVAL">Regional Art Festival</option>
-          <option value="FESTIVAL">Festival</option>
-          <option value="SPORT EVENT">Sport Event</option>
-          <option value="HARBOUR CONCERT">Harbour Concert</option>
-          <option value="CIRCUS">Circus</option>
-          <option value="GALA EVENT">Gala Event</option>
-          <option value="DJ PARTY">DJ Party</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Durum</label>
-        <select id="fStatus">
-          <option value="confirmed">Onaylı</option>
-          <option value="negotiation">Müzakere</option>
-          <option value="done">Tamamlandı</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Başlangıç</label>
-        <input type="date" id="fStart">
-      </div>
-      <div class="form-group">
-        <label>Bitiş</label>
-        <input type="date" id="fEnd">
-      </div>
-      <div class="form-group">
-        <label>Gelir (€)</label>
-        <input type="number" id="fRevenue" placeholder="0">
-      </div>
-      <div class="form-group">
-        <label>Dolaylı Gelir (€)</label>
-        <input type="number" id="fNonDirect" placeholder="0">
-      </div>
-      <div class="form-group">
-        <label>Misafir Sayısı</label>
-        <input type="number" id="fGuests" placeholder="0">
-      </div>
-      <div class="form-group">
-        <label>Gider (€)</label>
-        <input type="number" id="fExpense" placeholder="0">
-      </div>
-      <div class="form-group full">
-        <label>Not</label>
-        <textarea id="fNote" placeholder="Notlar…"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">İptal</button>
-      <button class="btn-save" onclick="saveModal()">Kaydet</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
-<div id="toast"></div>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 <script>
-const BLOB_ID = "019d3eb2-5b95-770c-8e52-3a00f1d6e5c7";
-const API_URL = "https://jsonblob.com/api/jsonBlob/" + BLOB_ID;
+// ═══════════════════════════════════════════════════════════
+//  FIREBASE BULUT YAPILANDIRMASI
+//  Netlify sadece siteyi yayınlar.
+//  Etkinlikler artık Firebase Firestore içinde "events" koleksiyonunda saklanır.
+//  Telefon + bilgisayar aynı veriyi gerçek zamanlı görür.
+// ═══════════════════════════════════════════════════════════
+const firebaseConfig = window.KARAVANSARAY_FIREBASE_CONFIG || {
+  apiKey: "",
+  authDomain: "karavansaray-events-v2.firebaseapp.com",
+  projectId: "karavansaray-events-v2",
+  storageBucket: "karavansaray-events-v2.firebasestorage.app",
+  messagingSenderId: "",
+  appId: "",
+  measurementId: ""
+};
 
-const RAW_EVENTS = [
-  {id:"1",no:1,type:"ARENA CONCERT",event:"Halay & Türkü Gecesi",artist:"Volkan Konak",start:"2026-01-10",end:"2026-01-10",revenue:85000,nonDirect:12000,guests:8500,expense:22000,note:"Açılış konseri",status:"done",done:true},
-  {id:"2",no:2,type:"ARENA EVENT",event:"Yeni Yıl Galası",artist:"Çeşitli Sanatçılar",start:"2026-01-17",end:"2026-01-17",revenue:120000,nonDirect:18000,guests:12000,expense:35000,note:"Özel davetli",status:"done",done:true},
-  {id:"3",no:3,type:"FESTIVAL",event:"Kış Müzik Festivali",artist:"Karışık Program",start:"2026-01-24",end:"2026-01-25",revenue:200000,nonDirect:30000,guests:20000,expense:60000,note:"2 günlük etkinlik",status:"done",done:true},
-  {id:"4",no:4,type:"ARENA FOOTBALL",event:"Süper Lig Maçı",artist:"Galatasaray vs Fenerbahçe",start:"2026-02-07",end:"2026-02-07",revenue:350000,nonDirect:45000,guests:35000,expense:80000,note:"Derbi maçı",status:"done",done:true},
-  {id:"5",no:5,type:"GALA EVENT",event:"Valentines Galası",artist:"Sertab Erener",start:"2026-02-14",end:"2026-02-14",revenue:95000,nonDirect:14000,guests:9500,expense:28000,note:"Sevgililer günü özel",status:"done",done:true},
-  {id:"6",no:6,type:"ARENA CONCERT",event:"Pop Gecesi",artist:"Tarkan",start:"2026-02-21",end:"2026-02-21",revenue:450000,nonDirect:55000,guests:40000,expense:120000,note:"Büyük konser",status:"done",done:true},
-  {id:"7",no:7,type:"SPORT EVENT",event:"Boks Şampiyonası",artist:"Milli Takım Karşılaşması",start:"2026-02-28",end:"2026-02-28",revenue:75000,nonDirect:10000,guests:7500,expense:20000,note:"Uluslararası maç",status:"done",done:true},
-  {id:"8",no:8,type:"REGIONAL ART FESTIVAL",event:"Sanat Haftası",artist:"Yerel Sanatçılar",start:"2026-03-05",end:"2026-03-08",revenue:60000,nonDirect:8000,guests:6000,expense:15000,note:"Bölgesel festival",status:"done",done:true},
-  {id:"9",no:9,type:"HARBOUR CONCERT",event:"Liman Konseri",artist:"Sezen Aksu",start:"2026-03-14",end:"2026-03-14",revenue:180000,nonDirect:25000,guests:15000,expense:45000,note:"Açık hava konseri",status:"done",done:true},
-  {id:"10",no:10,type:"ARENA CONCERT",event:"Rock Gecesi",artist:"Duman",start:"2026-03-21",end:"2026-03-21",revenue:220000,nonDirect:32000,guests:20000,expense:58000,note:"",status:"done",done:true},
-  {id:"11",no:11,type:"CIRCUS",event:"Uluslararası Sirk",artist:"Cirque Fantastique",start:"2026-04-03",end:"2026-04-06",revenue:140000,nonDirect:20000,guests:14000,expense:40000,note:"4 günlük gösteri",status:"confirmed",done:false},
-  {id:"12",no:12,type:"FESTIVAL",event:"Bahar Festivali",artist:"Çeşitli",start:"2026-04-11",end:"2026-04-12",revenue:170000,nonDirect:24000,guests:17000,expense:48000,note:"",status:"confirmed",done:false},
-  {id:"13",no:13,type:"ARENA FOOTBALL",event:"UEFA Elemeleri",artist:"Türkiye Milli Takımı",start:"2026-04-18",end:"2026-04-18",revenue:420000,nonDirect:52000,guests:38000,expense:95000,note:"Milli maç",status:"confirmed",done:false},
-  {id:"14",no:14,type:"ARENA CONCERT",event:"Pop Starlar",artist:"Hadise & Hande Yener",start:"2026-04-25",end:"2026-04-25",revenue:280000,nonDirect:38000,guests:25000,expense:72000,note:"İkili konser",status:"confirmed",done:false},
-  {id:"15",no:15,type:"DJ PARTY",event:"Elektronik Müzik Gecesi",artist:"DJ Tiësto",start:"2026-05-02",end:"2026-05-02",revenue:320000,nonDirect:42000,guests:28000,expense:88000,note:"Uluslararası DJ",status:"confirmed",done:false},
-  {id:"16",no:16,type:"GALA EVENT",event:"Özel Gala",artist:"VIP Etkinlik",start:"2026-05-09",end:"2026-05-09",revenue:150000,nonDirect:22000,guests:5000,expense:45000,note:"Davetiye ile",status:"confirmed",done:false},
-  {id:"17",no:17,type:"SPORT EVENT",event:"Atletizm Yarışması",artist:"Milli Atletler",start:"2026-05-16",end:"2026-05-17",revenue:90000,nonDirect:12000,guests:9000,expense:25000,note:"2 günlük",status:"confirmed",done:false},
-  {id:"18",no:18,type:"HARBOUR CONCERT",event:"Deniz Festivali",artist:"Yıldız Tilbe",start:"2026-05-23",end:"2026-05-23",revenue:160000,nonDirect:22000,guests:13000,expense:42000,note:"",status:"confirmed",done:false},
-  {id:"19",no:19,type:"ARENA CONCERT",event:"Yaz Konseri",artist:"Mustafa Sandal",start:"2026-05-30",end:"2026-05-30",revenue:240000,nonDirect:33000,guests:22000,expense:62000,note:"",status:"confirmed",done:false},
-  {id:"20",no:20,type:"FESTIVAL",event:"Yaz Müzik Festivali",artist:"Birçok Sanatçı",start:"2026-06-06",end:"2026-06-07",revenue:380000,nonDirect:50000,guests:35000,expense:100000,note:"Büyük festival",status:"confirmed",done:false},
-  {id:"21",no:21,type:"ARENA FOOTBALL",event:"Kupa Finali",artist:"TFF Kupası",start:"2026-06-14",end:"2026-06-14",revenue:500000,nonDirect:65000,guests:42000,expense:130000,note:"Kupa finali",status:"confirmed",done:false},
-  {id:"22",no:22,type:"REGIONAL ART FESTIVAL",event:"Uluslararası Sanat",artist:"Uluslararası Sanatçılar",start:"2026-06-20",end:"2026-06-22",revenue:110000,nonDirect:16000,guests:11000,expense:32000,note:"3 gün",status:"confirmed",done:false},
-  {id:"23",no:23,type:"ARENA CONCERT",event:"Latin Gecesi",artist:"Marc Anthony",start:"2026-07-04",end:"2026-07-04",revenue:380000,nonDirect:48000,guests:32000,expense:98000,note:"Uluslararası sanatçı",status:"confirmed",done:false},
-  {id:"24",no:24,type:"DJ PARTY",event:"Sunset DJ Festivali",artist:"David Guetta",start:"2026-07-11",end:"2026-07-11",revenue:420000,nonDirect:55000,guests:36000,expense:115000,note:"",status:"negotiation",done:false},
-  {id:"25",no:25,type:"FESTIVAL",event:"Rock Festivali",artist:"Çeşitli Rock Grupları",start:"2026-07-18",end:"2026-07-20",revenue:550000,nonDirect:70000,guests:48000,expense:145000,note:"3 günlük büyük festival",status:"negotiation",done:false},
-  {id:"26",no:26,type:"HARBOUR CONCERT",event:"Yaz Akşamı Konseri",artist:"Ajda Pekkan",start:"2026-07-25",end:"2026-07-25",revenue:290000,nonDirect:40000,guests:24000,expense:78000,note:"",status:"negotiation",done:false},
-  {id:"27",no:27,type:"ARENA CONCERT",event:"Türk Pop Gecesi",artist:"Serdar Ortaç",start:"2026-08-01",end:"2026-08-01",revenue:260000,nonDirect:35000,guests:23000,expense:68000,note:"",status:"negotiation",done:false},
-  {id:"28",no:28,type:"SPORT EVENT",event:"Motosiklet Yarışları",artist:"MotoGP Turkey",start:"2026-08-08",end:"2026-08-09",revenue:600000,nonDirect:80000,guests:55000,expense:160000,note:"Uluslararası yarış",status:"negotiation",done:false},
-  {id:"29",no:29,type:"GALA EVENT",event:"Yaz Galası",artist:"Özel Program",start:"2026-08-15",end:"2026-08-15",revenue:180000,nonDirect:26000,guests:8000,expense:55000,note:"",status:"negotiation",done:false},
-  {id:"30",no:30,type:"ARENA CONCERT",event:"Sonbahar Konseri",artist:"Sıla",start:"2026-09-05",end:"2026-09-05",revenue:210000,nonDirect:29000,guests:19000,expense:56000,note:"",status:"negotiation",done:false},
-  {id:"31",no:31,type:"FESTIVAL",event:"Sonbahar Festivali",artist:"Karma Program",start:"2026-09-19",end:"2026-09-20",revenue:320000,nonDirect:44000,guests:28000,expense:86000,note:"",status:"negotiation",done:false},
-  {id:"32",no:32,type:"ARENA FOOTBALL",event:"Şampiyonlar Ligi",artist:"Avrupa Maçı",start:"2026-10-03",end:"2026-10-03",revenue:480000,nonDirect:62000,guests:40000,expense:125000,note:"",status:"negotiation",done:false},
-  {id:"33",no:33,type:"ARENA CONCERT",event:"Yılsonu Konseri",artist:"Çeşitli Sanatçılar",start:"2026-12-31",end:"2026-12-31",revenue:650000,nonDirect:85000,guests:50000,expense:175000,note:"Büyük kapanış konseri",status:"negotiation",done:false}
+const EVENTS_COLLECTION = 'events';
+const LOCAL_KEY = 'kv_events_2026_v2_cache';
+const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+let db = null;
+let storage = null;
+let eventsCollection = null;
+let eventsQuery = null;
+
+if (isFirebaseConfigured) {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  storage = firebase.storage();
+  eventsCollection = db.collection(EVENTS_COLLECTION);
+  eventsQuery = eventsCollection.orderBy('no', 'asc');
+}
+
+const DEFAULT_DATA = [
+  {
+    "done": true,
+    "nonDirect": 500000,
+    "event": "DJ PARTY",
+    "start": "2026-01-01",
+    "end": "2026-01-01",
+    "updatedAt": "2026-07-03T09:30:33.649Z",
+    "contractUrl": "",
+    "artist": "DJ SHAMIL",
+    "note": "Event Completed",
+    "contractName": "",
+    "location": "Karavansaray Arena",
+    "status": "done",
+    "guests": 326,
+    "type": "DJ PARTY",
+    "revenue": 815000,
+    "no": 1,
+    "id": 1,
+    "materials": ""
+  },
+  {
+    "note": "Event Completed",
+    "artist": "DRONE RACE",
+    "id": 2,
+    "no": 2,
+    "revenue": 1030000,
+    "type": "ARENA EVENT",
+    "status": "done",
+    "guests": 2000,
+    "location": "Karavansaray Arena",
+    "nonDirect": 500000,
+    "done": true,
+    "end": "2026-01-14",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "start": "2026-01-13"
+  },
+  {
+    "note": "Event Completed",
+    "artist": "BENOM & UMMON",
+    "no": 3,
+    "id": 3,
+    "revenue": 700000,
+    "location": "Karavansaray Arena",
+    "type": "ARENA CONCERT",
+    "status": "done",
+    "guests": 2500,
+    "nonDirect": 500000,
+    "done": true,
+    "start": "2026-02-14",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-02-14"
+  },
+  {
+    "no": 4,
+    "id": 4,
+    "revenue": 900000,
+    "location": "Karavansaray Arena",
+    "type": "ARENA EVENT",
+    "guests": 1500,
+    "status": "done",
+    "note": "",
+    "artist": "Business Forum",
+    "start": "2026-03-25",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-03-26",
+    "nonDirect": 500000,
+    "done": true
+  },
+  {
+    "nonDirect": 500000,
+    "done": true,
+    "start": "2026-03-29",
+    "end": "2026-03-29",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "note": "",
+    "artist": "Mega Polis Dance Fest",
+    "revenue": 800000,
+    "no": 5,
+    "id": 5,
+    "location": "Karavansaray Arena",
+    "type": "ARENA EVENT",
+    "guests": 1500,
+    "status": "done"
+  },
+  {
+    "start": "2026-04-01",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-04-03",
+    "done": true,
+    "nonDirect": 0,
+    "location": "Flying Theater Area",
+    "status": "done",
+    "type": "FESTIVAL",
+    "guests": 2000,
+    "no": 6,
+    "id": 6,
+    "revenue": 475000,
+    "artist": "Hand Craft FEST",
+    "note": ""
+  },
+  {
+    "nonDirect": 500000,
+    "done": true,
+    "end": "2026-04-15",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "start": "2026-04-15",
+    "note": "",
+    "artist": "Jigitter",
+    "id": 7,
+    "no": 7,
+    "revenue": 800000,
+    "guests": 1500,
+    "type": "ARENA EVENT",
+    "status": "done",
+    "location": "Karavansaray Arena"
+  },
+  {
+    "note": "",
+    "artist": "Exhibition of the International Painters",
+    "no": 8,
+    "id": 8,
+    "revenue": 200000,
+    "location": "Flying Theater Area",
+    "guests": 1000,
+    "type": "EXHIBITION",
+    "status": "done",
+    "nonDirect": 0,
+    "done": true,
+    "start": "2026-04-21",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-04-21"
+  },
+  {
+    "done": true,
+    "nonDirect": 0,
+    "end": "2026-04-24",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "start": "2026-04-24",
+    "artist": "El qorǵau – naǵyz erler isi",
+    "note": "В 18:30 приедем будем готовить место. В 19:00 начало мероприятия примерно минут 25–30 будет. В 20:00 уедем",
+    "guests": 500,
+    "type": "CEREMONIA",
+    "status": "done",
+    "location": "Harbour",
+    "id": 9,
+    "no": 9,
+    "revenue": 0
+  },
+  {
+    "nonDirect": 5000000,
+    "done": true,
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-04-29",
+    "start": "2026-04-29",
+    "note": "ӨНЕРЛІ ӨЛКЕ Contract",
+    "artist": "ӨНЕРЛІ ӨЛКЕ",
+    "id": 10,
+    "no": 10,
+    "revenue": 1000000,
+    "status": "done",
+    "type": "REGIONAL ART FESTIVAL",
+    "guests": 18000,
+    "location": "Flying Theater Area"
+  },
+  {
+    "type": "ARENA EVENT",
+    "status": "done",
+    "guests": 3000,
+    "location": "Harbour",
+    "revenue": 0,
+    "id": 11,
+    "no": 11,
+    "artist": "Turan Dance FEST",
+    "note": "Together With OnerliOlke",
+    "end": "2026-04-30",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "start": "2026-04-29",
+    "done": true,
+    "nonDirect": 1000000
+  },
+  {
+    "start": "2026-05-01",
+    "end": "2026-05-02",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "done": true,
+    "nonDirect": 0,
+    "location": "Flying Theater Area",
+    "status": "done",
+    "type": "SPORT EVENT",
+    "guests": 2000,
+    "no": 12,
+    "id": 12,
+    "revenue": 0,
+    "artist": "Night Marathon",
+    "note": "Çadır"
+  },
+  {
+    "start": "2026-05-10",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-05-10",
+    "done": true,
+    "nonDirect": 1000000,
+    "location": "Karavansaray Arena",
+    "status": "done",
+    "guests": 1500,
+    "type": "ARENA EVENT",
+    "no": 13,
+    "id": 13,
+    "revenue": 1000000,
+    "artist": "Мәдени мұра",
+    "note": ""
+  },
+  {
+    "done": true,
+    "nonDirect": 500000,
+    "start": "2026-05-21",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-05-22",
+    "artist": "MCS MMA FIGHT",
+    "note": "MCS Contract",
+    "location": "Karavansaray Arena",
+    "status": "done",
+    "type": "SPORT EVENT",
+    "guests": 3000,
+    "no": 15,
+    "id": 15,
+    "revenue": 1200000
+  },
+  {
+    "artist": "Bastau School Graduation",
+    "note": "Bastau Contract",
+    "location": "Karavansaray Arena",
+    "status": "done",
+    "type": "ARENA EVENT",
+    "guests": 1500,
+    "no": 16,
+    "id": 16,
+    "revenue": 1200000,
+    "done": true,
+    "nonDirect": 500000,
+    "start": "2026-05-24",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-05-24"
+  },
+  {
+    "id": 17,
+    "no": 17,
+    "revenue": 900000,
+    "status": "done",
+    "guests": 1500,
+    "type": "ARENA EVENT",
+    "location": "Karavansaray Arena",
+    "note": "TEDX Contract",
+    "artist": "TEDX",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-05-30",
+    "start": "2026-05-30",
+    "nonDirect": 500000,
+    "done": true
+  },
+  {
+    "done": true,
+    "nonDirect": 500000,
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-06-01",
+    "start": "2026-06-01",
+    "artist": "Harbour Stars Umida Erkinova",
+    "note": "KARAVANSARAY",
+    "status": "done",
+    "type": "HARBOUR CONCERT",
+    "guests": 1000,
+    "location": "Harbour",
+    "id": 18,
+    "no": 18,
+    "revenue": 0
+  },
+  {
+    "note": "KARAVANSARAY",
+    "artist": "KIDS FESTIVAL",
+    "no": 19,
+    "id": 19,
+    "revenue": 0,
+    "location": "Karavansaray Arena",
+    "guests": 10000,
+    "type": "FESTIVAL",
+    "status": "done",
+    "nonDirect": 1000000,
+    "done": true,
+    "start": "2026-06-01",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-06-01"
+  },
+  {
+    "done": true,
+    "nonDirect": 500000,
+    "event": "HARBOUR CONCERT",
+    "end": "2026-06-05",
+    "updatedAt": "2026-06-05T16:01:21.861Z",
+    "start": "2026-06-05",
+    "artist": "\"Sugir\" National Instrument Orchestra",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "19:00",
+    "status": "done",
+    "type": "HARBOUR CONCERT",
+    "guests": 1000,
+    "location": "Harbour",
+    "id": 20,
+    "materials": "",
+    "no": 20,
+    "revenue": 0
+  },
+  {
+    "id": 21,
+    "materials": "",
+    "no": 21,
+    "revenue": 0,
+    "status": "done",
+    "type": "FESTIVAL",
+    "guests": 1500,
+    "location": "Flying Theater Area",
+    "contractName": "",
+    "note": "18:00",
+    "artist": "BOOK FESTIVAL",
+    "contractUrl": "",
+    "end": "2026-06-08",
+    "updatedAt": "2026-06-09T11:32:36.310Z",
+    "start": "2026-06-08",
+    "nonDirect": 0,
+    "event": "FESTIVAL",
+    "done": true
+  },
+  {
+    "start": "2026-06-12",
+    "end": "2026-06-12",
+    "updatedAt": "2026-06-12T20:36:59.331Z",
+    "done": true,
+    "nonDirect": 500000,
+    "event": "HARBOUR CONCERT",
+    "location": "Harbour",
+    "guests": 2000,
+    "type": "HARBOUR CONCERT",
+    "status": "done",
+    "revenue": 0,
+    "no": 22,
+    "id": 22,
+    "materials": "",
+    "artist": "\"Shaugar\" ethno ensemble",
+    "contractUrl": "",
+    "note": "19:00",
+    "contractName": ""
+  },
+  {
+    "note": "Cancel",
+    "contractName": "",
+    "artist": "\"Alkonyr\" folk ensemble",
+    "contractUrl": "",
+    "revenue": 0,
+    "no": 24,
+    "materials": "",
+    "id": 24,
+    "location": "Harbour",
+    "type": "HARBOUR CONCERT",
+    "guests": 2000,
+    "status": "done",
+    "nonDirect": 500000,
+    "event": "HARBOUR CONCERT",
+    "done": true,
+    "start": "2026-06-26",
+    "end": "2026-06-26",
+    "updatedAt": "2026-06-28T12:38:00.007Z"
+  },
+  {
+    "nonDirect": 500000,
+    "event": "HARBOUR CONCERT",
+    "done": true,
+    "start": "2026-06-19",
+    "end": "2026-06-19",
+    "updatedAt": "2026-06-21T15:56:52.521Z",
+    "note": "Canceled",
+    "contractName": "",
+    "contractUrl": "",
+    "artist": "«Тарлан» ВИА і",
+    "revenue": 0,
+    "no": 25,
+    "materials": "",
+    "id": 25,
+    "location": "Harbour",
+    "guests": 1000,
+    "status": "done",
+    "type": "HARBOUR CONCERT"
+  },
+  {
+    "nonDirect": 500000,
+    "event": "ARENA EVENT",
+    "done": true,
+    "start": "2026-07-03",
+    "end": "2026-07-03",
+    "updatedAt": "2026-07-04T11:32:43.614Z",
+    "note": "",
+    "contractName": "",
+    "contractUrl": "",
+    "artist": "Fashion & Murat Yaprak",
+    "no": 26,
+    "materials": "",
+    "id": 26,
+    "revenue": 750000,
+    "location": "Karavansaray Arena",
+    "guests": 1500,
+    "type": "ARENA EVENT",
+    "status": "done"
+  },
+  {
+    "contractUrl": "",
+    "artist": "Weightlifting Championship",
+    "contractName": "",
+    "note": "",
+    "guests": 8000,
+    "status": "negotiation",
+    "type": "ARENA EVENT",
+    "location": "Karavansaray Arena",
+    "id": 27,
+    "materials": "",
+    "no": 27,
+    "revenue": 2300000,
+    "done": false,
+    "nonDirect": 1000000,
+    "event": "ARENA EVENT",
+    "end": "2026-07-13",
+    "updatedAt": "2026-06-28T13:48:33.925Z",
+    "start": "2026-07-04"
+  },
+  {
+    "contractName": "",
+    "note": "KARAVANSARAY",
+    "artist": "WORLD CUP",
+    "contractUrl": "",
+    "materials": "",
+    "id": 28,
+    "no": 28,
+    "revenue": 2000000,
+    "guests": 2000,
+    "status": "confirmed",
+    "type": "ARENA FOOTBALL",
+    "location": "Karavansaray Arena",
+    "nonDirect": 1000000,
+    "event": "ARENA FOOTBALL",
+    "done": false,
+    "end": "2026-07-19",
+    "updatedAt": "2026-06-17T07:44:19.130Z",
+    "start": "2026-07-09"
+  },
+  {
+    "revenue": 0,
+    "id": 29,
+    "materials": "",
+    "no": 29,
+    "status": "done",
+    "type": "FESTIVAL",
+    "guests": 1000,
+    "location": "Flying Theater Area",
+    "contractName": "",
+    "note": "18:00",
+    "artist": "«Өнерлі өлке»  Tolebi district",
+    "contractUrl": "",
+    "end": "2026-06-11",
+    "updatedAt": "2026-06-12T20:36:58.387Z",
+    "start": "2026-06-11",
+    "nonDirect": 1000000,
+    "event": "HARBOUR CONCERT",
+    "done": true
+  },
+  {
+    "location": "Arena Parking",
+    "status": "done",
+    "guests": 30000,
+    "type": "FESTIVAL",
+    "no": 30,
+    "id": 30,
+    "materials": "",
+    "revenue": 2500000,
+    "contractUrl": "",
+    "artist": "Turkestan 8 years old",
+    "note": "Cancelled",
+    "contractName": "",
+    "start": "2026-06-19",
+    "end": "2026-06-19",
+    "updatedAt": "2026-06-17T07:42:23.320Z",
+    "done": true,
+    "nonDirect": 1000000,
+    "event": "HARBOUR CONCERT"
+  },
+  {
+    "artist": "Circus",
+    "note": "Negotiation continue",
+    "type": "CIRCUS",
+    "status": "negotiation",
+    "guests": 1500,
+    "location": "Karavansaray Arena",
+    "id": 31,
+    "no": 31,
+    "revenue": 500000,
+    "done": false,
+    "nonDirect": 0,
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-09-10",
+    "start": "2026-09-10"
+  },
+  {
+    "note": "KARAVANSARAY",
+    "artist": "KALIFARNIA",
+    "no": 32,
+    "id": 32,
+    "revenue": 8000000,
+    "location": "Karavansaray Arena",
+    "type": "ARENA CONCERT",
+    "status": "negotiation",
+    "guests": 2000,
+    "nonDirect": 1000000,
+    "done": false,
+    "start": "2026-09-14",
+    "end": "2026-09-14",
+    "updatedAt": "2026-06-05T15:39:34.489Z"
+  },
+  {
+    "status": "negotiation",
+    "guests": 20000,
+    "type": "FESTIVAL",
+    "location": "Arena Parking",
+    "revenue": 1500000,
+    "id": 33,
+    "materials": "",
+    "no": 33,
+    "artist": "Shamshi songs",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "Negotiation continue",
+    "end": "2026-07-18",
+    "updatedAt": "2026-06-05T15:54:57.375Z",
+    "start": "2026-07-18",
+    "done": false,
+    "nonDirect": 2000000,
+    "event": "ARENA CONCERT"
+  },
+  {
+    "nonDirect": 1000000,
+    "event": "ARENA EVENT",
+    "done": false,
+    "start": "2026-09-26",
+    "end": "2026-10-02",
+    "updatedAt": "2026-06-17T07:44:21.103Z",
+    "note": "",
+    "contractName": "",
+    "contractUrl": "",
+    "artist": "Taekwondo World Championship",
+    "revenue": 4200000,
+    "no": 34,
+    "id": 34,
+    "materials": "",
+    "location": "Karavansaray Arena",
+    "status": "confirmed",
+    "guests": 2000,
+    "type": "ARENA EVENT"
+  },
+  {
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "done": false,
+    "start": "2026-10-03",
+    "end": "2026-10-04",
+    "updatedAt": "2026-06-05T15:56:19.831Z",
+    "note": "Negotiation continue",
+    "contractName": "",
+    "artist": "Voice of TURAN",
+    "contractUrl": "",
+    "no": 35,
+    "id": 35,
+    "materials": "",
+    "revenue": 1500000,
+    "location": "Karavansaray Arena",
+    "status": "negotiation",
+    "guests": 1500,
+    "type": "FESTIVAL"
+  },
+  {
+    "location": "Karavansaray Arena",
+    "guests": 2000,
+    "status": "negotiation",
+    "type": "ARENA CONCERT",
+    "no": 36,
+    "id": 36,
+    "revenue": 700000,
+    "artist": "YULDUZ USMANOVA",
+    "note": "Negotiation continue",
+    "start": "2026-10-18",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-10-18",
+    "done": false,
+    "nonDirect": 500000
+  },
+  {
+    "start": "2026-10-24",
+    "end": "2026-10-25",
+    "updatedAt": "2026-06-17T07:44:23.188Z",
+    "nonDirect": 1000000,
+    "event": "ARENA CONCERT",
+    "done": false,
+    "revenue": 1500000,
+    "no": 37,
+    "materials": "",
+    "id": 37,
+    "location": "Karavansaray Arena",
+    "type": "ARENA CONCERT",
+    "guests": 3000,
+    "status": "confirmed",
+    "note": "",
+    "contractName": "",
+    "contractUrl": "",
+    "artist": "MARATHON OPENING"
+  },
+  {
+    "done": false,
+    "nonDirect": 0,
+    "start": "2026-11-04",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "end": "2026-11-05",
+    "artist": "SHYMKENT CIRCUS",
+    "note": "",
+    "location": "Karavansaray Arena",
+    "type": "CIRCUS",
+    "guests": 6000,
+    "status": "negotiation",
+    "revenue": 1000000,
+    "no": 38,
+    "id": 38
+  },
+  {
+    "start": "2026-11-20",
+    "end": "2026-11-20",
+    "updatedAt": "2026-06-05T15:39:34.489Z",
+    "done": false,
+    "nonDirect": 500000,
+    "location": "Karavansaray Arena",
+    "type": "ARENA CONCERT",
+    "guests": 1500,
+    "status": "negotiation",
+    "revenue": 500000,
+    "no": 39,
+    "id": 39,
+    "artist": "ALASH PRIDE",
+    "note": "Negotiation continue"
+  },
+  {
+    "artist": "NEW YEAR GALA",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "KARAVANSARAY",
+    "type": "GALA EVENT",
+    "status": "confirmed",
+    "guests": 100,
+    "location": "Karavansaray Arena",
+    "revenue": 3000000,
+    "id": 40,
+    "materials": "",
+    "no": 40,
+    "done": false,
+    "nonDirect": 0,
+    "event": "GALA EVENT",
+    "end": "2026-12-31",
+    "updatedAt": "2026-06-17T07:44:26.042Z",
+    "start": "2026-12-31"
+  },
+  {
+    "contractUrl": "",
+    "artist": "«Өнерлі өлке»  Zhetysai District",
+    "note": "19:00",
+    "contractName": "",
+    "location": "Flying Theater Area",
+    "guests": 2000,
+    "status": "done",
+    "type": "FESTIVAL",
+    "no": 41,
+    "materials": "",
+    "id": 41,
+    "revenue": 0,
+    "done": true,
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "start": "2026-06-12",
+    "end": "2026-06-12",
+    "updatedAt": "2026-06-12T20:37:05.003Z"
+  },
+  {
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "done": true,
+    "start": "2026-06-13",
+    "end": "2026-06-13",
+    "updatedAt": "2026-06-17T06:03:24.261Z",
+    "note": "19:00",
+    "contractName": "",
+    "artist": "«Өнерлі өлке»  Keles District",
+    "contractUrl": "",
+    "revenue": 0,
+    "no": 42,
+    "materials": "",
+    "id": 42,
+    "location": "Flying Theater Area",
+    "status": "done",
+    "guests": 2000,
+    "type": "FESTIVAL"
+  },
+  {
+    "revenue": 0,
+    "materials": "",
+    "id": 43,
+    "no": 43,
+    "guests": 5000,
+    "status": "done",
+    "type": "FESTIVAL",
+    "location": "Flying Theater Area",
+    "contractName": "",
+    "note": "",
+    "contractUrl": "",
+    "artist": "«Өнерлі Өлке»  Мақтаарал Ауданы",
+    "end": "2026-06-05",
+    "updatedAt": "2026-06-05T16:04:20.510Z",
+    "start": "2026-06-05",
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "done": true
+  },
+  {
+    "done": true,
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "updatedAt": "2026-06-19T10:11:08.642Z",
+    "end": "2026-06-18",
+    "start": "2026-06-18",
+    "artist": "«Өнерлі Өлке»  Шардара  Ауданы",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "",
+    "type": "FESTIVAL",
+    "guests": 2000,
+    "status": "done",
+    "location": "Flying Theater Area",
+    "revenue": 0,
+    "id": 44,
+    "materials": "",
+    "no": 44
+  },
+  {
+    "contractName": "",
+    "note": "",
+    "artist": "«Өнерлі Өлке»     Қазығұрт Ауданы",
+    "contractUrl": "",
+    "revenue": 0,
+    "id": 45,
+    "materials": "",
+    "no": 45,
+    "guests": 3000,
+    "status": "done",
+    "type": "FESTIVAL",
+    "location": "Flying Theater Area",
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "done": true,
+    "end": "2026-06-19",
+    "updatedAt": "2026-06-21T15:56:57.837Z",
+    "start": "2026-06-19"
+  },
+  {
+    "artist": "«Өнерлі Өлке»  Кентау Қаласы",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "",
+    "type": "FESTIVAL",
+    "status": "done",
+    "guests": 3000,
+    "location": "Flying Theater Area",
+    "materials": "",
+    "id": 46,
+    "no": 46,
+    "revenue": 0,
+    "done": true,
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "end": "2026-06-20",
+    "updatedAt": "2026-06-21T15:56:59.477Z",
+    "start": "2026-06-20"
+  },
+  {
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "done": true,
+    "start": "2026-06-25",
+    "end": "2026-06-25",
+    "updatedAt": "2026-06-28T12:36:56.953Z",
+    "note": "",
+    "contractName": "",
+    "artist": "«Өнерлі Өлке»  Отырар Ауданы",
+    "contractUrl": "",
+    "no": 47,
+    "id": 47,
+    "materials": "",
+    "revenue": 0,
+    "location": "Flying Theater Area",
+    "guests": 2000,
+    "status": "done",
+    "type": "FESTIVAL"
+  },
+  {
+    "end": "2026-06-26",
+    "updatedAt": "2026-06-28T12:38:02.384Z",
+    "start": "2026-06-26",
+    "event": "FESTIVAL",
+    "nonDirect": 500000,
+    "done": true,
+    "materials": "",
+    "id": 48,
+    "no": 48,
+    "revenue": 0,
+    "type": "FESTIVAL",
+    "guests": 2000,
+    "status": "done",
+    "location": "Flying Theater Area",
+    "contractName": "",
+    "note": "19:00",
+    "artist": "«Өнерлі Өлке»  Ордабасы Ауданы",
+    "contractUrl": ""
+  },
+  {
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "done": true,
+    "end": "2026-06-27",
+    "updatedAt": "2026-06-28T12:38:05.581Z",
+    "start": "2026-06-27",
+    "contractName": "",
+    "note": "19:00",
+    "contractUrl": "",
+    "artist": "«Өнерлі Өлке»  Созақ Ауданы",
+    "revenue": 0,
+    "materials": "",
+    "id": 49,
+    "no": 49,
+    "status": "done",
+    "guests": 2000,
+    "type": "FESTIVAL",
+    "location": "Flying Theater Area"
+  },
+  {
+    "end": "2026-06-29",
+    "updatedAt": "2026-06-29T07:31:21.920Z",
+    "start": "2026-06-29",
+    "done": true,
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "guests": 2000,
+    "status": "done",
+    "type": "FESTIVAL",
+    "location": "Flying Theater Area",
+    "revenue": 0,
+    "id": 50,
+    "materials": "",
+    "no": 50,
+    "artist": "«Өнерлі Өлке»  Түлкібас Ауданы",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "19:00"
+  },
+  {
+    "end": "2026-06-30",
+    "updatedAt": "2026-07-02T10:35:44.897Z",
+    "start": "2026-06-30",
+    "done": true,
+    "nonDirect": 500000,
+    "event": "FESTIVAL",
+    "type": "FESTIVAL",
+    "guests": 2000,
+    "status": "done",
+    "location": "Flying Theater Area",
+    "revenue": 0,
+    "id": 51,
+    "materials": "",
+    "no": 51,
+    "artist": "«Өнерлі Өлке»  Сауран Ауданы",
+    "contractUrl": "",
+    "contractName": "",
+    "note": "19:00"
+  },
+  {
+    "materials": "",
+    "id": 52,
+    "no": 52,
+    "revenue": 2000000,
+    "type": "SPORT EVENT",
+    "status": "done",
+    "guests": 10000,
+    "location": "Harbour",
+    "contractName": "",
+    "note": "",
+    "artist": "8th Traditional Sports Championship",
+    "contractUrl": "https://drive.google.com/file/d/14uK84seim9Hf9V6fgpVKtMO7LzdvJrsV/view?usp=sharing",
+    "end": "2026-06-15",
+    "updatedAt": "2026-06-17T07:42:47.968Z",
+    "start": "2026-06-15",
+    "nonDirect": 500000,
+    "event": "SPORT EVENT",
+    "done": true
+  },
+  {
+    "location": "Flying Theater Area",
+    "status": "confirmed",
+    "guests": 2000,
+    "type": "FESTIVAL",
+    "no": 53,
+    "materials": "",
+    "id": 53,
+    "revenue": 0,
+    "contractUrl": "",
+    "artist": "“Күй құдіреті” республикалық күйшілер байқауы",
+    "note": "",
+    "contractName": "",
+    "start": "2026-07-05",
+    "end": "2026-07-05",
+    "updatedAt": "2026-07-04T11:34:48.503Z",
+    "done": false,
+    "nonDirect": 0
+  }
 ];
 
-let events = JSON.parse(JSON.stringify(RAW_EVENTS));
-let statusFilter = 'all';
-let typeFilter = 'all';
+const TR = {
+  confirmed:'Onaylandı', negotiation:'Müzakere', contractSigned:'Sözleşme İmzalandı', done:'Tamamlandı',
+  allEvents:'Tüm Etkinlikler', calendar:'Takvim', addEvent:'Etkinlik Ekle',
+  editEvent:'Etkinlik Düzenle', save:'Kaydet', cancel:'İptal', delete:'Sil',
+  search:'Ara...', report:'Rapor Al',
+  syncLabel:'Paylaşımlı · Herkes düzenleyebilir',
+  totalEvents:'Toplam Etkinlik', totalRevenue:'Toplam Gelir',
+  totalGuests:'Toplam Misafir', inNegotiation:'Müzakerede',
+  noEvents:'Etkinlik bulunamadı', catAll:'Tüm Kategoriler',
+  views:'Görünüm', filter:'Filtre', guests:'misafir', moreEvents:'daha',
+  saved:'Kaydedildi ✓', deleted:'Silindi', detailsTitle:'Etkinlik Detayı', close:'Kapat', materials:'Gerekli Malzemeler', contractDocument:'Sözleşme Dosyası', downloadContract:'Dosyayı Aç / İndir',
+  months:['OCAK','ŞUBAT','MART','NİSAN','MAYIS','HAZİRAN','TEMMUZ','AĞUSTOS','EYLÜL','EKİM','KASIM','ARALIK'],
+  days:['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'],
+  lArtist:'Sanatçı / İsim', lCategory:'Kategori', lLocation:'Mekan',
+  lStatus:'Durum', lStart:'Başlangıç', lEnd:'Bitiş', lRevenue:'Gelir (₸)',
+  lNonDirect:'Dolaylı Gelir (₸)', lGuests:'Misafir Sayısı', lNote:'Not', lMaterials:'Gerekli Malzemeler', lContractName:'Sözleşme Dosya Adı', lContractUrl:'Sözleşme Linki',
+  filterAll:'Tümü', year:'2026 yılı', activeNego:'aktif müzakere',
+  expected:'beklenen', directRev:'direkt gelir',
+  passwordPrompt:'Düzenleme şifresini girin', passwordWrong:'Şifre yanlış',
+  contractSigned:'Sözleşme İmzalandı'
+};
+const RU = {
+  confirmed:'Подтверждено', negotiation:'Переговоры', contractSigned:'Договор подписан', done:'Завершено',
+  allEvents:'Все события', calendar:'Календарь', addEvent:'Добавить событие',
+  editEvent:'Редактировать', save:'Сохранить', cancel:'Отмена', delete:'Удалить',
+  search:'Поиск...', report:'Отчёт',
+  syncLabel:'Общий · Все могут редактировать',
+  totalEvents:'Всего событий', totalRevenue:'Общий доход',
+  totalGuests:'Всего гостей', inNegotiation:'На переговорах',
+  noEvents:'Событий не найдено', catAll:'Все категории',
+  views:'Вид', filter:'Фильтр', guests:'гостей', moreEvents:'ещё',
+  saved:'Сохранено ✓', deleted:'Удалено', detailsTitle:'Детали события', close:'Закрыть', materials:'Необходимые материалы', contractDocument:'Файл договора', downloadContract:'Открыть / скачать файл',
+  months:['ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ','МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ','СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ'],
+  days:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+  lArtist:'Исполнитель / Название', lCategory:'Категория', lLocation:'Место',
+  lStatus:'Статус', lStart:'Начало', lEnd:'Конец', lRevenue:'Доход (₸)',
+  lNonDirect:'Косвенный доход (₸)', lGuests:'Кол-во гостей', lNote:'Примечание', lMaterials:'Необходимые материалы', lContractName:'Имя файла договора', lContractUrl:'Ссылка на договор',
+  filterAll:'Все', year:'год 2026', activeNego:'активных',
+  expected:'ожидается', directRev:'прямой доход',
+  passwordPrompt:'Введите пароль для редактирования', passwordWrong:'Неверный пароль',
+  contractSigned:'Договор подписан'
+};
+let lang = 'tr', L = TR;
+function T(k){ return L[k] || TR[k] || k; }
+function toggleLang(){
+  lang = lang === 'tr' ? 'ru' : 'tr';
+  L = lang === 'tr' ? TR : RU;
+  applyLang();
+  setLoaderText();
+  renderAll();
+}
+
+let data = [];
+let currentFilter = 'all';
+let currentCat = 'all';
 let currentView = 'list';
-let calYear = 2026;
-let calMonth = 2;
 let editingId = null;
-let lastDataStr = '';
+let calYear = 2026, calMonth = 3; // April = index 3
 
-function typeBadge(type) {
-  const map = {
-    'ARENA EVENT':['ct-arena','Arena'],
-    'ARENA CONCERT':['ct-concert','Concert'],
-    'ARENA FOOTBALL':['ct-football','Football'],
-    'REGIONAL ART FESTIVAL':['ct-regional','Art Fest'],
-    'FESTIVAL':['ct-festival','Festival'],
-    'SPORT EVENT':['ct-sport','Sport'],
-    'HARBOUR CONCERT':['ct-harbour','Harbour'],
-    'CIRCUS':['ct-circus','Circus'],
-    'GALA EVENT':['ct-gala','Gala'],
-    'DJ PARTY':['ct-dj','DJ']
+
+function setLoaderText() {
+  const t1 = document.getElementById('loader-title');
+  const t2 = document.getElementById('loader-text');
+  if (t1) t1.textContent = lang === 'tr' ? 'Etkinlikler Yükleniyor' : 'События загружаются';
+  if (t2) t2.textContent = lang === 'tr' ? 'Lütfen bekleyin, etkinlik verileri hazırlanıyor...' : 'Пожалуйста, подождите, данные событий загружаются...';
+}
+function hidePageLoader() {
+  const loader = document.getElementById('page-loader');
+  if (!loader) return;
+  loader.classList.add('hidden');
+  setTimeout(() => { if (loader && loader.parentNode) loader.style.display = 'none'; }, 400);
+}
+
+const EDIT_PASSWORD = 'Karavansaray';
+
+function setSyncState(state) {
+  const badge = document.querySelector('.sync-badge');
+  const dot   = document.querySelector('.sync-dot');
+  const lbl   = document.getElementById('sync-label');
+  if (!badge) return;
+  const styles = {
+    ok:      {bg:'#F0FDF4', border:'#BBF7D0', color:'#166534', dot:'#22C55E', anim:'pulse 2s infinite', text:()=>T('syncLabel')},
+    saving:  {bg:'#FFFBEB', border:'#FDE68A', color:'#92400E', dot:'#F59E0B', anim:'none',             text:()=>lang==='tr'?'Kaydediliyor…':'Сохранение…'},
+    error:   {bg:'#FEF2F2', border:'#FECACA', color:'#991B1B', dot:'#EF4444', anim:'none',             text:()=>lang==='tr'?'Bağlantı hatası':'Ошибка связи'},
+    local:   {bg:'#F8FAFC', border:'#E2E8F0', color:'#475569', dot:'#94A3B8', anim:'none',             text:()=>lang==='tr'?'Yerel mod · Sadece bu cihaz':'Локальный режим'},
   };
-  const [cls,label] = map[type] || ['ct-other',type];
-  return `<span class="type-badge ${cls}">${label}</span>`;
+  const s = styles[state] || styles.local;
+  badge.style.cssText = `display:flex;align-items:center;gap:6px;background:${s.bg};border:1px solid ${s.border};border-radius:20px;padding:5px 10px;font-size:11px;color:${s.color};font-weight:500;white-space:nowrap`;
+  if (dot) { dot.style.background = s.dot; dot.style.animation = s.anim; }
+  if (lbl) lbl.textContent = s.text();
 }
 
-function statusBadge(status) {
-  const map = {confirmed:['s-confirmed','Onaylı'],negotiation:['s-negotiation','Müzakere'],done:['s-done','Tamamlandı']};
-  const [cls,label] = map[status] || ['s-confirmed',status];
-  return `<span class="status-badge ${cls}">${label}</span>`;
+function normalizeEvent(raw, docId) {
+  const e = raw || {};
+  const parsedId = parseInt(docId, 10);
+  return {
+    id: Number(e.id || parsedId || Date.now()),
+    no: Number(e.no || 0),
+    type: e.type || 'ARENA EVENT',
+    event: e.event || e.type || 'ARENA EVENT',
+    artist: e.artist || e.title || '',
+    location: e.location || 'Karavansaray Arena',
+    start: e.start || '',
+    end: e.end || e.start || '',
+    revenue: Number(e.revenue || 0),
+    nonDirect: Number(e.nonDirect || 0),
+    guests: Number(e.guests || 0),
+    note: e.note || '',
+    materials: e.materials || '',
+    contractName: e.contractName || '',
+    contractUrl: e.contractUrl || '',
+    status: e.status || 'confirmed',
+    done: !!e.done || e.status === 'done'
+  };
 }
 
-function typeChipClass(type) {
-  const map = {'ARENA EVENT':'ct-arena','ARENA CONCERT':'ct-concert','ARENA FOOTBALL':'ct-football','REGIONAL ART FESTIVAL':'ct-regional','FESTIVAL':'ct-festival','SPORT EVENT':'ct-sport','HARBOUR CONCERT':'ct-harbour','CIRCUS':'ct-circus','GALA EVENT':'ct-gala','DJ PARTY':'ct-dj'};
-  return map[type] || 'ct-other';
-}
-
-function fmtDate(d) {
-  if (!d) return '';
-  const p = d.split('-');
-  return `${p[2]}.${p[1]}.${p[0]}`;
-}
-
-function fmtMoney(n) {
-  if (!n) return '0 €';
-  return Number(n).toLocaleString('tr-TR') + ' €';
-}
-
-function filtered() {
-  const q = (document.getElementById('searchBox')?.value||'').toLowerCase();
-  return events.filter(e => {
-    if (statusFilter !== 'all' && e.status !== statusFilter) return false;
-    if (typeFilter !== 'all' && e.type !== typeFilter) return false;
-    if (q && !`${e.event} ${e.artist} ${e.type}`.toLowerCase().includes(q)) return false;
-    return true;
+function firestoreSafeEvent(e) {
+  const safe = {};
+  Object.keys(e || {}).forEach(k => {
+    if (e[k] !== undefined) safe[k] = e[k];
   });
+  safe.updatedAt = isFirebaseConfigured ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString();
+  return safe;
 }
 
-function updateStats() {
-  const total = events.length;
-  const conf = events.filter(e=>e.status==='confirmed').length;
-  const nego = events.filter(e=>e.status==='negotiation').length;
-  const done = events.filter(e=>e.status==='done').length;
-  const rev = events.reduce((s,e)=>(s+Number(e.revenue||0)),0);
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statConf').textContent = conf;
-  document.getElementById('statNego').textContent = nego;
-  document.getElementById('statDone').textContent = done;
-  document.getElementById('statRev').textContent = fmtMoney(rev);
+async function seedDefaultData() {
+  if (!eventsCollection || !db) return;
+  const batch = db.batch();
+  DEFAULT_DATA.forEach(ev => {
+    const ref = eventsCollection.doc(String(ev.id));
+    batch.set(ref, firestoreSafeEvent(ev), { merge: true });
+  });
+  await batch.commit();
 }
 
-function render() {
-  updateStats();
-  if (currentView === 'calendar') {renderCalendar();return;}
-  const list = filtered();
-  const area = document.getElementById('contentArea');
-  if (!list.length) {
-    area.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div>Etkinlik bulunamadı</div></div>';
+async function saveData() {
+  // Toplu kaydetme sadece başlangıç/geri dönüş için kullanılır.
+  if (!eventsCollection || !db) {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+    setSyncState('local');
+    showToast(T('saved'));
     return;
   }
-  area.innerHTML = list.map(e => `
-    <div class="event-card ${e.done?'done-card':''}" onclick="openModal('${e.id}')">
-      <div class="event-no">${e.no}</div>
-      <div class="event-body">
-        <div class="event-top">
-          ${typeBadge(e.type)}
-          ${statusBadge(e.status)}
-          ${e.done?'<span style="font-size:11px;color:#16A34A;font-weight:600">✓ Tamamlandı</span>':''}
-        </div>
-        <div class="event-title">${e.event||'—'}</div>
-        ${e.artist?`<div class="event-artist">🎤 ${e.artist}</div>`:''}
-        <div class="event-meta">
-          ${e.start?`<span class="meta-item">📅 ${fmtDate(e.start)}${e.end&&e.end!==e.start?' – '+fmtDate(e.end):''}</span>`:''}
-          ${e.revenue?`<span class="meta-item">💰 ${fmtMoney(e.revenue)}</span>`:''}
-          ${e.guests?`<span class="meta-item">👥 ${Number(e.guests).toLocaleString('tr-TR')}</span>`:''}
-          ${e.expense?`<span class="meta-item">💸 ${fmtMoney(e.expense)}</span>`:''}
-        </div>
-        ${e.note?`<div style="font-size:12px;color:var(--ink4);margin-top:4px;font-style:italic">${e.note}</div>`:''}
-      </div>
-      <div class="event-actions" onclick="event.stopPropagation()">
-        <button class="btn-icon done-btn" title="Tamamlandı olarak işaretle" onclick="toggleDone('${e.id}')">${e.done?'↩':'✓'}</button>
-        <button class="btn-icon" title="Düzenle" onclick="openModal('${e.id}')">✏</button>
-        <button class="btn-icon del" title="Sil" onclick="deleteEvent('${e.id}')">🗑</button>
-      </div>
-    </div>
-  `).join('');
+  setSyncState('saving');
+  try {
+    const batch = db.batch();
+    data.forEach(ev => {
+      batch.set(eventsCollection.doc(String(ev.id)), firestoreSafeEvent(ev), { merge: true });
+    });
+    await batch.commit();
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+    setSyncState('ok');
+    showToast(T('saved'));
+  } catch(e) {
+    console.error('Firebase bulk save failed:', e);
+    setSyncState('error');
+    alert(lang === 'tr'
+      ? 'Online kayıt başarısız oldu. İnternet/Firebase bağlantısını kontrol edin.'
+      : 'Не удалось сохранить онлайн. Проверьте интернет/Firebase.');
+  }
 }
 
-function renderCalendar() {
-  const cal = document.getElementById('calendarView');
-  const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-  const dayNames = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-  const firstDay = new Date(calYear, calMonth, 1);
-  const lastDay = new Date(calYear, calMonth+1, 0);
-  let startDow = firstDay.getDay();
-  if (startDow === 0) startDow = 7;
-  startDow--;
+async function saveOneEvent(ev) {
+  if (!eventsCollection) {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+    setSyncState('local');
+    return;
+  }
+  setSyncState('saving');
+  await eventsCollection.doc(String(ev.id)).set(firestoreSafeEvent(ev), { merge: true });
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+  setSyncState('ok');
+}
 
-  const cells = [];
-  for (let i=0; i<startDow; i++) {
-    const d = new Date(calYear, calMonth, -startDow+i+1);
-    cells.push({date:d, other:true});
+async function deleteOneEvent(id) {
+  if (!eventsCollection) {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+    setSyncState('local');
+    return;
   }
-  for (let d=1; d<=lastDay.getDate(); d++) {
-    cells.push({date:new Date(calYear,calMonth,d), other:false});
-  }
-  while (cells.length % 7 !== 0) {
-    const d = new Date(calYear, calMonth+1, cells.length - lastDay.getDate() - startDow + 1);
-    cells.push({date:d, other:true});
+  setSyncState('saving');
+  await eventsCollection.doc(String(id)).delete();
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+  setSyncState('ok');
+}
+
+let unsubscribeEvents = null;
+let isSeeding = false;
+
+function loadData(silent = false) {
+  if (!eventsQuery) {
+    data = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null') || JSON.parse(JSON.stringify(DEFAULT_DATA));
+    setSyncState('local');
+    renderAll();
+    hidePageLoader();
+    return;
   }
 
-  const today = new Date();
-  const evMap = {};
-  events.forEach(e => {
-    if (!e.start) return;
-    const key = e.start.substring(0,10);
-    if (!evMap[key]) evMap[key] = [];
-    evMap[key].push(e);
+  if (!silent) setSyncState('saving');
+
+  if (unsubscribeEvents) unsubscribeEvents();
+
+  unsubscribeEvents = eventsQuery.onSnapshot(async (snapshot) => {
+    const remote = [];
+    snapshot.forEach(doc => {
+      const ev = normalizeEvent(doc.data(), doc.id);
+      if (ev.artist && ev.no) remote.push(ev);
+    });
+
+    const migrationKey = 'kv_events_2026_v2_seed_v40';
+    const needsInitialSeed = remote.length === 0;
+    const needsV40Migration = remote.length > 0 && remote.length < DEFAULT_DATA.length && !localStorage.getItem(migrationKey);
+
+    if ((needsInitialSeed || needsV40Migration) && !isSeeding) {
+      try {
+        isSeeding = true;
+        await seedDefaultData();
+        localStorage.setItem(migrationKey, '1');
+        return;
+      } catch(e) {
+        console.error('Firebase seed/migration failed:', e);
+        setSyncState('error');
+        data = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null') || JSON.parse(JSON.stringify(DEFAULT_DATA));
+      } finally {
+        isSeeding = false;
+      }
+    } else {
+      data = remote;
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+      setSyncState('ok');
+    }
+
+    renderAll();
+    hidePageLoader();
+  }, (error) => {
+    console.error('Firebase listen failed:', error);
+    setSyncState('error');
+    data = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null') || JSON.parse(JSON.stringify(DEFAULT_DATA));
+    renderAll();
+    hidePageLoader();
+    alert(lang === 'tr'
+      ? 'Firebase bağlantısı kurulamadı. Firestore Rules ve internet bağlantısını kontrol edin.'
+      : 'Не удалось подключиться к Firebase. Проверьте Firestore Rules и интернет.');
   });
-
-  cal.innerHTML = `
-    <div class="cal-nav">
-      <button class="cal-nav-btn" onclick="calPrev()">‹</button>
-      <h2>${monthNames[calMonth]} ${calYear}</h2>
-      <button class="cal-nav-btn" onclick="calNext()">›</button>
-    </div>
-    <div class="cal-grid">
-      ${dayNames.map(d=>`<div class="cal-header">${d}</div>`).join('')}
-      ${cells.map(c => {
-        const key = `${c.date.getFullYear()}-${String(c.date.getMonth()+1).padStart(2,'0')}-${String(c.date.getDate()).padStart(2,'0')}`;
-        const isToday = c.date.toDateString()===today.toDateString();
-        const dayEvs = evMap[key]||[];
-        return `<div class="cal-day${c.other?' other-month':''}${isToday?' today':''}">
-          <div class="cal-day-num">${c.date.getDate()}</div>
-          ${dayEvs.slice(0,3).map(e=>`<div class="cal-chip type-badge ${typeChipClass(e.type)}" onclick="openModal('${e.id}')" title="${e.event}">${e.artist||e.event}</div>`).join('')}
-          ${dayEvs.length>3?`<div style="font-size:10px;color:var(--ink4)">+${dayEvs.length-3} daha</div>`:''}
-        </div>`;
-      }).join('')}
-    </div>
-  `;
 }
 
-function calPrev() {
-  calMonth--;
-  if (calMonth<0){calMonth=11;calYear--;}
-  renderCalendar();
+
+function showSetupBanner() {
+  // Firebase sürümünde kurulum uyarısı gerekmez.
 }
-function calNext() {
-  calMonth++;
-  if (calMonth>11){calMonth=0;calYear++;}
-  renderCalendar();
+
+function fmtRev(v) {
+  if (!v || v === 0) return '—';
+  if (v >= 1000000) return (v/1000000).toFixed(1).replace(/\.0$/,'') + 'M ₸';
+  return (v/1000).toFixed(0) + 'K ₸';
+}
+function fmtNum(n) {
+  return n.toLocaleString();
+}
+function fmtDate(d) {
+  if (!d) return '';
+  const parts = d.split('-');
+  return parts[2] + '.' + parts[1] + '.' + parts[0];
+}
+
+function getCatClass(type) {
+  const t = (type||'').toUpperCase();
+  if (t.includes('ARENA')) return 'ct-arena';
+  if (t.includes('CONFERENCE') || t.includes('MEETING')) return 'ct-conf';
+  if (t === 'FESTIVAL') return 'ct-fest';
+  if (t.includes('SPORT')) return 'ct-sport';
+  if (t.includes('GALA')) return 'ct-gala';
+  if (t.includes('DJ')) return 'ct-dj';
+  if (t.includes('CIRCUS')) return 'ct-circ';
+  if (t.includes('HARBOUR')) return 'ct-harb';
+  if (t.includes('REGIONAL') || t.includes('ART')) return 'ct-art';
+  if (t.includes('EXHIBITION')) return 'ct-exhibition';
+  if (t.includes('CEREMONIA')) return 'ct-ceremonia';
+  return 'ct-arena';
+}
+function getStripe(status) {
+  if (status === 'confirmed') return 'linear-gradient(180deg,#3B82F6,#6366F1)';
+  if (status === 'negotiation') return 'linear-gradient(180deg,#F59E0B,#EF4444)';
+  return '#CBD5E1';
+}
+function getStatusClass(status) {
+  if (status === 'confirmed') return 'status-confirmed';
+  if (status === 'negotiation') return 'status-negotiation';
+  if (status === 'contractSigned') return 'status-contractSigned';
+  return 'status-done';
+}
+
+function applyLang() {
+  document.getElementById('lbl-views').textContent = T('views');
+  document.getElementById('lbl-filter').textContent = T('filter');
+  document.getElementById('nav-list-label').textContent = T('allEvents');
+  document.getElementById('nav-cal-label').textContent = T('calendar');
+  document.getElementById('fb-all-label').textContent = T('filterAll');
+  document.getElementById('fb-conf-label').textContent = T('confirmed');
+  document.getElementById('fb-nego-label').textContent = T('negotiation');
+  document.getElementById('fb-done-label').textContent = T('done');
+  document.getElementById('report-label').textContent = T('report');
+  document.getElementById('mobile-report-label').textContent = T('report');
+  document.getElementById('lang-label').textContent = lang === 'tr' ? 'Русский' : 'Türkçe';
+  document.getElementById('mobile-lang-label').textContent = lang === 'tr' ? 'Русский' : 'Türkçe';
+  document.getElementById('sync-label').textContent = T('syncLabel');
+  document.getElementById('add-btn-label').textContent = T('addEvent');
+  document.getElementById('stat-lbl-total').textContent = T('totalEvents');
+  document.getElementById('stat-lbl-nego').textContent = T('inNegotiation');
+  document.getElementById('stat-lbl-guests').textContent = T('totalGuests');
+  document.getElementById('stat-lbl-rev').textContent = T('totalRevenue');
+  document.getElementById('stat-total-sub').textContent = T('year');
+  document.getElementById('stat-nego-sub').textContent = T('activeNego');
+  document.getElementById('stat-guests-sub').textContent = T('expected');
+  document.getElementById('stat-rev-sub').textContent = T('directRev');
+  document.getElementById('search-input').placeholder = T('search');
+  document.getElementById('lbl-artist').textContent = T('lArtist');
+  document.getElementById('lbl-category').textContent = T('lCategory');
+  document.getElementById('lbl-location').textContent = T('lLocation');
+  document.getElementById('lbl-status').textContent = T('lStatus');
+  document.getElementById('lbl-start').textContent = T('lStart');
+  document.getElementById('lbl-end').textContent = T('lEnd');
+  document.getElementById('lbl-revenue').textContent = T('lRevenue');
+  document.getElementById('lbl-nondirect').textContent = T('lNonDirect');
+  document.getElementById('lbl-guests').textContent = T('lGuests');
+  document.getElementById('lbl-note').textContent = T('lNote');
+  const dtitle=document.getElementById('details-title'); if(dtitle && !dtitle.dataset.dynamic) dtitle.textContent = T('detailsTitle');
+  const dclose=document.getElementById('details-close-label'); if(dclose) dclose.textContent = T('close');
+  document.getElementById('lbl-materials').textContent = T('lMaterials');
+  document.getElementById('lbl-contract-name').textContent = T('lContractName');
+  document.getElementById('lbl-contract-url').textContent = T('lContractUrl');
+  document.getElementById('contract-help').textContent = lang === 'tr' ? 'PDF dosyasını doğrudan bu yapıya gömmek yerine Google Drive, Dropbox veya benzeri bir paylaşım linki eklemeniz önerilir.' : 'Вместо встраивания PDF прямо в эту систему рекомендуется вставить ссылку Google Drive, Dropbox или аналогичного сервиса.';
+  document.getElementById('del-label').textContent = T('delete');
+  document.getElementById('cancel-label').textContent = T('cancel');
+  document.getElementById('save-label').textContent = T('save');
+  // update status option labels in form
+  const statusSel = document.getElementById('f-status');
+  if (statusSel) {
+    statusSel.options[0].text = T('confirmed');
+    statusSel.options[1].text = T('negotiation');
+    statusSel.options[2].text = T('done');
+  }
+  setSyncState(eventsQuery ? 'ok' : 'local');
 }
 
 function switchView(v) {
   currentView = v;
-  const ca = document.getElementById('contentArea');
-  const cv = document.getElementById('calendarView');
-  const nl = document.getElementById('navList');
-  const nc = document.getElementById('navCal');
-  const vl = document.getElementById('vbList');
-  const vc = document.getElementById('vbCal');
-  if (v==='list') {
-    ca.style.display='block'; cv.style.display='none';
-    nl.classList.add('active'); nc.classList.remove('active');
-    vl.classList.add('active'); vc.classList.remove('active');
-  } else {
-    ca.style.display='none'; cv.style.display='block';
-    nl.classList.remove('active'); nc.classList.add('active');
-    vl.classList.remove('active'); vc.classList.add('active');
-    renderCalendar();
+  document.getElementById('list-view').style.display = v === 'list' ? 'flex' : 'none';
+  document.getElementById('cal-view').style.display = v === 'calendar' ? 'block' : 'none';
+  document.getElementById('toolbar').style.display = v === 'list' ? 'flex' : 'none';
+  const mobileActions = document.getElementById('mobile-actions'); if (mobileActions) mobileActions.style.display = v === 'list' && window.innerWidth <= 800 ? 'flex' : (window.innerWidth <= 800 ? 'flex' : 'none');
+  document.getElementById('nav-list').classList.toggle('active', v === 'list');
+  document.getElementById('nav-cal').classList.toggle('active', v === 'calendar');
+  document.getElementById('main-title').textContent = v === 'list' ? T('allEvents') : T('calendar');
+  if (v === 'calendar') renderCalendar();
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  ['all','confirmed','negotiation','done'].forEach(x => {
+    document.getElementById('fb-' + (x === 'all' ? 'all' : x)).classList.toggle('active', f === x);
+  });
+  renderEvents();
+}
+
+function getFilteredData() {
+  let d = [...data];
+  if (currentFilter !== 'all') d = d.filter(e => e.status === currentFilter);
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  if (q) d = d.filter(e => (e.artist||'').toLowerCase().includes(q) || (e.type||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q));
+  if (currentCat !== 'all') d = d.filter(e => e.type === currentCat);
+  return d.sort((a,b) => a.start.localeCompare(b.start));
+}
+
+function renderStats() {
+  const total = data.length;
+  const nego = data.filter(e => e.status === 'negotiation').length;
+  const guests = data.reduce((s,e) => s + (e.guests||0), 0);
+  const rev = data.filter(e => e.status !== 'done' || e.done).reduce((s,e) => s + (e.revenue||0), 0);
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-nego').textContent = nego;
+  document.getElementById('stat-guests').textContent = fmtNum(guests);
+  document.getElementById('stat-rev').textContent = fmtRev(data.reduce((s,e) => s + (e.revenue||0), 0));
+  // sidebar counts
+  document.getElementById('cnt-all').textContent = data.length;
+  document.getElementById('cnt-confirmed').textContent = data.filter(e => e.status === 'confirmed').length;
+  document.getElementById('cnt-negotiation').textContent = data.filter(e => e.status === 'negotiation').length;
+  document.getElementById('cnt-done').textContent = data.filter(e => e.status === 'done').length;
+}
+
+function renderStatusPills() {
+  const defs = [
+    {key:'all', label:T('filterAll')},
+    {key:'confirmed', label:T('confirmed')},
+    {key:'negotiation', label:T('negotiation')},
+    {key:'done', label:T('done')}
+  ];
+  const html = defs.map(d => `<button class="filter-pill${currentFilter === d.key ? ' active' : ''}" onclick="setFilter('${d.key}')">${d.label}</button>`).join('');
+  document.getElementById('status-pills').innerHTML = html;
+  document.getElementById('mobile-filter-pills').innerHTML = html;
+}
+
+function renderCatPills() {
+  const types = [...new Set(data.map(e => e.type))].sort();
+  const container = document.getElementById('cat-pills');
+  let html = `<button class="cat-pill${currentCat === 'all' ? ' active' : ''}" onclick="setCat('all')">${T('catAll')}</button>`;
+  types.forEach(t => {
+    html += `<button class="cat-pill${currentCat === t ? ' active' : ''}" onclick="setCat('${t.replace(/'/g,"\\'")}')"> ${t.charAt(0) + t.slice(1).toLowerCase()}</button>`;
+  });
+  container.innerHTML = html;
+}
+function setCat(c) {
+  currentCat = c;
+  renderCatPills();
+  renderEvents();
+}
+
+function renderEvents() {
+  const filtered = getFilteredData();
+  const container = document.getElementById('list-view');
+  if (!filtered.length) {
+    container.innerHTML = `<div class="no-events">${T('noEvents')}</div>`;
+    return;
   }
+  container.innerHTML = filtered.map(e => {
+    const catCls = getCatClass(e.type);
+    const stripe = getStripe(e.status);
+    const statusCls = getStatusClass(e.status);
+    const doneCard = e.done ? ' done-card' : '';
+    const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
+    const extras = [];
+    if (e.note) extras.push(`<div>📝 ${e.note}</div>`);
+    if (e.materials) extras.push(`<div>🧰 ${e.materials}</div>`);
+    if (e.contractUrl) extras.push(`<div>📄 ${e.contractName || T('contractDocument')}</div>`);
+    return `<div class="event-card${doneCard}" onclick="openDetails(${e.id})">
+      <div class="event-stripe" style="background:${stripe}"></div>
+      <div class="card-check-wrap">
+        <input type="checkbox" class="card-check" ${e.done ? 'checked' : ''} onclick="toggleDone(event,${e.id})" title="Tamamlandı"/>
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-artist">${e.artist}</span>
+          <span class="cat-badge ${catCls}">${e.type}</span>
+        </div>
+        <div class="card-meta">
+          <span>📍 ${e.location}</span>
+          <span>📅 ${dateStr}</span>
+          <span>👥 ${fmtNum(e.guests||0)} ${T('guests')}</span>
+        </div>
+        ${extras.length ? `<div class="card-extra">${extras.join('')}</div>` : ''}
+      </div>
+      <div class="card-right">
+        <div class="card-revenue">${fmtRev(e.revenue)}</div>
+        <span class="status-badge ${statusCls}">${T(e.status)}</span>
+        <button class="btn-edit" onclick="event.stopPropagation();openModal(${e.id})">${lang==='tr'?'Düzenle':'Редактировать'}</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function setStatusFilter(v) {
-  statusFilter = v;
-  document.querySelectorAll('#statusPills .pill').forEach(p=>{
-    p.classList.toggle('active', p.dataset.status===v);
-  });
-  render();
+function renderAll() {
+  applyLang();
+  renderStats();
+  renderStatusPills();
+  renderCatPills();
+  if (currentView === 'list') renderEvents();
+  else renderCalendar();
 }
 
-function setTypeFilter(v) {
-  typeFilter = v;
-  document.querySelectorAll('#typePills .pill').forEach(p=>{
-    p.classList.toggle('active', p.dataset.type===v);
-  });
-  render();
-}
-
-function setSideFilter(v) {
-  statusFilter = v;
-  typeFilter = 'all';
-  switchView('list');
-  document.querySelectorAll('#statusPills .pill').forEach(p=>{
-    p.classList.toggle('active', p.dataset.status===v);
-  });
-  document.querySelectorAll('#typePills .pill').forEach(p=>{
-    p.classList.toggle('active', p.dataset.type==='all');
-  });
-  render();
-}
-
-function openModal(id) {
-  editingId = id || null;
-  const m = document.getElementById('modalTitle');
-  if (id) {
-    const e = events.find(x=>x.id===id);
-    if (!e) return;
-    m.textContent = 'Etkinliği Düzenle';
-    document.getElementById('fArtist').value = e.artist||'';
-    document.getElementById('fEvent').value = e.event||'';
-    document.getElementById('fType').value = e.type||'ARENA EVENT';
-    document.getElementById('fStatus').value = e.status||'confirmed';
-    document.getElementById('fStart').value = e.start||'';
-    document.getElementById('fEnd').value = e.end||'';
-    document.getElementById('fRevenue').value = e.revenue||'';
-    document.getElementById('fNonDirect').value = e.nonDirect||'';
-    document.getElementById('fGuests').value = e.guests||'';
-    document.getElementById('fExpense').value = e.expense||'';
-    document.getElementById('fNote').value = e.note||'';
-  } else {
-    m.textContent = 'Yeni Etkinlik';
-    ['fArtist','fEvent','fStart','fEnd','fRevenue','fNonDirect','fGuests','fExpense','fNote'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('fType').value = 'ARENA EVENT';
-    document.getElementById('fStatus').value = 'confirmed';
-  }
-  document.getElementById('modalOverlay').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  editingId = null;
-}
-
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
-}
-
-async function saveModal() {
-  const artist = document.getElementById('fArtist').value.trim();
-  const event_name = document.getElementById('fEvent').value.trim();
-  if (!event_name) {showToast('⚠ Etkinlik adı gerekli');return;}
-  if (editingId) {
-    const idx = events.findIndex(x=>x.id===editingId);
-    if (idx>=0) {
-      events[idx] = {...events[idx],
-        artist, event:event_name,
-        type:document.getElementById('fType').value,
-        status:document.getElementById('fStatus').value,
-        start:document.getElementById('fStart').value,
-        end:document.getElementById('fEnd').value,
-        revenue:Number(document.getElementById('fRevenue').value)||0,
-        nonDirect:Number(document.getElementById('fNonDirect').value)||0,
-        guests:Number(document.getElementById('fGuests').value)||0,
-        expense:Number(document.getElementById('fExpense').value)||0,
-        note:document.getElementById('fNote').value.trim()
-      };
-    }
-  } else {
-    const newNo = events.length > 0 ? Math.max(...events.map(e=>e.no||0))+1 : 1;
-    events.push({
-      id:String(Date.now()), no:newNo,
-      artist, event:event_name,
-      type:document.getElementById('fType').value,
-      status:document.getElementById('fStatus').value,
-      start:document.getElementById('fStart').value,
-      end:document.getElementById('fEnd').value,
-      revenue:Number(document.getElementById('fRevenue').value)||0,
-      nonDirect:Number(document.getElementById('fNonDirect').value)||0,
-      guests:Number(document.getElementById('fGuests').value)||0,
-      expense:Number(document.getElementById('fExpense').value)||0,
-      note:document.getElementById('fNote').value.trim(),
-      done:false
-    });
-  }
-  closeModal();
-  render();
-  await save();
-  lastDataStr = JSON.stringify(events);
-  showToast('✅ Kaydedildi');
-}
-
-async function deleteEvent(id) {
-  if (!confirm('Bu etkinliği silmek istiyor musunuz?')) return;
-  events = events.filter(e=>e.id!==id);
-  render();
-  await save();
-  lastDataStr = JSON.stringify(events);
-  showToast('🗑 Silindi');
-}
-
-async function toggleDone(id) {
-  const e = events.find(x=>x.id===id);
+async function toggleDone(event, id) {
+  event.stopPropagation();
+  const e = data.find(x => x.id === id);
   if (!e) return;
   e.done = !e.done;
-  if (e.done) e.status = 'done';
-  render();
-  await save();
-  lastDataStr = JSON.stringify(events);
-  showToast(e.done?'✅ Tamamlandı':'↩ Geri alındı');
-}
-
-async function save() {
+  e.status = e.done ? 'done' : 'confirmed';
   try {
-    await fetch(API_URL, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(events)
-    });
-  } catch(e) {
-    showToast('⚠ Kaydetme hatası');
+    await saveOneEvent(e);
+    showToast(e.done ? T('done') + ' ✓' : T('confirmed') + ' ✓');
+  } catch(err) {
+    console.error('Firebase toggle failed:', err);
+    setSyncState('error');
+    showToast(lang==='tr'?'Kayıt hatası':'Ошибка сохранения');
   }
 }
 
-function setConnStatus(status) {
-  const b = document.getElementById('connBadge');
-  if (status==='online') {b.className='conn-badge online';b.textContent='⬤ Canlı';}
-  else if (status==='loading') {b.className='conn-badge loading';b.textContent='⬤ Bağlanıyor…';}
-  else {b.className='conn-badge offline';b.textContent='⬤ Bağlantı yok';}
+function openDetails(id) {
+  const e = data.find(x => x.id === id);
+  if (!e) return;
+  const overlay = document.getElementById('details-overlay');
+  const title = document.getElementById('details-title');
+  const body = document.getElementById('details-body');
+  title.textContent = `${T('detailsTitle')} — ${e.artist || ''}`;
+  title.dataset.dynamic = '1';
+  const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
+  const statusText = T(e.status || 'confirmed');
+  body.innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-block"><div class="detail-label">${T('lCategory')}</div><div class="detail-value">${e.type || '—'}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lStatus')}</div><div class="detail-value">${statusText}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lLocation')}</div><div class="detail-value">${e.location || '—'}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lGuests')}</div><div class="detail-value">${fmtNum(e.guests||0)}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lStart')}</div><div class="detail-value">${fmtDate(e.start || '') || '—'}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lEnd')}</div><div class="detail-value">${fmtDate(e.end || '') || '—'}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lRevenue')}</div><div class="detail-value">${fmtRev(e.revenue)}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lNonDirect')}</div><div class="detail-value">${fmtRev(e.nonDirect)}</div></div>
+    </div>
+    <div class="detail-block"><div class="detail-label">${lang==='tr'?'Tarih Aralığı':'Диапазон дат'}</div><div class="detail-value">${dateStr}</div></div>
+    <div class="detail-block"><div class="detail-label">${T('lNote')}</div><div class="detail-value">${e.note || '—'}</div></div>
+    <div class="detail-block"><div class="detail-label">${T('materials')}</div><div class="detail-value">${e.materials || '—'}</div></div>
+    <div class="detail-block"><div class="detail-label">${T('contractDocument')}</div><div class="detail-value">${e.contractUrl ? `<a class=\"detail-link\" href=\"${e.contractUrl}\" target=\"_blank\" rel=\"noopener noreferrer\">📄 ${e.contractName || T('downloadContract')}</a>` : '—'}</div></div>
+  `;
+  overlay.style.display = 'flex';
+}
+function closeDetailsModal() {
+  const overlay = document.getElementById('details-overlay');
+  if (overlay) overlay.style.display = 'none';
+  const title = document.getElementById('details-title');
+  if (title) { delete title.dataset.dynamic; title.textContent = T('detailsTitle'); }
+}
+function detailsOverlayClick(e) {
+  if (e.target === document.getElementById('details-overlay')) closeDetailsModal();
 }
 
+// Modal
+function openModal(id) {
+  if (id) {
+    const entered = window.prompt(T('passwordPrompt'));
+    if (entered === null) return;
+    if (entered !== EDIT_PASSWORD) {
+      showToast(T('passwordWrong'));
+      return;
+    }
+  }
+  editingId = id;
+  loadCustomOptions();
+  // Reset custom inputs
+  ['f-location-custom','f-category-custom'].forEach(cid => {
+    const el = document.getElementById(cid);
+    if (el) { el.style.display = 'none'; el.value = ''; }
+  });
+  const overlay = document.getElementById('overlay');
+  const btnDel = document.getElementById('btn-del');
+  document.getElementById('modal-title').textContent = id ? T('editEvent') : T('addEvent');
+  btnDel.style.display = id ? 'inline-flex' : 'none';
+  if (id) {
+    const e = data.find(x => x.id === id);
+    if (!e) return;
+    document.getElementById('f-artist').value = e.artist || '';
+    // Set location — if not in list, add it temporarily
+    const locSel = document.getElementById('f-location');
+    if (!Array.from(locSel.options).some(o => o.value === (e.location||''))) {
+      locSel.insertBefore(new Option(e.location, e.location), locSel.querySelector('option[value="__NEW__"]'));
+    }
+    locSel.value = e.location || 'Karavansaray Arena';
+    // Set category — if not in list, add it temporarily
+    const catSel = document.getElementById('f-category');
+    if (!Array.from(catSel.options).some(o => o.value === (e.type||''))) {
+      catSel.insertBefore(new Option(e.type, e.type), catSel.querySelector('option[value="__NEW__"]'));
+    }
+    catSel.value = e.type || 'ARENA EVENT';
+    document.getElementById('f-location').value = e.location || 'Karavansaray Arena';
+    document.getElementById('f-status').value = e.status || 'confirmed';
+    document.getElementById('f-start').value = e.start || '';
+    document.getElementById('f-end').value = e.end || '';
+    document.getElementById('f-revenue').value = e.revenue || '';
+    document.getElementById('f-nondirect').value = e.nonDirect || '';
+    document.getElementById('f-guests').value = e.guests || '';
+    document.getElementById('f-note').value = e.note || '';
+    document.getElementById('f-materials').value = e.materials || '';
+    document.getElementById('f-contract-name').value = e.contractName || '';
+    document.getElementById('f-contract-url').value = e.contractUrl || '';
+  } else {
+    document.getElementById('f-artist').value = '';
+    document.getElementById('f-category').value = 'ARENA EVENT';
+    document.getElementById('f-location').value = 'Karavansaray Arena';
+    document.getElementById('f-status').value = 'confirmed';
+    document.getElementById('f-start').value = '';
+    document.getElementById('f-end').value = '';
+    document.getElementById('f-revenue').value = '';
+    document.getElementById('f-nondirect').value = '';
+    document.getElementById('f-guests').value = '';
+    document.getElementById('f-note').value = '';
+    document.getElementById('f-materials').value = '';
+    document.getElementById('f-contract-name').value = '';
+    document.getElementById('f-contract-url').value = '';
+  }
+  overlay.className = 'open';
+  overlay.style.display = 'flex';
+}
+function closeModal() {
+  const overlay = document.getElementById('overlay');
+  overlay.style.display = 'none';
+  overlay.className = '';
+  editingId = null;
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeModal(); closeDetailsModal(); } });
+
+function handleNewOption(sel, field) {
+  if (sel.value !== '__NEW__') return;
+  const customInput = document.getElementById('f-'+field+'-custom');
+  customInput.style.display = 'block';
+  customInput.focus();
+  // Prevent saving __NEW__ as value
+  sel.value = sel.options[0].value;
+}
+
+function getSelectValue(selectId, customId) {
+  const customEl = document.getElementById(customId);
+  if (customEl && customEl.style.display !== 'none' && customEl.value.trim()) {
+    const newVal = customEl.value.trim();
+    // Add to dropdown for this session
+    const sel = document.getElementById(selectId);
+    const exists = Array.from(sel.options).some(o => o.value === newVal);
+    if (!exists) {
+      const newOpt = new Option(newVal, newVal);
+      sel.insertBefore(newOpt, sel.querySelector('option[value="__NEW__"]'));
+      // Persist custom options in localStorage
+      const key = 'custom_'+selectId;
+      const stored = JSON.parse(localStorage.getItem(key)||'[]');
+      if (!stored.includes(newVal)) { stored.push(newVal); localStorage.setItem(key, JSON.stringify(stored)); }
+    }
+    customEl.style.display = 'none';
+    customEl.value = '';
+    return newVal;
+  }
+  return document.getElementById(selectId).value;
+}
+
+function loadCustomOptions() {
+  ['f-location','f-category'].forEach(id => {
+    const stored = JSON.parse(localStorage.getItem('custom_'+id)||'[]');
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    stored.forEach(val => {
+      if (!Array.from(sel.options).some(o => o.value === val)) {
+        sel.insertBefore(new Option(val, val), sel.querySelector('option[value="__NEW__"]'));
+      }
+    });
+  });
+}
+
+async function saveEvent() {
+  const artist = document.getElementById('f-artist').value.trim();
+  const start = document.getElementById('f-start').value;
+  if (!artist || !start) { alert(lang==='tr'?'Sanatçı ve başlangıç tarihi zorunludur.':'Заполните обязательные поля.'); return; }
+  const end = document.getElementById('f-end').value || start;
+  const status = document.getElementById('f-status').value;
+  const obj = {
+    artist,
+    type: getSelectValue('f-category','f-category-custom'),
+    location: getSelectValue('f-location','f-location-custom'),
+    status,
+    done: status === 'done',
+    start,
+    end,
+    revenue: parseInt(document.getElementById('f-revenue').value) || 0,
+    nonDirect: parseInt(document.getElementById('f-nondirect').value) || 0,
+    guests: parseInt(document.getElementById('f-guests').value) || 0,
+    note: document.getElementById('f-note').value.trim(),
+    materials: document.getElementById('f-materials').value.trim(),
+    contractName: document.getElementById('f-contract-name').value.trim(),
+    contractUrl: document.getElementById('f-contract-url').value.trim(),
+  };
+
+  let ev;
+  if (editingId) {
+    const idx = data.findIndex(x => x.id === editingId);
+    if (idx > -1) {
+      ev = {...data[idx], ...obj};
+      data[idx] = ev;
+    }
+  } else {
+    const maxId = data.reduce((m,x) => Math.max(m, Number(x.id)||0), 0);
+    const maxNo = data.reduce((m,x) => Math.max(m, Number(x.no)||0), 0);
+    ev = {id: maxId+1, no: maxNo+1, ...obj};
+    data.push(ev);
+  }
+
+  if (!ev) return;
+
+  try {
+    await saveOneEvent(ev);
+    closeModal();
+    showToast(T('saved'));
+  } catch(err) {
+    console.error('Firebase save failed:', err);
+    setSyncState('error');
+    alert(lang==='tr'?'Online kayıt yapılamadı. Firebase bağlantısını kontrol edin.':'Не удалось сохранить онлайн. Проверьте Firebase.');
+  }
+}
+async function deleteEvent() {
+  if (!editingId) return;
+  if (!confirm(lang==='tr'?'Bu etkinliği silmek istediğinize emin misiniz?':'Вы уверены, что хотите удалить это событие?')) return;
+  const idToDelete = editingId;
+  data = data.filter(x => x.id !== idToDelete);
+  try {
+    await deleteOneEvent(idToDelete);
+    closeModal();
+    showToast(T('deleted'));
+  } catch(err) {
+    console.error('Firebase delete failed:', err);
+    setSyncState('error');
+    alert(lang==='tr'?'Silme işlemi online kaydedilemedi.':'Не удалось удалить онлайн.');
+  }
+}
+
+// Calendar
+function calPrev() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function calNext() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = T('months')[calMonth] + ' ' + calYear;
+  const headersEl = document.getElementById('cal-day-headers');
+  headersEl.innerHTML = T('days').map(d => `<div class="cal-day-header">${d}</div>`).join('');
+  const today = new Date();
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDow = firstDay.getDay(); // 0=Sun
+  startDow = startDow === 0 ? 6 : startDow - 1; // Monday-first
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+  const cells = [];
+  for (let i = 0; i < startDow; i++) cells.push({day: daysInPrev - startDow + 1 + i, cur: false});
+  for (let i = 1; i <= daysInMonth; i++) cells.push({day: i, cur: true});
+  const rem = 42 - cells.length;
+  for (let i = 1; i <= rem; i++) cells.push({day: i, cur: false});
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = cells.map(cell => {
+    if (!cell.cur) return `<div class="cal-cell other-month"><div class="cal-day-num">${cell.day}</div></div>`;
+    const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(cell.day).padStart(2,'0');
+    const isToday = (today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===cell.day);
+    // find events that include this date
+    const evts = data.filter(e => e.start <= dateStr && e.end >= dateStr);
+    const hasEvts = evts.length > 0;
+    let chipsHtml = '';
+    const show = evts.slice(0,2);
+    const more = evts.length - show.length;
+    show.forEach(ev => {
+      const chipCls = ev.status === 'confirmed' ? 'chip-conf' : ev.status === 'negotiation' ? 'chip-nego' : ev.status === 'contractSigned' ? 'chip-conf' : 'chip-done';
+      chipsHtml += `<div class="cal-chip ${chipCls}" onclick="openDetails(${ev.id});event.stopPropagation()" title="${ev.artist}">${ev.artist}</div>`;
+    });
+    if (more > 0) chipsHtml += `<div class="cal-more">+${more} ${T('moreEvents')}</div>`;
+    return `<div class="cal-cell${hasEvts ? ' has-events' : ''}${isToday ? ' today' : ''}">
+      <div class="cal-day-num">${cell.day}</div>
+      ${chipsHtml}
+    </div>`;
+  }).join('');
+}
+
+// Toast
+let toastTimer = null;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// CSV Export
 function exportCSV() {
-  const headers = ['No','Tip','Etkinlik','Sanatçı','Başlangıç','Bitiş','Gelir','Dolaylı','Misafir','Gider','Durum','Not'];
-  const rows = events.map(e=>[e.no,e.type,e.event,e.artist,e.start,e.end,e.revenue,e.nonDirect,e.guests,e.expense,e.status,e.note]);
-  const csv = [headers,...rows].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const h = ['No','Type','Artist','Location','Start','End','Revenue','NonDirect','Guests','Status','Done','Note','Materials','ContractName','ContractURL'];
+  const rows = [...data].sort((a,b) => a.start.localeCompare(b.start)).map(e => [
+    e.no, e.type, e.artist, e.location, e.start, e.end,
+    e.revenue||0, e.nonDirect||0, e.guests||0, e.status, e.done?'1':'0', e.note||'', e.materials||'', e.contractName||'', e.contractUrl||''
+  ]);
+  const csv = [h, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8'});
   const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
-  a.download = 'karavansaray-events-2026.csv';
+  a.href = URL.createObjectURL(blob);
+  a.download = `karavansaray_events_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+  showToast(T('report') + ' ✓');
 }
-
-// Polling
-setInterval(async () => {
-  try {
-    const r = await fetch(API_URL + '?t=' + Date.now());
-    const data = await r.json();
-    const str = JSON.stringify(data);
-    if (str !== lastDataStr && lastDataStr !== '') {
-      events = data;
-      lastDataStr = str;
-      render();
-      showToast('🔄 Veriler güncellendi');
-    }
-    if (!lastDataStr) lastDataStr = str;
-    setConnStatus('online');
-  } catch(e) {
-    setConnStatus('offline');
-  }
-}, 5000);
 
 // Init
-async function init() {
-  setConnStatus('loading');
-  try {
-    const r = await fetch(API_URL + '?t=' + Date.now());
-    if (r.ok) {
-      const data = await r.json();
-      if (Array.isArray(data) && data.length > 0) {
-        events = data;
-        lastDataStr = JSON.stringify(data);
-      }
-      setConnStatus('online');
-    } else {
-      setConnStatus('offline');
-    }
-  } catch(e) {
-    setConnStatus('offline');
-    showToast('⚠ Bağlantı hatası — yerel veriler kullanılıyor');
-  }
-  document.getElementById('loadingOverlay').style.display = 'none';
-  render();
-}
-
-init();
+setLoaderText();
+loadData();
+// Firebase gerçek zamanlı dinleme kullanır; ayrı periyodik yenileme gerekmez.
+window.addEventListener('resize', () => { if (currentView === 'list') { const mobileActions = document.getElementById('mobile-actions'); if (mobileActions) mobileActions.style.display = window.innerWidth <= 800 ? 'flex' : 'none'; } });
 </script>
 </body>
 </html>
