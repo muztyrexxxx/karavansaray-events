@@ -2703,7 +2703,7 @@ function downloadBlob(blob, filename) {
 const XL = {
   navy: 'FF0F172A', cyan: 'FF06B6D4', headerBlue: 'FF1E40AF',
   altRow: 'FFF8FAFC', border: 'FFCBD5E1', totalFill: 'FFEFF6FF',
-  slate: 'FF64748B', dark: 'FF1E293B',
+  slate: 'FF64748B', dark: 'FF000000',
   stConfirmed: 'FF1D4ED8', stNego: 'FF92400E', stSigned: 'FF047857', stDone: 'FF64748B'
 };
 function xlBorder() {
@@ -2782,11 +2782,10 @@ async function exportXLSX() {
       e.guests || 0, e.revenue || 0, e.nonDirect || 0, (e.revenue||0) + (e.nonDirect||0),
       T(e.status), e.note || ''
     ];
-    const isDone = e.done || e.status === 'done';
     row.eachCell({includeEmpty:true}, (c, col) => {
       if (col > headers.length) return;
       c.border = xlBorder();
-      c.font = {name:'Calibri', size:10, color:{argb: isDone ? XL.slate : XL.dark}};
+      c.font = {name:'Calibri', size:10, color:{argb: XL.dark}};
       if (idx % 2 === 1) c.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.altRow}};
       c.alignment = {vertical:'middle', horizontal: col === 1 || col === 7 ? 'center' : (col >= 8 && col <= 10 ? 'right' : 'left'), wrapText: col === 12};
     });
@@ -2838,7 +2837,7 @@ async function exportXLSX() {
     const row = os.getRow(kr);
     row.getCell(1).value = lbl;
     row.getCell(2).value = val;
-    row.getCell(1).font = {name:'Calibri', size:10, bold:true, color:{argb: XL.slate}};
+    row.getCell(1).font = {name:'Calibri', size:10, bold:true, color:{argb: XL.dark}};
     row.getCell(2).font = {name:'Calibri', size:11, bold:true, color:{argb: XL.headerBlue}};
     if (kr >= 8) row.getCell(2).numFmt = moneyFmt; else row.getCell(2).numFmt = '#,##0';
     row.getCell(1).border = xlBorder(); row.getCell(2).border = xlBorder();
