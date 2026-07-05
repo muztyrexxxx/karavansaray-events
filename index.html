@@ -142,7 +142,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 .cal-nav-btn{background:#fff;border:1px solid #E2E8F0;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#475569;font-size:16px;transition:all 0.15s;flex-shrink:0}
 .cal-nav-btn:hover{border-color:#93C5FD;color:#1D4ED8}
 .cal-month-label{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:#1E293B;flex:1}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
 .cal-day-header{text-align:center;padding:6px 0;font-size:11px;font-weight:700;color:#94A3B8;letter-spacing:0.5px}
 .cal-cell{min-height:90px;background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;transition:all 0.15s}
 .cal-cell.has-events{background:#EFF6FF;border-color:#BFDBFE}
@@ -155,6 +155,46 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 .cal-chip.chip-conf{background:#DBEAFE;color:#1D4ED8}
 .cal-chip.chip-nego{background:#FFFBEB;color:#92400E}
 .cal-chip.chip-done{background:#F1F5F9;color:#475569}
+/* Dashboard */
+.dash-wrap{padding:0 24px 24px;display:flex;flex-direction:column;gap:14px;flex:1}
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.dash-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.chart-card.wide{grid-column:1/-1}
+.chart-title{font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.5px}
+.chart-box{position:relative;height:260px}
+@media(max-width:800px){.dash-charts{grid-template-columns:1fr}.dash-kpis{grid-template-columns:repeat(2,1fr)}}
+/* Table view */
+.table-wrap{padding:0 24px 24px;overflow-x:auto;flex:1}
+.ev-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;font-size:12.5px}
+.ev-table th{background:#F8FAFC;color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;padding:10px 12px;text-align:left;border-bottom:1px solid #E2E8F0;cursor:pointer;white-space:nowrap;user-select:none}
+.ev-table th:hover{color:#1D4ED8}
+.ev-table td{padding:9px 12px;border-bottom:1px solid #F1F5F9;color:#1E293B;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.ev-table tr:last-child td{border-bottom:none}
+.ev-table tbody tr{cursor:pointer;transition:background 0.1s}
+.ev-table tbody tr:hover{background:#F8FAFC}
+.ev-table tbody tr.done-row{opacity:0.55}
+.sort-arrow{font-size:9px;margin-left:3px}
+/* View toggle + toolbar controls */
+.view-toggle{display:flex;border:1px solid #E2E8F0;border-radius:9px;overflow:hidden;flex-shrink:0}
+.view-toggle button{padding:7px 12px;background:#fff;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:#64748B;cursor:pointer;transition:all 0.15s}
+.view-toggle button.active{background:#EFF6FF;color:#1D4ED8}
+.toolbar-select{padding:8px 10px;border:1px solid #E2E8F0;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#475569;background:#fff;outline:none;cursor:pointer;max-width:180px}
+.date-range-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.date-range-wrap input{padding:7px 8px;border:1px solid #E2E8F0;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#475569;background:#fff;outline:none}
+.date-range-wrap span{font-size:12px;color:#94A3B8}
+.clear-filters-btn{padding:7px 11px;border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer}
+/* Conflict */
+.conflict-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA;white-space:nowrap}
+.cal-cell{cursor:pointer}
+.cal-cell:hover{border-color:#93C5FD}
+.cal-cell.conflict{border-color:#FCA5A5;box-shadow:inset 0 0 0 1px #FCA5A5}
+.cal-mode-toggle{display:flex;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;flex-shrink:0}
+.cal-mode-toggle button{padding:6px 12px;background:#fff;border:none;font-size:12px;font-weight:600;color:#64748B;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.cal-mode-toggle button.active{background:#EFF6FF;color:#1D4ED8}
+.cal-grid.week-mode .cal-cell{min-height:230px}
+.gcal-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;background:#ECFDF5;border:1px solid #A7F3D0;color:#047857;text-decoration:none;font-weight:600;width:max-content;font-size:12.5px}
+.gcal-btn:hover{background:#D1FAE5}
 /* Toast */
 #toast{position:fixed;bottom:24px;right:24px;background:#1E293B;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none}
 #toast.show{opacity:1;transform:translateY(0)}
@@ -206,6 +246,9 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
       </div>
     </div>
     <div class="sb-section-label" id="lbl-views">Görünüm</div>
+    <button class="sb-nav-btn" id="nav-dash" onclick="switchView('dashboard')">
+      <span>📊</span><span id="nav-dash-label">Genel Bakış</span>
+    </button>
     <button class="sb-nav-btn active" id="nav-list" onclick="switchView('list')">
       <span>☰</span><span id="nav-list-label">Etkinlik Listesi</span>
     </button>
@@ -234,7 +277,9 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
       <span class="sb-badge" id="cnt-done">0</span>
     </button>
     <div class="sb-footer">
-      <button class="sb-report-btn" id="report-btn" onclick="exportCSV()">⬇ <span id="report-label">Rapor Al</span></button>
+      <button class="sb-report-btn" id="report-btn" onclick="exportXLSX()">⬇ <span id="report-label">Excel Raporu</span></button>
+      <button class="sb-report-btn" id="csv-btn" onclick="exportCSV()">⬇ <span id="csv-label">CSV Raporu</span></button>
+      <button class="sb-report-btn" id="ics-btn" onclick="exportICS()">📅 <span id="ics-label">Takvim (.ics)</span></button>
       <button class="sb-lang-btn" id="lang-btn" onclick="toggleLang()">🌐 <span id="lang-label">Русский</span></button>
     </div>
   </aside>
@@ -255,8 +300,11 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 
     <div class="mobile-actions" id="mobile-actions">
       <div class="mobile-top-actions">
+        <button class="mobile-btn" id="mobile-nav-dash" onclick="switchView('dashboard')">📊</button>
+        <button class="mobile-btn active" id="mobile-nav-list" onclick="switchView('list')">☰</button>
+        <button class="mobile-btn" id="mobile-nav-cal" onclick="switchView('calendar')">📅</button>
         <button class="mobile-btn" id="mobile-lang-btn" onclick="toggleLang()">🌐 <span id="mobile-lang-label">Русский</span></button>
-        <button class="mobile-btn" id="mobile-report-btn" onclick="exportCSV()">⬇ <span id="mobile-report-label">Rapor Al</span></button>
+        <button class="mobile-btn" id="mobile-report-btn" onclick="exportXLSX()">⬇ <span id="mobile-report-label">Excel</span></button>
       </div>
       <div class="pill-row" id="mobile-filter-pills"></div>
     </div>
@@ -285,6 +333,50 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
       </div>
     </div>
 
+    <!-- DASHBOARD VIEW -->
+    <div id="dash-view" class="dash-wrap" style="display:none">
+      <div class="dash-kpis">
+        <div class="stat-card">
+          <div class="stat-label" id="kpi-lbl-totalrev">Toplam Gelir (Tümü)</div>
+          <div class="stat-value cyan" id="kpi-totalrev">—</div>
+          <div class="stat-sub" id="kpi-totalrev-sub">direkt + dolaylı</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="kpi-lbl-done">Tamamlanan</div>
+          <div class="stat-value" id="kpi-done">—</div>
+          <div class="stat-sub" id="kpi-done-sub">etkinlik</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="kpi-lbl-upcoming">Yaklaşan</div>
+          <div class="stat-value" id="kpi-upcoming">—</div>
+          <div class="stat-sub" id="kpi-upcoming-sub">planlanan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="kpi-lbl-avgguests">Ort. Misafir</div>
+          <div class="stat-value" id="kpi-avgguests">—</div>
+          <div class="stat-sub" id="kpi-avgguests-sub">etkinlik başına</div>
+        </div>
+      </div>
+      <div class="dash-charts">
+        <div class="chart-card wide">
+          <div class="chart-title" id="ch-lbl-monthly">Aylık Gelir</div>
+          <div class="chart-box"><canvas id="chart-monthly"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" id="ch-lbl-cat">Kategori Dağılımı</div>
+          <div class="chart-box"><canvas id="chart-cat"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" id="ch-lbl-venue">Mekan Kullanımı</div>
+          <div class="chart-box"><canvas id="chart-venue"></canvas></div>
+        </div>
+        <div class="chart-card wide">
+          <div class="chart-title" id="ch-lbl-guests">Aylık Misafir</div>
+          <div class="chart-box"><canvas id="chart-guests"></canvas></div>
+        </div>
+      </div>
+    </div>
+
     <!-- TOOLBAR -->
     <div class="toolbar-stack" id="toolbar">
       <div class="pill-row" id="status-pills"></div>
@@ -294,8 +386,27 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
             <circle cx="6.5" cy="6.5" r="4.5" stroke="#94A3B8" stroke-width="1.5"/>
             <path d="M10 10l3 3" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          <input class="search-input" id="search-input" type="text" placeholder="Ara..." oninput="renderEvents()"/>
+          <input class="search-input" id="search-input" type="text" placeholder="Ara..." oninput="renderListOrTable()"/>
         </div>
+        <div class="view-toggle">
+          <button id="vt-list" class="active" onclick="switchView('list')" title="Liste">☰</button>
+          <button id="vt-table" onclick="switchView('table')" title="Tablo">▦</button>
+        </div>
+        <select class="toolbar-select" id="venue-filter" onchange="renderListOrTable()"></select>
+        <select class="toolbar-select" id="sort-select" onchange="applySortSelect()">
+          <option value="start-asc">Tarih ↑</option>
+          <option value="start-desc">Tarih ↓</option>
+          <option value="revenue-desc">Gelir ↓</option>
+          <option value="guests-desc">Misafir ↓</option>
+        </select>
+        <div class="date-range-wrap">
+          <input type="date" id="filter-date-from" onchange="renderListOrTable()"/>
+          <span>→</span>
+          <input type="date" id="filter-date-to" onchange="renderListOrTable()"/>
+          <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕</button>
+        </div>
+      </div>
+      <div class="toolbar">
         <div class="pill-row" id="cat-pills"></div>
       </div>
     </div>
@@ -303,11 +414,19 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
     <!-- EVENTS LIST -->
     <div id="list-view" class="events-list"></div>
 
+    <!-- TABLE VIEW -->
+    <div id="table-view" class="table-wrap" style="display:none"></div>
+
     <!-- CALENDAR VIEW -->
     <div id="cal-view" class="cal-wrap" style="display:none">
       <div class="cal-header">
         <button class="cal-nav-btn" onclick="calPrev()">‹</button>
         <div class="cal-month-label" id="cal-month-label">NİSAN 2026</div>
+        <div class="cal-mode-toggle">
+          <button id="cm-month" class="active" onclick="setCalMode('month')">Ay</button>
+          <button id="cm-week" onclick="setCalMode('week')">Hafta</button>
+        </div>
+        <button class="cal-nav-btn" onclick="calToday()" id="cal-today-btn" style="width:auto;padding:0 12px;font-size:12px;font-weight:600">Bugün</button>
         <button class="cal-nav-btn" onclick="calNext()">›</button>
       </div>
       <div class="cal-grid" id="cal-day-headers"></div>
@@ -452,6 +571,8 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
 //  FIREBASE BULUT YAPILANDIRMASI
@@ -1440,7 +1561,18 @@ const TR = {
   filterAll:'Tümü', year:'2026 yılı', activeNego:'aktif müzakere',
   expected:'beklenen', directRev:'direkt gelir',
   passwordPrompt:'Düzenleme şifresini girin', passwordWrong:'Şifre yanlış',
-  contractSigned:'Sözleşme İmzalandı'
+  contractSigned:'Sözleşme İmzalandı',
+  dashboard:'Genel Bakış', monthView:'Ay', weekView:'Hafta', today:'Bugün',
+  excelReport:'Excel Raporu', csvReport:'CSV Raporu', icsExport:'Takvim (.ics)',
+  addToGcal:"Google Takvim'e Ekle", conflictWarn:'Mekan çakışması',
+  kpiTotalRev:'Toplam Gelir (Tümü)', kpiTotalRevSub:'direkt + dolaylı',
+  kpiDone:'Tamamlanan', kpiDoneSub:'etkinlik',
+  kpiUpcoming:'Yaklaşan', kpiUpcomingSub:'planlanan',
+  kpiAvgGuests:'Ort. Misafir', kpiAvgGuestsSub:'etkinlik başına',
+  chMonthly:'Aylık Gelir', chCat:'Kategori Dağılımı', chVenue:'Mekan Kullanımı', chGuests:'Aylık Misafir',
+  allVenues:'Tüm Mekanlar', sortDateAsc:'Tarih ↑', sortDateDesc:'Tarih ↓', sortRevDesc:'Gelir ↓', sortGuestsDesc:'Misafir ↓',
+  directLabel:'Direkt', indirectLabel:'Dolaylı', guestsLabel:'Misafir', eventsLabel:'etkinlik',
+  thNo:'No', thDate:'Tarih'
 };
 const RU = {
   confirmed:'Подтверждено', negotiation:'Переговоры', contractSigned:'Договор подписан', done:'Завершено',
@@ -1461,7 +1593,18 @@ const RU = {
   filterAll:'Все', year:'год 2026', activeNego:'активных',
   expected:'ожидается', directRev:'прямой доход',
   passwordPrompt:'Введите пароль для редактирования', passwordWrong:'Неверный пароль',
-  contractSigned:'Договор подписан'
+  contractSigned:'Договор подписан',
+  dashboard:'Обзор', monthView:'Месяц', weekView:'Неделя', today:'Сегодня',
+  excelReport:'Отчёт Excel', csvReport:'Отчёт CSV', icsExport:'Календарь (.ics)',
+  addToGcal:'Добавить в Google Календарь', conflictWarn:'Конфликт площадки',
+  kpiTotalRev:'Общий доход (всё)', kpiTotalRevSub:'прямой + косвенный',
+  kpiDone:'Завершено', kpiDoneSub:'событий',
+  kpiUpcoming:'Предстоящие', kpiUpcomingSub:'запланировано',
+  kpiAvgGuests:'Сред. гостей', kpiAvgGuestsSub:'на событие',
+  chMonthly:'Доход по месяцам', chCat:'По категориям', chVenue:'Загрузка площадок', chGuests:'Гости по месяцам',
+  allVenues:'Все площадки', sortDateAsc:'Дата ↑', sortDateDesc:'Дата ↓', sortRevDesc:'Доход ↓', sortGuestsDesc:'Гости ↓',
+  directLabel:'Прямой', indirectLabel:'Косвенный', guestsLabel:'Гости', eventsLabel:'событий',
+  thNo:'№', thDate:'Дата'
 };
 let lang = 'tr', L = TR;
 function T(k){ return L[k] || TR[k] || k; }
@@ -1479,6 +1622,21 @@ let currentCat = 'all';
 let currentView = 'list';
 let editingId = null;
 let calYear = 2026, calMonth = 3; // April = index 3
+let calMode = 'month';
+let calWeekStart = null; // 'YYYY-MM-DD' of Monday in week mode
+let sortKey = 'start', sortDir = 1;
+let conflictIds = new Set();
+let charts = {};
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function setTxt(id, txt){ const el = document.getElementById(id); if (el) el.textContent = txt; }
+function isoAddDays(iso, n){
+  const d = new Date(iso + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
 
 
 function setLoaderText() {
@@ -1763,19 +1921,92 @@ function applyLang() {
     statusSel.options[1].text = T('negotiation');
     statusSel.options[2].text = T('done');
   }
+  // new UI labels
+  setTxt('nav-dash-label', T('dashboard'));
+  setTxt('report-label', T('excelReport'));
+  setTxt('csv-label', T('csvReport'));
+  setTxt('ics-label', T('icsExport'));
+  setTxt('mobile-report-label', 'Excel');
+  setTxt('cm-month', T('monthView'));
+  setTxt('cm-week', T('weekView'));
+  setTxt('cal-today-btn', T('today'));
+  setTxt('kpi-lbl-totalrev', T('kpiTotalRev'));
+  setTxt('kpi-totalrev-sub', T('kpiTotalRevSub'));
+  setTxt('kpi-lbl-done', T('kpiDone'));
+  setTxt('kpi-done-sub', T('kpiDoneSub'));
+  setTxt('kpi-lbl-upcoming', T('kpiUpcoming'));
+  setTxt('kpi-upcoming-sub', T('kpiUpcomingSub'));
+  setTxt('kpi-lbl-avgguests', T('kpiAvgGuests'));
+  setTxt('kpi-avgguests-sub', T('kpiAvgGuestsSub'));
+  setTxt('ch-lbl-monthly', T('chMonthly'));
+  setTxt('ch-lbl-cat', T('chCat'));
+  setTxt('ch-lbl-venue', T('chVenue'));
+  setTxt('ch-lbl-guests', T('chGuests'));
+  const sortSel = document.getElementById('sort-select');
+  if (sortSel) {
+    sortSel.options[0].text = T('sortDateAsc');
+    sortSel.options[1].text = T('sortDateDesc');
+    sortSel.options[2].text = T('sortRevDesc');
+    sortSel.options[3].text = T('sortGuestsDesc');
+  }
+  renderVenueFilter();
   setSyncState(eventsQuery ? 'ok' : 'local');
 }
 
 function switchView(v) {
   currentView = v;
+  const isListy = v === 'list' || v === 'table';
+  document.getElementById('dash-view').style.display = v === 'dashboard' ? 'flex' : 'none';
   document.getElementById('list-view').style.display = v === 'list' ? 'flex' : 'none';
+  document.getElementById('table-view').style.display = v === 'table' ? 'block' : 'none';
   document.getElementById('cal-view').style.display = v === 'calendar' ? 'block' : 'none';
-  document.getElementById('toolbar').style.display = v === 'list' ? 'flex' : 'none';
-  const mobileActions = document.getElementById('mobile-actions'); if (mobileActions) mobileActions.style.display = v === 'list' && window.innerWidth <= 800 ? 'flex' : (window.innerWidth <= 800 ? 'flex' : 'none');
-  document.getElementById('nav-list').classList.toggle('active', v === 'list');
+  document.getElementById('toolbar').style.display = isListy ? 'flex' : 'none';
+  const mobileActions = document.getElementById('mobile-actions'); if (mobileActions) mobileActions.style.display = window.innerWidth <= 800 ? 'flex' : 'none';
+  document.getElementById('nav-dash').classList.toggle('active', v === 'dashboard');
+  document.getElementById('nav-list').classList.toggle('active', isListy);
   document.getElementById('nav-cal').classList.toggle('active', v === 'calendar');
-  document.getElementById('main-title').textContent = v === 'list' ? T('allEvents') : T('calendar');
+  const mnd = document.getElementById('mobile-nav-dash'); if (mnd) mnd.classList.toggle('active', v === 'dashboard');
+  const mnl = document.getElementById('mobile-nav-list'); if (mnl) mnl.classList.toggle('active', isListy);
+  const mnc = document.getElementById('mobile-nav-cal'); if (mnc) mnc.classList.toggle('active', v === 'calendar');
+  const vtl = document.getElementById('vt-list'); if (vtl) vtl.classList.toggle('active', v === 'list');
+  const vtt = document.getElementById('vt-table'); if (vtt) vtt.classList.toggle('active', v === 'table');
+  document.getElementById('main-title').textContent = v === 'dashboard' ? T('dashboard') : (v === 'calendar' ? T('calendar') : T('allEvents'));
   if (v === 'calendar') renderCalendar();
+  else if (v === 'dashboard') renderDashboard();
+  else renderListOrTable();
+}
+
+function renderListOrTable() {
+  if (currentView === 'table') renderTable();
+  else renderEvents();
+}
+
+function applySortSelect() {
+  const val = document.getElementById('sort-select').value;
+  const [k, dir] = val.split('-');
+  sortKey = k;
+  sortDir = dir === 'desc' ? -1 : 1;
+  renderListOrTable();
+}
+
+function clearFilters() {
+  document.getElementById('filter-date-from').value = '';
+  document.getElementById('filter-date-to').value = '';
+  document.getElementById('search-input').value = '';
+  const vf = document.getElementById('venue-filter'); if (vf) vf.value = 'all';
+  currentCat = 'all';
+  renderCatPills();
+  renderListOrTable();
+}
+
+function renderVenueFilter() {
+  const sel = document.getElementById('venue-filter');
+  if (!sel) return;
+  const current = sel.value || 'all';
+  const venues = [...new Set(data.map(e => e.location).filter(Boolean))].sort();
+  sel.innerHTML = `<option value="all">${esc(T('allVenues'))}</option>` +
+    venues.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  sel.value = venues.includes(current) || current === 'all' ? current : 'all';
 }
 
 function setFilter(f) {
@@ -1783,7 +2014,8 @@ function setFilter(f) {
   ['all','confirmed','negotiation','done'].forEach(x => {
     document.getElementById('fb-' + (x === 'all' ? 'all' : x)).classList.toggle('active', f === x);
   });
-  renderEvents();
+  renderStatusPills();
+  renderListOrTable();
 }
 
 function getFilteredData() {
@@ -1792,7 +2024,33 @@ function getFilteredData() {
   const q = (document.getElementById('search-input').value || '').toLowerCase();
   if (q) d = d.filter(e => (e.artist||'').toLowerCase().includes(q) || (e.type||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q));
   if (currentCat !== 'all') d = d.filter(e => e.type === currentCat);
-  return d.sort((a,b) => a.start.localeCompare(b.start));
+  const from = (document.getElementById('filter-date-from')||{}).value;
+  const to = (document.getElementById('filter-date-to')||{}).value;
+  if (from) d = d.filter(e => (e.end || e.start) >= from);
+  if (to) d = d.filter(e => e.start <= to);
+  const venue = (document.getElementById('venue-filter')||{}).value || 'all';
+  if (venue !== 'all') d = d.filter(e => e.location === venue);
+  return d.sort((a,b) => {
+    let va = a[sortKey], vb = b[sortKey];
+    if (sortKey === 'start') { va = a.start || ''; vb = b.start || ''; return va.localeCompare(vb) * sortDir; }
+    if (typeof va === 'string') return va.localeCompare(vb) * sortDir;
+    return ((va||0) - (vb||0)) * sortDir;
+  });
+}
+
+function computeConflicts() {
+  conflictIds = new Set();
+  const active = data.filter(e => !e.done && e.status !== 'done' && e.start && e.location);
+  for (let i = 0; i < active.length; i++) {
+    for (let j = i + 1; j < active.length; j++) {
+      const a = active[i], b = active[j];
+      const aEnd = a.end || a.start, bEnd = b.end || b.start;
+      if (a.location === b.location && a.start <= bEnd && b.start <= aEnd) {
+        conflictIds.add(a.id);
+        conflictIds.add(b.id);
+      }
+    }
+  }
 }
 
 function renderStats() {
@@ -1835,7 +2093,7 @@ function renderCatPills() {
 function setCat(c) {
   currentCat = c;
   renderCatPills();
-  renderEvents();
+  renderListOrTable();
 }
 
 function renderEvents() {
@@ -1852,9 +2110,10 @@ function renderEvents() {
     const doneCard = e.done ? ' done-card' : '';
     const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
     const extras = [];
-    if (e.note) extras.push(`<div>📝 ${e.note}</div>`);
-    if (e.materials) extras.push(`<div>🧰 ${e.materials}</div>`);
-    if (e.contractUrl) extras.push(`<div>📄 ${e.contractName || T('contractDocument')}</div>`);
+    if (e.note) extras.push(`<div>📝 ${esc(e.note)}</div>`);
+    if (e.materials) extras.push(`<div>🧰 ${esc(e.materials)}</div>`);
+    if (e.contractUrl) extras.push(`<div>📄 ${esc(e.contractName) || T('contractDocument')}</div>`);
+    const conflictBadge = conflictIds.has(e.id) ? `<span class="conflict-badge" title="${esc(T('conflictWarn'))}">⚠ ${esc(T('conflictWarn'))}</span>` : '';
     return `<div class="event-card${doneCard}" onclick="openDetails(${e.id})">
       <div class="event-stripe" style="background:${stripe}"></div>
       <div class="card-check-wrap">
@@ -1862,11 +2121,12 @@ function renderEvents() {
       </div>
       <div class="card-body">
         <div class="card-top">
-          <span class="card-artist">${e.artist}</span>
-          <span class="cat-badge ${catCls}">${e.type}</span>
+          <span class="card-artist">${esc(e.artist)}</span>
+          <span class="cat-badge ${catCls}">${esc(e.type)}</span>
+          ${conflictBadge}
         </div>
         <div class="card-meta">
-          <span>📍 ${e.location}</span>
+          <span>📍 ${esc(e.location)}</span>
           <span>📅 ${dateStr}</span>
           <span>👥 ${fmtNum(e.guests||0)} ${T('guests')}</span>
         </div>
@@ -1881,13 +2141,159 @@ function renderEvents() {
   }).join('');
 }
 
+function renderTable() {
+  const filtered = getFilteredData();
+  const container = document.getElementById('table-view');
+  if (!filtered.length) {
+    container.innerHTML = `<div class="no-events">${T('noEvents')}</div>`;
+    return;
+  }
+  const cols = [
+    {key:'no', label:T('thNo')},
+    {key:'start', label:T('thDate')},
+    {key:'artist', label:T('lArtist')},
+    {key:'type', label:T('lCategory')},
+    {key:'location', label:T('lLocation')},
+    {key:'guests', label:T('lGuests')},
+    {key:'revenue', label:T('lRevenue')},
+    {key:'status', label:T('lStatus')}
+  ];
+  const head = cols.map(c => {
+    const arrow = sortKey === c.key ? `<span class="sort-arrow">${sortDir === 1 ? '▲' : '▼'}</span>` : '';
+    return `<th onclick="sortTable('${c.key}')">${esc(c.label)}${arrow}</th>`;
+  }).join('');
+  const rows = filtered.map(e => {
+    const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
+    const conflict = conflictIds.has(e.id) ? ` <span class="conflict-badge" title="${esc(T('conflictWarn'))}">⚠</span>` : '';
+    return `<tr class="${e.done ? 'done-row' : ''}" onclick="openDetails(${e.id})">
+      <td>${e.no || ''}</td>
+      <td>${dateStr}</td>
+      <td>${esc(e.artist)}${conflict}</td>
+      <td><span class="cat-badge ${getCatClass(e.type)}">${esc(e.type)}</span></td>
+      <td>${esc(e.location)}</td>
+      <td>${fmtNum(e.guests||0)}</td>
+      <td>${fmtRev(e.revenue)}</td>
+      <td><span class="status-badge ${getStatusClass(e.status)}">${T(e.status)}</span></td>
+    </tr>`;
+  }).join('');
+  container.innerHTML = `<table class="ev-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function sortTable(key) {
+  if (sortKey === key) sortDir = -sortDir;
+  else { sortKey = key; sortDir = key === 'revenue' || key === 'guests' ? -1 : 1; }
+  renderTable();
+}
+
 function renderAll() {
+  computeConflicts();
   applyLang();
   renderStats();
   renderStatusPills();
   renderCatPills();
   if (currentView === 'list') renderEvents();
+  else if (currentView === 'table') renderTable();
+  else if (currentView === 'dashboard') renderDashboard();
   else renderCalendar();
+}
+
+// ── Dashboard ──────────────────────────────────────────────
+const CHART_COLORS = ['#3B82F6','#06B6D4','#8B5CF6','#F59E0B','#EF4444','#10B981','#EC4899','#6366F1','#14B8A6','#F97316','#A855F7','#84CC16','#0EA5E9','#E11D48'];
+
+function makeChart(id, config) {
+  const el = document.getElementById(id);
+  if (!el || typeof Chart === 'undefined') return;
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(el, config);
+}
+
+function renderDashboard() {
+  const totalRev = data.reduce((s,e) => s + (e.revenue||0) + (e.nonDirect||0), 0);
+  const doneCount = data.filter(e => e.done || e.status === 'done').length;
+  const todayIso = new Date().toISOString().slice(0,10);
+  const upcoming = data.filter(e => !e.done && e.status !== 'done' && (e.end || e.start) >= todayIso).length;
+  const withGuests = data.filter(e => (e.guests||0) > 0);
+  const avgGuests = withGuests.length ? Math.round(withGuests.reduce((s,e) => s + e.guests, 0) / withGuests.length) : 0;
+  setTxt('kpi-totalrev', fmtRev(totalRev));
+  setTxt('kpi-done', String(doneCount));
+  setTxt('kpi-upcoming', String(upcoming));
+  setTxt('kpi-avgguests', fmtNum(avgGuests));
+
+  const monthLabels = T('months').map(m => m.slice(0,3));
+  const revByMonth = Array(12).fill(0);
+  const indByMonth = Array(12).fill(0);
+  const guestsByMonth = Array(12).fill(0);
+  data.forEach(e => {
+    if (!e.start) return;
+    const m = parseInt(e.start.slice(5,7), 10) - 1;
+    if (m < 0 || m > 11) return;
+    revByMonth[m] += e.revenue || 0;
+    indByMonth[m] += e.nonDirect || 0;
+    guestsByMonth[m] += e.guests || 0;
+  });
+
+  makeChart('chart-monthly', {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [
+        {label: T('directLabel'), data: revByMonth, backgroundColor: '#3B82F6', borderRadius: 4},
+        {label: T('indirectLabel'), data: indByMonth, backgroundColor: '#93C5FD', borderRadius: 4}
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: {stacked: true, grid: {display: false}},
+        y: {stacked: true, ticks: {callback: v => fmtRev(v)}}
+      },
+      plugins: {legend: {position: 'bottom', labels: {boxWidth: 12, font: {size: 11}}}}
+    }
+  });
+
+  const catCounts = {};
+  data.forEach(e => { const t = e.type || '—'; catCounts[t] = (catCounts[t]||0) + 1; });
+  const catEntries = Object.entries(catCounts).sort((a,b) => b[1] - a[1]);
+  makeChart('chart-cat', {
+    type: 'doughnut',
+    data: {
+      labels: catEntries.map(x => x[0]),
+      datasets: [{data: catEntries.map(x => x[1]), backgroundColor: CHART_COLORS, borderWidth: 2, borderColor: '#fff'}]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '58%',
+      plugins: {legend: {position: 'right', labels: {boxWidth: 10, font: {size: 10}}}}
+    }
+  });
+
+  const venueCounts = {};
+  data.forEach(e => { const v = e.location || '—'; venueCounts[v] = (venueCounts[v]||0) + 1; });
+  const venueEntries = Object.entries(venueCounts).sort((a,b) => b[1] - a[1]);
+  makeChart('chart-venue', {
+    type: 'bar',
+    data: {
+      labels: venueEntries.map(x => x[0]),
+      datasets: [{label: T('eventsLabel'), data: venueEntries.map(x => x[1]), backgroundColor: '#06B6D4', borderRadius: 4}]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: {x: {ticks: {precision: 0}}},
+      plugins: {legend: {display: false}}
+    }
+  });
+
+  makeChart('chart-guests', {
+    type: 'line',
+    data: {
+      labels: monthLabels,
+      datasets: [{label: T('guestsLabel'), data: guestsByMonth, borderColor: '#8B5CF6', backgroundColor: 'rgba(139,92,246,0.12)', fill: true, tension: 0.35, pointRadius: 3}]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {y: {ticks: {callback: v => fmtNum(v)}}},
+      plugins: {legend: {display: false}}
+    }
+  });
 }
 
 async function toggleDone(event, id) {
@@ -1916,11 +2322,15 @@ function openDetails(id) {
   title.dataset.dynamic = '1';
   const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
   const statusText = T(e.status || 'confirmed');
+  const conflictRow = conflictIds.has(e.id)
+    ? `<div class="detail-block" style="background:#FEF2F2;border-color:#FECACA"><div class="detail-label" style="color:#B91C1C">⚠ ${esc(T('conflictWarn'))}</div><div class="detail-value" style="color:#B91C1C;font-size:12.5px">${lang==='tr'?'Bu tarihlerde aynı mekanda başka bir etkinlik var.':'На эти даты на этой площадке есть другое событие.'}</div></div>`
+    : '';
   body.innerHTML = `
+    ${conflictRow}
     <div class="detail-grid">
-      <div class="detail-block"><div class="detail-label">${T('lCategory')}</div><div class="detail-value">${e.type || '—'}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lCategory')}</div><div class="detail-value">${esc(e.type) || '—'}</div></div>
       <div class="detail-block"><div class="detail-label">${T('lStatus')}</div><div class="detail-value">${statusText}</div></div>
-      <div class="detail-block"><div class="detail-label">${T('lLocation')}</div><div class="detail-value">${e.location || '—'}</div></div>
+      <div class="detail-block"><div class="detail-label">${T('lLocation')}</div><div class="detail-value">${esc(e.location) || '—'}</div></div>
       <div class="detail-block"><div class="detail-label">${T('lGuests')}</div><div class="detail-value">${fmtNum(e.guests||0)}</div></div>
       <div class="detail-block"><div class="detail-label">${T('lStart')}</div><div class="detail-value">${fmtDate(e.start || '') || '—'}</div></div>
       <div class="detail-block"><div class="detail-label">${T('lEnd')}</div><div class="detail-value">${fmtDate(e.end || '') || '—'}</div></div>
@@ -1928,9 +2338,10 @@ function openDetails(id) {
       <div class="detail-block"><div class="detail-label">${T('lNonDirect')}</div><div class="detail-value">${fmtRev(e.nonDirect)}</div></div>
     </div>
     <div class="detail-block"><div class="detail-label">${lang==='tr'?'Tarih Aralığı':'Диапазон дат'}</div><div class="detail-value">${dateStr}</div></div>
-    <div class="detail-block"><div class="detail-label">${T('lNote')}</div><div class="detail-value">${e.note || '—'}</div></div>
-    <div class="detail-block"><div class="detail-label">${T('materials')}</div><div class="detail-value">${e.materials || '—'}</div></div>
-    <div class="detail-block"><div class="detail-label">${T('contractDocument')}</div><div class="detail-value">${e.contractUrl ? `<a class=\"detail-link\" href=\"${e.contractUrl}\" target=\"_blank\" rel=\"noopener noreferrer\">📄 ${e.contractName || T('downloadContract')}</a>` : '—'}</div></div>
+    <div class="detail-block"><div class="detail-label">${T('lNote')}</div><div class="detail-value">${esc(e.note) || '—'}</div></div>
+    <div class="detail-block"><div class="detail-label">${T('materials')}</div><div class="detail-value">${esc(e.materials) || '—'}</div></div>
+    <div class="detail-block"><div class="detail-label">${T('contractDocument')}</div><div class="detail-value">${e.contractUrl ? `<a class=\"detail-link\" href=\"${esc(e.contractUrl)}\" target=\"_blank\" rel=\"noopener noreferrer\">📄 ${esc(e.contractName) || T('downloadContract')}</a>` : '—'}</div></div>
+    ${e.start ? `<a class="gcal-btn" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer">📅 ${esc(T('addToGcal'))}</a>` : ''}
   `;
   overlay.style.display = 'flex';
 }
@@ -2131,10 +2542,65 @@ async function deleteEvent() {
 }
 
 // Calendar
-function calPrev() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
-function calNext() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+function calPrev() {
+  if (calMode === 'week') {
+    calWeekStart = isoAddDays(calWeekStart, -7);
+    calYear = parseInt(calWeekStart.slice(0,4), 10);
+    calMonth = parseInt(calWeekStart.slice(5,7), 10) - 1;
+  } else {
+    calMonth--; if(calMonth<0){calMonth=11;calYear--;}
+  }
+  renderCalendar();
+}
+function calNext() {
+  if (calMode === 'week') {
+    calWeekStart = isoAddDays(calWeekStart, 7);
+    calYear = parseInt(calWeekStart.slice(0,4), 10);
+    calMonth = parseInt(calWeekStart.slice(5,7), 10) - 1;
+  } else {
+    calMonth++; if(calMonth>11){calMonth=0;calYear++;}
+  }
+  renderCalendar();
+}
+function calToday() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  calWeekStart = mondayOf(now);
+  renderCalendar();
+}
+function mondayOf(d) {
+  const dt = new Date(d);
+  const dow = dt.getDay() === 0 ? 6 : dt.getDay() - 1;
+  dt.setDate(dt.getDate() - dow);
+  return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+}
+function setCalMode(m) {
+  calMode = m;
+  if (m === 'week' && !calWeekStart) {
+    const now = new Date();
+    calWeekStart = (now.getFullYear() === calYear && now.getMonth() === calMonth)
+      ? mondayOf(now)
+      : mondayOf(new Date(calYear, calMonth, 1));
+  }
+  document.getElementById('cm-month').classList.toggle('active', m === 'month');
+  document.getElementById('cm-week').classList.toggle('active', m === 'week');
+  renderCalendar();
+}
+function dayClick(dateStr) {
+  openModal(null);
+  document.getElementById('f-start').value = dateStr;
+  document.getElementById('f-end').value = dateStr;
+}
+function calChipCls(status) {
+  return status === 'confirmed' ? 'chip-conf' : status === 'negotiation' ? 'chip-nego' : status === 'contractSigned' ? 'chip-conf' : 'chip-done';
+}
 
 function renderCalendar() {
+  document.getElementById('cm-month').classList.toggle('active', calMode === 'month');
+  document.getElementById('cm-week').classList.toggle('active', calMode === 'week');
+  if (calMode === 'week') { renderWeek(); return; }
+  document.getElementById('cal-grid').classList.remove('week-mode');
   document.getElementById('cal-month-label').textContent = T('months')[calMonth] + ' ' + calYear;
   const headersEl = document.getElementById('cal-day-headers');
   headersEl.innerHTML = T('days').map(d => `<div class="cal-day-header">${d}</div>`).join('');
@@ -2157,16 +2623,44 @@ function renderCalendar() {
     // find events that include this date
     const evts = data.filter(e => e.start <= dateStr && e.end >= dateStr);
     const hasEvts = evts.length > 0;
+    const hasConflict = evts.some(ev => conflictIds.has(ev.id));
     let chipsHtml = '';
     const show = evts.slice(0,2);
     const more = evts.length - show.length;
     show.forEach(ev => {
-      const chipCls = ev.status === 'confirmed' ? 'chip-conf' : ev.status === 'negotiation' ? 'chip-nego' : ev.status === 'contractSigned' ? 'chip-conf' : 'chip-done';
-      chipsHtml += `<div class="cal-chip ${chipCls}" onclick="openDetails(${ev.id});event.stopPropagation()" title="${ev.artist}">${ev.artist}</div>`;
+      const warn = conflictIds.has(ev.id) ? '⚠ ' : '';
+      chipsHtml += `<div class="cal-chip ${calChipCls(ev.status)}" onclick="openDetails(${ev.id});event.stopPropagation()" title="${esc(ev.artist)}">${warn}${esc(ev.artist)}</div>`;
     });
     if (more > 0) chipsHtml += `<div class="cal-more">+${more} ${T('moreEvents')}</div>`;
-    return `<div class="cal-cell${hasEvts ? ' has-events' : ''}${isToday ? ' today' : ''}">
+    return `<div class="cal-cell${hasEvts ? ' has-events' : ''}${isToday ? ' today' : ''}${hasConflict ? ' conflict' : ''}" onclick="dayClick('${dateStr}')">
       <div class="cal-day-num">${cell.day}</div>
+      ${chipsHtml}
+    </div>`;
+  }).join('');
+}
+
+function renderWeek() {
+  if (!calWeekStart) calWeekStart = mondayOf(new Date(calYear, calMonth, 1));
+  const grid = document.getElementById('cal-grid');
+  grid.classList.add('week-mode');
+  const days = [];
+  for (let i = 0; i < 7; i++) days.push(isoAddDays(calWeekStart, i));
+  const weekEnd = days[6];
+  document.getElementById('cal-month-label').textContent = fmtDate(calWeekStart) + ' – ' + fmtDate(weekEnd);
+  const headersEl = document.getElementById('cal-day-headers');
+  headersEl.innerHTML = T('days').map((d, i) => `<div class="cal-day-header">${d} ${parseInt(days[i].slice(8,10),10)}</div>`).join('');
+  const todayIso = new Date().toISOString().slice(0,10);
+  grid.innerHTML = days.map(dateStr => {
+    const evts = data.filter(e => e.start <= dateStr && e.end >= dateStr);
+    const hasConflict = evts.some(ev => conflictIds.has(ev.id));
+    let chipsHtml = '';
+    evts.slice(0, 8).forEach(ev => {
+      const warn = conflictIds.has(ev.id) ? '⚠ ' : '';
+      chipsHtml += `<div class="cal-chip ${calChipCls(ev.status)}" onclick="openDetails(${ev.id});event.stopPropagation()" title="${esc(ev.artist)} — ${esc(ev.location)}">${warn}${esc(ev.artist)}</div>`;
+    });
+    if (evts.length > 8) chipsHtml += `<div class="cal-more">+${evts.length - 8} ${T('moreEvents')}</div>`;
+    return `<div class="cal-cell${evts.length ? ' has-events' : ''}${dateStr === todayIso ? ' today' : ''}${hasConflict ? ' conflict' : ''}" onclick="dayClick('${dateStr}')">
+      <div class="cal-day-num">${parseInt(dateStr.slice(8,10),10)}</div>
       ${chipsHtml}
     </div>`;
   }).join('');
@@ -2191,13 +2685,78 @@ function exportCSV() {
   ]);
   const csv = [h, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8'});
+  downloadBlob(blob, `karavansaray_events_${new Date().toISOString().slice(0,10)}.csv`);
+  showToast(T('csvReport') + ' ✓');
+}
+
+function downloadBlob(blob, filename) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `karavansaray_events_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  showToast(T('report') + ' ✓');
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+// Excel Export (SheetJS)
+function exportXLSX() {
+  if (typeof XLSX === 'undefined') { exportCSV(); return; }
+  const rows = [...data].sort((a,b) => (a.start||'').localeCompare(b.start||'')).map(e => ({
+    'No': e.no, 'Tarih (Başlangıç)': e.start, 'Tarih (Bitiş)': e.end,
+    'Sanatçı / İsim': e.artist, 'Kategori': e.type, 'Mekan': e.location,
+    'Misafir': e.guests||0, 'Gelir (₸)': e.revenue||0, 'Dolaylı Gelir (₸)': e.nonDirect||0,
+    'Durum': T(e.status), 'Tamamlandı': e.done ? 'Evet' : 'Hayır',
+    'Not': e.note||'', 'Malzemeler': e.materials||'', 'Sözleşme': e.contractUrl||''
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{wch:4},{wch:12},{wch:12},{wch:32},{wch:20},{wch:22},{wch:9},{wch:13},{wch:15},{wch:16},{wch:11},{wch:30},{wch:24},{wch:34}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Events 2026');
+  XLSX.writeFile(wb, `karavansaray_events_${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast(T('excelReport') + ' ✓');
+}
+
+// ── Google Calendar / ICS ──────────────────────────────────
+function icsEsc(s) {
+  return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+}
+
+function gcalUrl(e) {
+  const startStr = (e.start||'').replace(/-/g,'');
+  const endStr = isoAddDays(e.end || e.start, 1).replace(/-/g,'');
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: `${e.artist}${e.type ? ' — ' + e.type : ''}`,
+    dates: `${startStr}/${endStr}`,
+    details: e.note || '',
+    location: e.location || ''
+  });
+  return 'https://calendar.google.com/calendar/render?' + params.toString();
+}
+
+function exportICS() {
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Karavansaray Events//2026//TR','CALSCALE:GREGORIAN','X-WR-CALNAME:Karavansaray Events 2026'];
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').slice(0,15) + 'Z';
+  data.forEach(e => {
+    if (!e.start) return;
+    lines.push(
+      'BEGIN:VEVENT',
+      `UID:kv-${e.id}@karavansaray-events`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${e.start.replace(/-/g,'')}`,
+      `DTEND;VALUE=DATE:${isoAddDays(e.end || e.start, 1).replace(/-/g,'')}`,
+      `SUMMARY:${icsEsc(e.artist + (e.type ? ' — ' + e.type : ''))}`,
+      `LOCATION:${icsEsc(e.location)}`,
+      `DESCRIPTION:${icsEsc([e.note, e.materials ? 'Malzemeler: ' + e.materials : ''].filter(Boolean).join('\n'))}`,
+      `STATUS:${e.status === 'negotiation' ? 'TENTATIVE' : 'CONFIRMED'}`,
+      'END:VEVENT'
+    );
+  });
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n')], {type:'text/calendar;charset=utf-8'});
+  downloadBlob(blob, 'karavansaray_events_2026.ics');
+  showToast(T('icsExport') + ' ✓');
 }
 
 // Init
