@@ -572,7 +572,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
 //  FIREBASE BULUT YAPILANDIRMASI
@@ -2699,21 +2699,232 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 
-// Excel Export (SheetJS)
-function exportXLSX() {
-  if (typeof XLSX === 'undefined') { exportCSV(); return; }
-  const rows = [...data].sort((a,b) => (a.start||'').localeCompare(b.start||'')).map(e => ({
-    'No': e.no, 'Tarih (Başlangıç)': e.start, 'Tarih (Bitiş)': e.end,
-    'Sanatçı / İsim': e.artist, 'Kategori': e.type, 'Mekan': e.location,
-    'Misafir': e.guests||0, 'Gelir (₸)': e.revenue||0, 'Dolaylı Gelir (₸)': e.nonDirect||0,
-    'Durum': T(e.status), 'Tamamlandı': e.done ? 'Evet' : 'Hayır',
-    'Not': e.note||'', 'Malzemeler': e.materials||'', 'Sözleşme': e.contractUrl||''
-  }));
-  const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [{wch:4},{wch:12},{wch:12},{wch:32},{wch:20},{wch:22},{wch:9},{wch:13},{wch:15},{wch:16},{wch:11},{wch:30},{wch:24},{wch:34}];
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Events 2026');
-  XLSX.writeFile(wb, `karavansaray_events_${new Date().toISOString().slice(0,10)}.xlsx`);
+// Excel Export (ExcelJS — stilli profesyonel rapor)
+const XL = {
+  navy: 'FF0F172A', cyan: 'FF06B6D4', headerBlue: 'FF1E40AF',
+  altRow: 'FFF8FAFC', border: 'FFCBD5E1', totalFill: 'FFEFF6FF',
+  slate: 'FF64748B', dark: 'FF1E293B',
+  stConfirmed: 'FF1D4ED8', stNego: 'FF92400E', stSigned: 'FF047857', stDone: 'FF64748B'
+};
+function xlBorder() {
+  const thin = {style:'thin', color:{argb: XL.border}};
+  return {top:thin, left:thin, bottom:thin, right:thin};
+}
+function xlDate(iso) {
+  if (!iso) return '';
+  return new Date(iso + 'T00:00:00');
+}
+function xlStatusColor(status) {
+  if (status === 'confirmed') return XL.stConfirmed;
+  if (status === 'negotiation') return XL.stNego;
+  if (status === 'contractSigned') return XL.stSigned;
+  return XL.stDone;
+}
+function xlTitleBlock(ws, colCount, subtitle) {
+  ws.mergeCells(1, 1, 1, colCount);
+  const t = ws.getCell(1, 1);
+  t.value = 'KARAVANSARAY EVENTS 2026';
+  t.font = {name:'Calibri', size:16, bold:true, color:{argb: XL.cyan}};
+  t.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.navy}};
+  t.alignment = {vertical:'middle', horizontal:'left', indent:1};
+  ws.getRow(1).height = 32;
+  ws.mergeCells(2, 1, 2, colCount);
+  const s = ws.getCell(2, 1);
+  s.value = subtitle;
+  s.font = {name:'Calibri', size:10, color:{argb:'FFCBD5E1'}};
+  s.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.navy}};
+  s.alignment = {vertical:'middle', horizontal:'left', indent:1};
+  ws.getRow(2).height = 18;
+  ws.getRow(3).height = 6;
+}
+function xlHeaderRow(ws, rowNo, labels) {
+  const row = ws.getRow(rowNo);
+  labels.forEach((lbl, i) => {
+    const c = row.getCell(i + 1);
+    c.value = lbl;
+    c.font = {name:'Calibri', size:10, bold:true, color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.headerBlue}};
+    c.alignment = {vertical:'middle', horizontal:'center', wrapText:true};
+    c.border = xlBorder();
+  });
+  row.height = 24;
+  return row;
+}
+
+async function exportXLSX() {
+  if (typeof ExcelJS === 'undefined') { exportCSV(); return; }
+  const tr = lang === 'tr';
+  const sorted = [...data].sort((a,b) => (a.start||'').localeCompare(b.start||''));
+  const todayStr = fmtDate(new Date().toISOString().slice(0,10));
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'Karavansaray Events';
+  wb.created = new Date();
+
+  // ── Sayfa 1: Etkinlikler ──
+  const ws = wb.addWorksheet(tr ? 'Etkinlikler' : 'События', {views:[{state:'frozen', ySplit:4}]});
+  const headers = [
+    T('thNo'), T('lStart'), T('lEnd'), T('lArtist'), T('lCategory'), T('lLocation'),
+    T('lGuests'), T('lRevenue'), T('lNonDirect'), tr ? 'Toplam Gelir (₸)' : 'Общий доход (₸)',
+    T('lStatus'), T('lNote')
+  ];
+  const widths = [5, 12, 12, 34, 20, 22, 10, 14, 15, 14, 18, 40];
+  widths.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  xlTitleBlock(ws, headers.length,
+    (tr ? 'Etkinlik Raporu · ' : 'Отчёт о событиях · ') + todayStr + ' · ' + sorted.length + ' ' + T('eventsLabel'));
+  xlHeaderRow(ws, 4, headers);
+
+  const moneyFmt = '#,##0 "₸"';
+  let r = 5;
+  sorted.forEach((e, idx) => {
+    const row = ws.getRow(r);
+    row.values = [
+      e.no || '', xlDate(e.start), xlDate(e.end), e.artist || '', e.type || '', e.location || '',
+      e.guests || 0, e.revenue || 0, e.nonDirect || 0, (e.revenue||0) + (e.nonDirect||0),
+      T(e.status), e.note || ''
+    ];
+    const isDone = e.done || e.status === 'done';
+    row.eachCell({includeEmpty:true}, (c, col) => {
+      if (col > headers.length) return;
+      c.border = xlBorder();
+      c.font = {name:'Calibri', size:10, color:{argb: isDone ? XL.slate : XL.dark}};
+      if (idx % 2 === 1) c.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.altRow}};
+      c.alignment = {vertical:'middle', horizontal: col === 1 || col === 7 ? 'center' : (col >= 8 && col <= 10 ? 'right' : 'left'), wrapText: col === 12};
+    });
+    row.getCell(2).numFmt = 'dd.mm.yyyy';
+    row.getCell(3).numFmt = 'dd.mm.yyyy';
+    row.getCell(7).numFmt = '#,##0';
+    [8,9,10].forEach(col => { row.getCell(col).numFmt = moneyFmt; });
+    const st = row.getCell(11);
+    st.font = {name:'Calibri', size:10, bold:true, color:{argb: xlStatusColor(e.status)}};
+    st.alignment = {vertical:'middle', horizontal:'center'};
+    r++;
+  });
+
+  // Toplam satırı
+  const totRow = ws.getRow(r);
+  const sumG = sorted.reduce((s,e) => s + (e.guests||0), 0);
+  const sumR = sorted.reduce((s,e) => s + (e.revenue||0), 0);
+  const sumN = sorted.reduce((s,e) => s + (e.nonDirect||0), 0);
+  totRow.values = ['', '', '', tr ? 'TOPLAM' : 'ИТОГО', '', '', sumG, sumR, sumN, sumR + sumN, '', ''];
+  totRow.eachCell({includeEmpty:true}, (c, col) => {
+    if (col > headers.length) return;
+    c.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.totalFill}};
+    c.font = {name:'Calibri', size:10, bold:true, color:{argb: XL.headerBlue}};
+    c.border = {...xlBorder(), top:{style:'double', color:{argb: XL.headerBlue}}};
+    c.alignment = {vertical:'middle', horizontal: col === 7 ? 'center' : (col >= 8 && col <= 10 ? 'right' : 'left')};
+  });
+  totRow.getCell(7).numFmt = '#,##0';
+  [8,9,10].forEach(col => { totRow.getCell(col).numFmt = moneyFmt; });
+  totRow.height = 22;
+  ws.autoFilter = {from:{row:4, column:1}, to:{row:r - 1, column:headers.length}};
+
+  // ── Sayfa 2: Özet ──
+  const os = wb.addWorksheet(tr ? 'Özet' : 'Сводка');
+  [22, 14, 14, 16, 16, 16].forEach((w, i) => { os.getColumn(i + 1).width = w; });
+  xlTitleBlock(os, 6, (tr ? 'Yönetici Özeti · ' : 'Сводный отчёт · ') + todayStr);
+
+  // KPI bloğu
+  const kpis = [
+    [T('totalEvents'), sorted.length],
+    [T('kpiDone'), sorted.filter(e => e.done || e.status === 'done').length],
+    [T('inNegotiation'), sorted.filter(e => e.status === 'negotiation').length],
+    [T('totalGuests'), sumG],
+    [T('lRevenue'), sumR],
+    [T('lNonDirect'), sumN],
+    [T('kpiTotalRev'), sumR + sumN]
+  ];
+  let kr = 4;
+  kpis.forEach(([lbl, val]) => {
+    const row = os.getRow(kr);
+    row.getCell(1).value = lbl;
+    row.getCell(2).value = val;
+    row.getCell(1).font = {name:'Calibri', size:10, bold:true, color:{argb: XL.slate}};
+    row.getCell(2).font = {name:'Calibri', size:11, bold:true, color:{argb: XL.headerBlue}};
+    if (kr >= 8) row.getCell(2).numFmt = moneyFmt; else row.getCell(2).numFmt = '#,##0';
+    row.getCell(1).border = xlBorder(); row.getCell(2).border = xlBorder();
+    if ((kr - 4) % 2 === 1) [1,2].forEach(c => { row.getCell(c).fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.altRow}}; });
+    kr++;
+  });
+
+  // Aylık kırılım
+  kr += 1;
+  xlHeaderRow(os, kr, [tr ? 'Ay' : 'Месяц', T('totalEvents'), T('lGuests'), T('lRevenue'), T('lNonDirect'), tr ? 'Toplam' : 'Итого']);
+  kr++;
+  for (let m = 0; m < 12; m++) {
+    const mEvents = sorted.filter(e => e.start && parseInt(e.start.slice(5,7), 10) === m + 1);
+    if (!mEvents.length) continue;
+    const row = os.getRow(kr);
+    const mg = mEvents.reduce((s,e) => s + (e.guests||0), 0);
+    const mr = mEvents.reduce((s,e) => s + (e.revenue||0), 0);
+    const mn = mEvents.reduce((s,e) => s + (e.nonDirect||0), 0);
+    row.values = [T('months')[m], mEvents.length, mg, mr, mn, mr + mn];
+    row.eachCell({includeEmpty:true}, (c, col) => {
+      if (col > 6) return;
+      c.border = xlBorder();
+      c.font = {name:'Calibri', size:10, color:{argb: XL.dark}};
+      if (col >= 2) c.alignment = {horizontal:'right'};
+      if (col === 3) c.numFmt = '#,##0';
+      if (col >= 4) c.numFmt = moneyFmt;
+    });
+    row.getCell(1).font = {name:'Calibri', size:10, bold:true, color:{argb: XL.dark}};
+    kr++;
+  }
+
+  // Kategori ve mekan kırılımı (yan yana)
+  kr += 1;
+  const catStart = kr;
+  xlHeaderRow(os, kr, [T('lCategory'), T('totalEvents'), T('lRevenue')]);
+  const catAgg = {};
+  sorted.forEach(e => {
+    const k = e.type || '—';
+    if (!catAgg[k]) catAgg[k] = {n:0, rev:0};
+    catAgg[k].n++; catAgg[k].rev += (e.revenue||0) + (e.nonDirect||0);
+  });
+  let cr = catStart + 1;
+  Object.entries(catAgg).sort((a,b) => b[1].n - a[1].n).forEach(([k, v]) => {
+    const row = os.getRow(cr);
+    row.getCell(1).value = k; row.getCell(2).value = v.n; row.getCell(3).value = v.rev;
+    [1,2,3].forEach(col => {
+      const c = row.getCell(col);
+      c.border = xlBorder();
+      c.font = {name:'Calibri', size:10, color:{argb: XL.dark}};
+      if (col > 1) c.alignment = {horizontal:'right'};
+    });
+    row.getCell(3).numFmt = moneyFmt;
+    cr++;
+  });
+  // Mekan tablosu (E sütunundan itibaren)
+  const venAgg = {};
+  sorted.forEach(e => {
+    const k = e.location || '—';
+    if (!venAgg[k]) venAgg[k] = {n:0, rev:0};
+    venAgg[k].n++; venAgg[k].rev += (e.revenue||0) + (e.nonDirect||0);
+  });
+  const vHead = os.getRow(catStart);
+  [[5, T('lLocation')], [6, T('totalEvents')]].forEach(([col, lbl]) => {
+    const c = vHead.getCell(col);
+    c.value = lbl;
+    c.font = {name:'Calibri', size:10, bold:true, color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.headerBlue}};
+    c.alignment = {vertical:'middle', horizontal:'center', wrapText:true};
+    c.border = xlBorder();
+  });
+  let vr = catStart + 1;
+  Object.entries(venAgg).sort((a,b) => b[1].n - a[1].n).forEach(([k, v]) => {
+    const row = os.getRow(vr);
+    row.getCell(5).value = k; row.getCell(6).value = v.n;
+    [5,6].forEach(col => {
+      const c = row.getCell(col);
+      c.border = xlBorder();
+      c.font = {name:'Calibri', size:10, color:{argb: XL.dark}};
+      if (col === 6) c.alignment = {horizontal:'right'};
+    });
+    vr++;
+  });
+
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  downloadBlob(blob, `karavansaray_events_${new Date().toISOString().slice(0,10)}.xlsx`);
   showToast(T('excelReport') + ' ✓');
 }
 
