@@ -449,6 +449,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 <script>
@@ -459,12 +460,12 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
 //  Telefon + bilgisayar aynı veriyi gerçek zamanlı görür.
 // ═══════════════════════════════════════════════════════════
 const firebaseConfig = window.KARAVANSARAY_FIREBASE_CONFIG || {
-  apiKey: "",
+  apiKey: "AIzaSyDEstgDNz-x3ur0XHFGnUugceWPTgoFdZo",
   authDomain: "karavansaray-events-v2.firebaseapp.com",
   projectId: "karavansaray-events-v2",
   storageBucket: "karavansaray-events-v2.firebasestorage.app",
-  messagingSenderId: "",
-  appId: "",
+  messagingSenderId: "528120694671",
+  appId: "1:528120694671:web:1a09e4f48007de14c32dfa",
   measurementId: ""
 };
 
@@ -473,11 +474,13 @@ const LOCAL_KEY = 'kv_events_2026_v2_cache';
 const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
 let db = null;
 let storage = null;
+let auth = null;
 let eventsCollection = null;
 let eventsQuery = null;
 
 if (isFirebaseConfigured) {
   firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
   db = firebase.firestore();
   storage = firebase.storage();
   eventsCollection = db.collection(EVENTS_COLLECTION);
@@ -2198,8 +2201,24 @@ function exportCSV() {
 }
 
 // Init
-setLoaderText();
-loadData();
+async function initApp() {
+  setLoaderText();
+  if (auth) {
+    try {
+      await auth.signInAnonymously();
+    } catch (e) {
+      console.error('Anonymous sign-in failed:', e);
+      setSyncState('error');
+      data = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null') || JSON.parse(JSON.stringify(DEFAULT_DATA));
+      renderAll();
+      hidePageLoader();
+      return;
+    }
+  }
+  loadData();
+}
+
+initApp();
 // Firebase gerçek zamanlı dinleme kullanır; ayrı periyodik yenileme gerekmez.
 window.addEventListener('resize', () => { if (currentView === 'list') { const mobileActions = document.getElementById('mobile-actions'); if (mobileActions) mobileActions.style.display = window.innerWidth <= 800 ? 'flex' : 'none'; } });
 </script>

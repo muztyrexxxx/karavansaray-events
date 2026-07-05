@@ -1,9 +1,9 @@
 window.KARAVANSARAY_FIREBASE_CONFIG = {
-  apiKey: "YENI_API_KEY",
+  apiKey: "AIzaSyDEstgDNz-x3ur0XHFGnUugceWPTgoFdZo",
   authDomain: "karavansaray-events-v2.firebaseapp.com",
   projectId: "karavansaray-events-v2",
   storageBucket: "karavansaray-events-v2.firebasestorage.app",
-  messagingSenderId: "YENI_SENDER_ID",
-  appId: "YENI_APP_ID",
-  measurementId: "YENI_MEASUREMENT_ID"
+  messagingSenderId: "528120694671",
+  appId: "1:528120694671:web:1a09e4f48007de14c32dfa",
+  measurementId: ""
 };

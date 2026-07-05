@@ -10,15 +10,16 @@ Bu kopya, canlı `karavansaray-events` Firebase projesine yazmayacak şekilde ha
 - V2 Firebase project: yeni Firebase project olarak kurulacak
 - V2 koleksiyon: `events`
 
-`index.html` icindeki Firebase config bilerek bos birakildi. Config doldurulana kadar uygulama yerel modda calisir ve eski Firebase verilerine dokunmaz.
+`index.html` artik yeni `karavansaray-events-v2` Firebase projesine baglidir. Eski `karavansaray-events` Firebase projesine yazmaz.
 
 ## Yeni Firebase project adimlari
 
-1. Firebase Console'da yeni project olustur: `karavansaray-events-v2`
-2. Firestore Database olustur.
-3. Web App ekle ve Firebase config degerlerini al.
-4. Firestore Rules icin `firestore.rules` dosyasindaki taslagi kullan.
-5. Yeni Firestore'a aktarilacak temiz seed dosyasi:
+1. Firebase project olusturuldu: `karavansaray-events-v2`
+2. Firestore Database olusturuldu: `(default)` / `nam5`
+3. Web App eklendi: `karavansaray-events-v2`
+4. Anonymous Authentication etkinlestirildi.
+5. Firestore Rules `firestore.rules` ile ayni mantikta yayinda.
+6. Yeni Firestore'a aktarilan temiz seed dosyasi:
    `data/events-seed.json`
 
 Canli verinin tam yedegi ayrica su dosyada tutuldu:
@@ -26,17 +27,17 @@ Canli verinin tam yedegi ayrica su dosyada tutuldu:
 
 ## Config ekleme
 
-`index.html` icindeki `firebaseConfig` alanina yeni Firebase Web App config degerlerini yaz:
+Aktif Firebase Web App config:
 
 ```js
 const firebaseConfig = window.KARAVANSARAY_FIREBASE_CONFIG || {
-  apiKey: "YENI_API_KEY",
+  apiKey: "AIzaSyDEstgDNz-x3ur0XHFGnUugceWPTgoFdZo",
   authDomain: "karavansaray-events-v2.firebaseapp.com",
   projectId: "karavansaray-events-v2",
   storageBucket: "karavansaray-events-v2.firebasestorage.app",
-  messagingSenderId: "YENI_SENDER_ID",
-  appId: "YENI_APP_ID",
-  measurementId: "YENI_MEASUREMENT_ID"
+  messagingSenderId: "528120694671",
+  appId: "1:528120694671:web:1a09e4f48007de14c32dfa",
+  measurementId: ""
 };
 ```
 
