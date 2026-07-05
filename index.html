@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Karavansaray Events 2026</title>
+<title>Karavansaray Events</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
@@ -241,7 +241,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
         </svg>
         <div class="sb-logo-text">
           <div class="sb-logo-name">KARAVANSARAY</div>
-          <div class="sb-logo-sub">EVENTS 2026</div>
+          <div class="sb-logo-sub">EVENTS</div>
         </div>
       </div>
     </div>
@@ -278,6 +278,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
     </button>
     <div class="sb-footer">
       <button class="sb-report-btn" id="report-btn" onclick="exportXLSX()">⬇ <span id="report-label">Excel Raporu</span></button>
+      <button class="sb-report-btn" id="pdf-btn" onclick="exportPDF()">📄 <span id="pdf-label">PDF Raporu</span></button>
       <button class="sb-report-btn" id="csv-btn" onclick="exportCSV()">⬇ <span id="csv-label">CSV Raporu</span></button>
       <button class="sb-report-btn" id="ics-btn" onclick="exportICS()">📅 <span id="ics-label">Takvim (.ics)</span></button>
       <button class="sb-lang-btn" id="lang-btn" onclick="toggleLang()">🌐 <span id="lang-label">Русский</span></button>
@@ -288,6 +289,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
   <main class="main" id="main">
     <div class="main-header">
       <div class="main-title" id="main-title">Tüm Etkinlikler</div>
+      <div class="pill-row" id="year-tabs"></div>
       <div class="sync-badge">
         <span class="sync-dot"></span>
         <span id="sync-label">Paylaşımlı · Herkes düzenleyebilir</span>
@@ -305,6 +307,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
         <button class="mobile-btn" id="mobile-nav-cal" onclick="switchView('calendar')">📅</button>
         <button class="mobile-btn" id="mobile-lang-btn" onclick="toggleLang()">🌐 <span id="mobile-lang-label">Русский</span></button>
         <button class="mobile-btn" id="mobile-report-btn" onclick="exportXLSX()">⬇ <span id="mobile-report-label">Excel</span></button>
+        <button class="mobile-btn" id="mobile-pdf-btn" onclick="exportPDF()">📄 PDF</button>
       </div>
       <div class="pill-row" id="mobile-filter-pills"></div>
     </div>
@@ -1572,7 +1575,10 @@ const TR = {
   chMonthly:'Aylık Gelir', chCat:'Kategori Dağılımı', chVenue:'Mekan Kullanımı', chGuests:'Aylık Misafir',
   allVenues:'Tüm Mekanlar', sortDateAsc:'Tarih ↑', sortDateDesc:'Tarih ↓', sortRevDesc:'Gelir ↓', sortGuestsDesc:'Misafir ↓',
   directLabel:'Direkt', indirectLabel:'Dolaylı', guestsLabel:'Misafir', eventsLabel:'etkinlik',
-  thNo:'No', thDate:'Tarih'
+  thNo:'No', thDate:'Tarih',
+  allYears:'Tüm Yıllar', allYearsSub:'tüm yıllar', yearSuffix:' yılı',
+  pdfReport:'PDF Raporu', reportTitle:'Etkinlik Raporu', summaryTitle:'Yönetici Özeti',
+  totalLabel:'TOPLAM', pageLabel:'Sayfa'
 };
 const RU = {
   confirmed:'Подтверждено', negotiation:'Переговоры', contractSigned:'Договор подписан', done:'Завершено',
@@ -1604,7 +1610,10 @@ const RU = {
   chMonthly:'Доход по месяцам', chCat:'По категориям', chVenue:'Загрузка площадок', chGuests:'Гости по месяцам',
   allVenues:'Все площадки', sortDateAsc:'Дата ↑', sortDateDesc:'Дата ↓', sortRevDesc:'Доход ↓', sortGuestsDesc:'Гости ↓',
   directLabel:'Прямой', indirectLabel:'Косвенный', guestsLabel:'Гости', eventsLabel:'событий',
-  thNo:'№', thDate:'Дата'
+  thNo:'№', thDate:'Дата',
+  allYears:'Все годы', allYearsSub:'все годы', yearSuffix:' год',
+  pdfReport:'Отчёт PDF', reportTitle:'Отчёт о событиях', summaryTitle:'Сводный отчёт',
+  totalLabel:'ИТОГО', pageLabel:'Стр.'
 };
 let lang = 'tr', L = TR;
 function T(k){ return L[k] || TR[k] || k; }
@@ -1621,8 +1630,9 @@ let currentFilter = 'all';
 let currentCat = 'all';
 let currentView = 'list';
 let editingId = null;
-let calYear = 2026, calMonth = 3; // April = index 3
+let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let calMode = 'month';
+let currentYearSel = String(new Date().getFullYear());
 let calWeekStart = null; // 'YYYY-MM-DD' of Monday in week mode
 let sortKey = 'start', sortDir = 1;
 let conflictIds = new Set();
@@ -1632,6 +1642,30 @@ function esc(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function setTxt(id, txt){ const el = document.getElementById(id); if (el) el.textContent = txt; }
+function getYearData(){
+  if (currentYearSel === 'all') return data;
+  return data.filter(e => (e.start||'').slice(0,4) === currentYearSel);
+}
+function yearLabel(){ return currentYearSel === 'all' ? T('allYears') : currentYearSel; }
+function yearFileSuffix(){ return currentYearSel === 'all' ? 'tum_yillar' : currentYearSel; }
+function setYear(y){
+  currentYearSel = String(y);
+  if (currentYearSel !== 'all') calYear = Number(currentYearSel);
+  renderAll();
+}
+function renderYearTabs(){
+  const el = document.getElementById('year-tabs');
+  if (!el) return;
+  const years = [...new Set(data.map(e => (e.start||'').slice(0,4)).filter(y => /^\d{4}$/.test(y)))];
+  const cy = String(new Date().getFullYear());
+  if (!years.includes(cy)) years.push(cy);
+  years.sort();
+  let html = `<button class="filter-pill${currentYearSel === 'all' ? ' active' : ''}" onclick="setYear('all')">${esc(T('allYears'))}</button>`;
+  years.forEach(y => {
+    html += `<button class="filter-pill${currentYearSel === y ? ' active' : ''}" onclick="setYear('${y}')">${y}</button>`;
+  });
+  el.innerHTML = html;
+}
 function isoAddDays(iso, n){
   const d = new Date(iso + 'T00:00:00');
   d.setDate(d.getDate() + n);
@@ -1890,7 +1924,7 @@ function applyLang() {
   document.getElementById('stat-lbl-nego').textContent = T('inNegotiation');
   document.getElementById('stat-lbl-guests').textContent = T('totalGuests');
   document.getElementById('stat-lbl-rev').textContent = T('totalRevenue');
-  document.getElementById('stat-total-sub').textContent = T('year');
+  setTxt('stat-total-sub', currentYearSel === 'all' ? T('allYearsSub') : currentYearSel + T('yearSuffix'));
   document.getElementById('stat-nego-sub').textContent = T('activeNego');
   document.getElementById('stat-guests-sub').textContent = T('expected');
   document.getElementById('stat-rev-sub').textContent = T('directRev');
@@ -1924,6 +1958,7 @@ function applyLang() {
   // new UI labels
   setTxt('nav-dash-label', T('dashboard'));
   setTxt('report-label', T('excelReport'));
+  setTxt('pdf-label', T('pdfReport'));
   setTxt('csv-label', T('csvReport'));
   setTxt('ics-label', T('icsExport'));
   setTxt('mobile-report-label', 'Excel');
@@ -2003,7 +2038,7 @@ function renderVenueFilter() {
   const sel = document.getElementById('venue-filter');
   if (!sel) return;
   const current = sel.value || 'all';
-  const venues = [...new Set(data.map(e => e.location).filter(Boolean))].sort();
+  const venues = [...new Set(getYearData().map(e => e.location).filter(Boolean))].sort();
   sel.innerHTML = `<option value="all">${esc(T('allVenues'))}</option>` +
     venues.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
   sel.value = venues.includes(current) || current === 'all' ? current : 'all';
@@ -2019,7 +2054,7 @@ function setFilter(f) {
 }
 
 function getFilteredData() {
-  let d = [...data];
+  let d = [...getYearData()];
   if (currentFilter !== 'all') d = d.filter(e => e.status === currentFilter);
   const q = (document.getElementById('search-input').value || '').toLowerCase();
   if (q) d = d.filter(e => (e.artist||'').toLowerCase().includes(q) || (e.type||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q));
@@ -2054,19 +2089,20 @@ function computeConflicts() {
 }
 
 function renderStats() {
-  const total = data.length;
-  const nego = data.filter(e => e.status === 'negotiation').length;
-  const guests = data.reduce((s,e) => s + (e.guests||0), 0);
-  const rev = data.filter(e => e.status !== 'done' || e.done).reduce((s,e) => s + (e.revenue||0), 0);
+  const yd = getYearData();
+  const total = yd.length;
+  const nego = yd.filter(e => e.status === 'negotiation').length;
+  const guests = yd.reduce((s,e) => s + (e.guests||0), 0);
   document.getElementById('stat-total').textContent = total;
   document.getElementById('stat-nego').textContent = nego;
   document.getElementById('stat-guests').textContent = fmtNum(guests);
-  document.getElementById('stat-rev').textContent = fmtRev(data.reduce((s,e) => s + (e.revenue||0), 0));
+  document.getElementById('stat-rev').textContent = fmtRev(yd.reduce((s,e) => s + (e.revenue||0), 0));
+  setTxt('stat-total-sub', currentYearSel === 'all' ? T('allYearsSub') : currentYearSel + T('yearSuffix'));
   // sidebar counts
-  document.getElementById('cnt-all').textContent = data.length;
-  document.getElementById('cnt-confirmed').textContent = data.filter(e => e.status === 'confirmed').length;
-  document.getElementById('cnt-negotiation').textContent = data.filter(e => e.status === 'negotiation').length;
-  document.getElementById('cnt-done').textContent = data.filter(e => e.status === 'done').length;
+  document.getElementById('cnt-all').textContent = yd.length;
+  document.getElementById('cnt-confirmed').textContent = yd.filter(e => e.status === 'confirmed').length;
+  document.getElementById('cnt-negotiation').textContent = yd.filter(e => e.status === 'negotiation').length;
+  document.getElementById('cnt-done').textContent = yd.filter(e => e.status === 'done').length;
 }
 
 function renderStatusPills() {
@@ -2082,7 +2118,7 @@ function renderStatusPills() {
 }
 
 function renderCatPills() {
-  const types = [...new Set(data.map(e => e.type))].sort();
+  const types = [...new Set(getYearData().map(e => e.type))].sort();
   const container = document.getElementById('cat-pills');
   let html = `<button class="cat-pill${currentCat === 'all' ? ' active' : ''}" onclick="setCat('all')">${T('catAll')}</button>`;
   types.forEach(t => {
@@ -2188,6 +2224,7 @@ function sortTable(key) {
 function renderAll() {
   computeConflicts();
   applyLang();
+  renderYearTabs();
   renderStats();
   renderStatusPills();
   renderCatPills();
@@ -2208,11 +2245,12 @@ function makeChart(id, config) {
 }
 
 function renderDashboard() {
-  const totalRev = data.reduce((s,e) => s + (e.revenue||0) + (e.nonDirect||0), 0);
-  const doneCount = data.filter(e => e.done || e.status === 'done').length;
+  const yd = getYearData();
+  const totalRev = yd.reduce((s,e) => s + (e.revenue||0) + (e.nonDirect||0), 0);
+  const doneCount = yd.filter(e => e.done || e.status === 'done').length;
   const todayIso = new Date().toISOString().slice(0,10);
-  const upcoming = data.filter(e => !e.done && e.status !== 'done' && (e.end || e.start) >= todayIso).length;
-  const withGuests = data.filter(e => (e.guests||0) > 0);
+  const upcoming = yd.filter(e => !e.done && e.status !== 'done' && (e.end || e.start) >= todayIso).length;
+  const withGuests = yd.filter(e => (e.guests||0) > 0);
   const avgGuests = withGuests.length ? Math.round(withGuests.reduce((s,e) => s + e.guests, 0) / withGuests.length) : 0;
   setTxt('kpi-totalrev', fmtRev(totalRev));
   setTxt('kpi-done', String(doneCount));
@@ -2223,7 +2261,7 @@ function renderDashboard() {
   const revByMonth = Array(12).fill(0);
   const indByMonth = Array(12).fill(0);
   const guestsByMonth = Array(12).fill(0);
-  data.forEach(e => {
+  yd.forEach(e => {
     if (!e.start) return;
     const m = parseInt(e.start.slice(5,7), 10) - 1;
     if (m < 0 || m > 11) return;
@@ -2252,7 +2290,7 @@ function renderDashboard() {
   });
 
   const catCounts = {};
-  data.forEach(e => { const t = e.type || '—'; catCounts[t] = (catCounts[t]||0) + 1; });
+  yd.forEach(e => { const t = e.type || '—'; catCounts[t] = (catCounts[t]||0) + 1; });
   const catEntries = Object.entries(catCounts).sort((a,b) => b[1] - a[1]);
   makeChart('chart-cat', {
     type: 'doughnut',
@@ -2267,7 +2305,7 @@ function renderDashboard() {
   });
 
   const venueCounts = {};
-  data.forEach(e => { const v = e.location || '—'; venueCounts[v] = (venueCounts[v]||0) + 1; });
+  yd.forEach(e => { const v = e.location || '—'; venueCounts[v] = (venueCounts[v]||0) + 1; });
   const venueEntries = Object.entries(venueCounts).sort((a,b) => b[1] - a[1]);
   makeChart('chart-venue', {
     type: 'bar',
@@ -2621,7 +2659,7 @@ function renderCalendar() {
     const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(cell.day).padStart(2,'0');
     const isToday = (today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===cell.day);
     // find events that include this date
-    const evts = data.filter(e => e.start <= dateStr && e.end >= dateStr);
+    const evts = getYearData().filter(e => e.start <= dateStr && e.end >= dateStr);
     const hasEvts = evts.length > 0;
     const hasConflict = evts.some(ev => conflictIds.has(ev.id));
     let chipsHtml = '';
@@ -2651,7 +2689,7 @@ function renderWeek() {
   headersEl.innerHTML = T('days').map((d, i) => `<div class="cal-day-header">${d} ${parseInt(days[i].slice(8,10),10)}</div>`).join('');
   const todayIso = new Date().toISOString().slice(0,10);
   grid.innerHTML = days.map(dateStr => {
-    const evts = data.filter(e => e.start <= dateStr && e.end >= dateStr);
+    const evts = getYearData().filter(e => e.start <= dateStr && e.end >= dateStr);
     const hasConflict = evts.some(ev => conflictIds.has(ev.id));
     let chipsHtml = '';
     evts.slice(0, 8).forEach(ev => {
@@ -2679,13 +2717,13 @@ function showToast(msg) {
 // CSV Export
 function exportCSV() {
   const h = ['No','Type','Artist','Location','Start','End','Revenue','NonDirect','Guests','Status','Done','Note','Materials','ContractName','ContractURL'];
-  const rows = [...data].sort((a,b) => a.start.localeCompare(b.start)).map(e => [
+  const rows = [...getYearData()].sort((a,b) => a.start.localeCompare(b.start)).map(e => [
     e.no, e.type, e.artist, e.location, e.start, e.end,
     e.revenue||0, e.nonDirect||0, e.guests||0, e.status, e.done?'1':'0', e.note||'', e.materials||'', e.contractName||'', e.contractUrl||''
   ]);
   const csv = [h, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8'});
-  downloadBlob(blob, `karavansaray_events_${new Date().toISOString().slice(0,10)}.csv`);
+  downloadBlob(blob, `karavansaray_events_${yearFileSuffix()}_${new Date().toISOString().slice(0,10)}.csv`);
   showToast(T('csvReport') + ' ✓');
 }
 
@@ -2723,7 +2761,7 @@ function xlStatusColor(status) {
 function xlTitleBlock(ws, colCount, subtitle) {
   ws.mergeCells(1, 1, 1, colCount);
   const t = ws.getCell(1, 1);
-  t.value = 'KARAVANSARAY EVENTS 2026';
+  t.value = 'KARAVANSARAY EVENTS';
   t.font = {name:'Calibri', size:16, bold:true, color:{argb: XL.cyan}};
   t.fill = {type:'pattern', pattern:'solid', fgColor:{argb: XL.navy}};
   t.alignment = {vertical:'middle', horizontal:'left', indent:1};
@@ -2754,7 +2792,7 @@ function xlHeaderRow(ws, rowNo, labels) {
 async function exportXLSX() {
   if (typeof ExcelJS === 'undefined') { exportCSV(); return; }
   const tr = lang === 'tr';
-  const sorted = [...data].sort((a,b) => (a.start||'').localeCompare(b.start||''));
+  const sorted = [...getYearData()].sort((a,b) => (a.start||'').localeCompare(b.start||''));
   const todayStr = fmtDate(new Date().toISOString().slice(0,10));
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Karavansaray Events';
@@ -2770,7 +2808,7 @@ async function exportXLSX() {
   const widths = [5, 12, 12, 34, 20, 22, 10, 14, 15, 14, 18, 40];
   widths.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   xlTitleBlock(ws, headers.length,
-    (tr ? 'Etkinlik Raporu · ' : 'Отчёт о событиях · ') + todayStr + ' · ' + sorted.length + ' ' + T('eventsLabel'));
+    T('reportTitle') + ' · ' + yearLabel() + ' · ' + todayStr + ' · ' + sorted.length + ' ' + T('eventsLabel'));
   xlHeaderRow(ws, 4, headers);
 
   const moneyFmt = '#,##0 "₸"';
@@ -2820,7 +2858,7 @@ async function exportXLSX() {
   // ── Sayfa 2: Özet ──
   const os = wb.addWorksheet(tr ? 'Özet' : 'Сводка');
   [22, 14, 14, 16, 16, 16].forEach((w, i) => { os.getColumn(i + 1).width = w; });
-  xlTitleBlock(os, 6, (tr ? 'Yönetici Özeti · ' : 'Сводный отчёт · ') + todayStr);
+  xlTitleBlock(os, 6, T('summaryTitle') + ' · ' + yearLabel() + ' · ' + todayStr);
 
   // KPI bloğu
   const kpis = [
@@ -2923,8 +2961,136 @@ async function exportXLSX() {
 
   const buf = await wb.xlsx.writeBuffer();
   const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  downloadBlob(blob, `karavansaray_events_${new Date().toISOString().slice(0,10)}.xlsx`);
+  downloadBlob(blob, `karavansaray_events_${yearFileSuffix()}_${new Date().toISOString().slice(0,10)}.xlsx`);
   showToast(T('excelReport') + ' ✓');
+}
+
+// ── PDF Raporu (pdfmake — tıklanınca yüklenir) ─────────────
+let pdfLibPromise = null;
+function loadPdfMake() {
+  if (window.pdfMake && window.pdfMake.vfs) return Promise.resolve();
+  if (pdfLibPromise) return pdfLibPromise;
+  const addScript = src => new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = res;
+    s.onerror = () => rej(new Error('load failed: ' + src));
+    document.head.appendChild(s);
+  });
+  pdfLibPromise = addScript('https://cdn.jsdelivr.net/npm/pdfmake@0.2.10/build/pdfmake.min.js')
+    .then(() => addScript('https://cdn.jsdelivr.net/npm/pdfmake@0.2.10/build/vfs_fonts.js'));
+  return pdfLibPromise;
+}
+
+function pdfMoney(v) {
+  return (v||0).toLocaleString('tr-TR') + ' ₸';
+}
+function pdfStatusColor(status) {
+  if (status === 'confirmed') return '#1D4ED8';
+  if (status === 'negotiation') return '#92400E';
+  if (status === 'contractSigned') return '#047857';
+  return '#64748B';
+}
+
+async function exportPDF() {
+  showToast(lang === 'tr' ? 'PDF hazırlanıyor…' : 'PDF готовится…');
+  try {
+    await loadPdfMake();
+  } catch(e) {
+    console.error('pdfmake load failed:', e);
+    alert(lang === 'tr' ? 'PDF kütüphanesi yüklenemedi. İnternet bağlantısını kontrol edin.' : 'Не удалось загрузить библиотеку PDF.');
+    return;
+  }
+  const sorted = [...getYearData()].sort((a,b) => (a.start||'').localeCompare(b.start||''));
+  const todayStr = fmtDate(new Date().toISOString().slice(0,10));
+  const sumG = sorted.reduce((s,e) => s + (e.guests||0), 0);
+  const sumR = sorted.reduce((s,e) => s + (e.revenue||0), 0);
+  const sumN = sorted.reduce((s,e) => s + (e.nonDirect||0), 0);
+
+  const kpiCell = (label, value) => ({
+    stack: [
+      {text: label, fontSize: 8, bold: true, color: '#64748B'},
+      {text: value, fontSize: 13, bold: true, color: '#1E40AF', margin: [0, 2, 0, 0]}
+    ],
+    fillColor: '#F8FAFC', margin: [8, 6, 8, 6]
+  });
+
+  const tableHeader = [T('thNo'), T('thDate'), T('lArtist'), T('lCategory'), T('lLocation'), T('lGuests'), T('lRevenue'), T('lNonDirect'), T('lStatus')]
+    .map(h => ({text: h, bold: true, color: '#FFFFFF', fillColor: '#1E40AF', fontSize: 8.5, alignment: 'center', margin: [0, 3, 0, 3]}));
+
+  const tableBody = [tableHeader];
+  sorted.forEach(e => {
+    const dateStr = e.start === e.end ? fmtDate(e.start) : fmtDate(e.start) + ' – ' + fmtDate(e.end);
+    tableBody.push([
+      {text: String(e.no || ''), alignment: 'center', fontSize: 8, color: '#000000'},
+      {text: dateStr, fontSize: 8, color: '#000000'},
+      {text: e.artist || '', fontSize: 8, color: '#000000'},
+      {text: e.type || '', fontSize: 8, color: '#000000'},
+      {text: e.location || '', fontSize: 8, color: '#000000'},
+      {text: fmtNum(e.guests||0), alignment: 'right', fontSize: 8, color: '#000000'},
+      {text: pdfMoney(e.revenue), alignment: 'right', fontSize: 8, color: '#000000'},
+      {text: pdfMoney(e.nonDirect), alignment: 'right', fontSize: 8, color: '#000000'},
+      {text: T(e.status), alignment: 'center', fontSize: 8, bold: true, color: pdfStatusColor(e.status)}
+    ]);
+  });
+  tableBody.push([
+    {text: '', fillColor: '#EFF6FF'},
+    {text: '', fillColor: '#EFF6FF'},
+    {text: T('totalLabel'), bold: true, fontSize: 8.5, color: '#1E40AF', fillColor: '#EFF6FF'},
+    {text: '', fillColor: '#EFF6FF'},
+    {text: '', fillColor: '#EFF6FF'},
+    {text: fmtNum(sumG), alignment: 'right', bold: true, fontSize: 8.5, color: '#1E40AF', fillColor: '#EFF6FF'},
+    {text: pdfMoney(sumR), alignment: 'right', bold: true, fontSize: 8.5, color: '#1E40AF', fillColor: '#EFF6FF'},
+    {text: pdfMoney(sumN), alignment: 'right', bold: true, fontSize: 8.5, color: '#1E40AF', fillColor: '#EFF6FF'},
+    {text: '', fillColor: '#EFF6FF'}
+  ]);
+
+  const dd = {
+    pageSize: 'A4',
+    pageOrientation: 'landscape',
+    pageMargins: [24, 24, 24, 34],
+    content: [
+      {
+        table: {widths: ['*'], body: [[{
+          stack: [
+            {text: 'KARAVANSARAY EVENTS', fontSize: 17, bold: true, color: '#06B6D4'},
+            {text: T('reportTitle') + ' · ' + yearLabel() + ' · ' + todayStr + ' · ' + sorted.length + ' ' + T('eventsLabel'), fontSize: 9, color: '#CBD5E1', margin: [0, 3, 0, 0]}
+          ],
+          fillColor: '#0F172A', margin: [12, 10, 12, 10]
+        }]]},
+        layout: 'noBorders', margin: [0, 0, 0, 10]
+      },
+      {
+        table: {widths: ['*','*','*','*'], body: [[
+          kpiCell(T('totalEvents'), String(sorted.length)),
+          kpiCell(T('totalGuests'), fmtNum(sumG)),
+          kpiCell(T('lRevenue'), pdfMoney(sumR)),
+          kpiCell(T('kpiTotalRev'), pdfMoney(sumR + sumN))
+        ]]},
+        layout: {hLineColor: () => '#E2E8F0', vLineColor: () => '#E2E8F0', hLineWidth: () => 0.5, vLineWidth: () => 0.5},
+        margin: [0, 0, 0, 12]
+      },
+      {
+        table: {headerRows: 1, widths: [22, 62, '*', 72, 76, 40, 58, 58, 62], body: tableBody},
+        layout: {
+          fillColor: (rowIndex) => rowIndex > 0 && rowIndex < tableBody.length - 1 && rowIndex % 2 === 0 ? '#F8FAFC' : null,
+          hLineColor: () => '#CBD5E1', vLineColor: () => '#CBD5E1',
+          hLineWidth: () => 0.5, vLineWidth: () => 0.5,
+          paddingTop: () => 3, paddingBottom: () => 3, paddingLeft: () => 4, paddingRight: () => 4
+        }
+      }
+    ],
+    footer: (currentPage, pageCount) => ({
+      columns: [
+        {text: 'Karavansaray Events · ' + todayStr, fontSize: 8, color: '#94A3B8', margin: [24, 8, 0, 0]},
+        {text: T('pageLabel') + ' ' + currentPage + ' / ' + pageCount, fontSize: 8, color: '#94A3B8', alignment: 'right', margin: [0, 8, 24, 0]}
+      ]
+    }),
+    defaultStyle: {font: 'Roboto'}
+  };
+
+  pdfMake.createPdf(dd).download(`karavansaray_events_${yearFileSuffix()}_${new Date().toISOString().slice(0,10)}.pdf`);
+  showToast(T('pdfReport') + ' ✓');
 }
 
 // ── Google Calendar / ICS ──────────────────────────────────
@@ -2946,9 +3112,10 @@ function gcalUrl(e) {
 }
 
 function exportICS() {
-  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Karavansaray Events//2026//TR','CALSCALE:GREGORIAN','X-WR-CALNAME:Karavansaray Events 2026'];
+  const calName = 'Karavansaray Events' + (currentYearSel === 'all' ? '' : ' ' + currentYearSel);
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Karavansaray Events//TR','CALSCALE:GREGORIAN','X-WR-CALNAME:' + calName];
   const stamp = new Date().toISOString().replace(/[-:]/g,'').slice(0,15) + 'Z';
-  data.forEach(e => {
+  getYearData().forEach(e => {
     if (!e.start) return;
     lines.push(
       'BEGIN:VEVENT',
@@ -2965,7 +3132,7 @@ function exportICS() {
   });
   lines.push('END:VCALENDAR');
   const blob = new Blob([lines.join('\r\n')], {type:'text/calendar;charset=utf-8'});
-  downloadBlob(blob, 'karavansaray_events_2026.ics');
+  downloadBlob(blob, `karavansaray_events_${yearFileSuffix()}.ics`);
   showToast(T('icsExport') + ' ✓');
 }
 
